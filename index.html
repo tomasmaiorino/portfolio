@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Freelancer - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/freelancer.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style>
+.circle {
+  margin: 1px;
+  display: inline-block;
+  padding: 16px;
+  text-align: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #1d2087;
+}
+
+.circle::before,
+.circle::after {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  content: '';
+}
+.circle,
+.circle::before,
+.circle::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+.circle {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+  border: 2px solid #5c5eae;
+  color: #5c5eae;
+  line-height: 50px;
+  overflow: hidden;
+}
+
+.circle:hover {
+  color: #fff;
+}
+.circle::after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  -webkit-transform: scale(.5);
+  transform: scale(.5);
+}
+
+.circle:hover::after {
+  background: #5c5eae;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+
+
+.circle_change {
+    color: #fff;
+}
+
+.circle_change h2{
+  color: #fff;
+}
+
+
+.circle_change::after {color: #fff;
+  background: #5c5eae;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+
+.circle a {
+  text-decoration: none;
+  color: #1d2087;
+}
+
+.circle h2 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.circle h2 small {
+  color: #1d2087;
+}
+
+.circle p {
+  font-size: 24px;
+  line-height: 26px;
+}
+
+.circle:hover h2 {
+  color: #fff;
+}
+
+.details {
+}
+
+.details li {
+    list-style-type: none;
+}
+
+.hide {
+    display: none;
+}
+
+.margin_lines {
+  margin-top: 60px;
+}
+
+#vertical {
+  transition: width 0.5s ease;
+  width: 10%;
+  background: rebeccapurple;
+  height: 1px;
+}
+
+ .box {
+      /*background-color: red;*/
+    }
+
+    .box-full {
+      width: 100%;
+    }
+
+    .box-middle {
+      width: 50%;
+    }
+
+    .box-middle-2 {
+      width: 70%;
+    }
+
+    .box .linee,
+    .box .circlee,
+    .box .specs {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .box .linee {
+      width: 0;
+      height: 2px;
+      width: 0;
+      display: inline-block;
+      background: #5c5eae;
+      /*
+      -webkit-transition: width 2s ease-out;
+      -moz-transition: width 2s ease-out;
+      -ms-transition: width 2s ease-out;
+      -o-transition: width 2s ease-out;
+      transition: width 2s ease-out;
+      */
+    }
+
+    .box .circlee {
+      width: 10%;
+      text-align: center;
+    }
+
+    .box .circlee span {
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      background-color: blue;
+      border-radius: 50%;
+    }
+
+    .box .specs {
+      width: 30%;
+    }
+
+    .box .linee span {
+    }
+
+    .box.active .linee {
+      width: 55%;
+    }
+
+   .box ul {
+      list-style: none;
+    }
+
+    .circle_div {
+    }
+
+    .hide {
+    }
+
+   
+    .display {}
+
+    .img-border {
+      border-radius: 25px;
+    }
+    .pointer {
+      cursor: pointer;
+    }
+    .n_text_title_color {
+      color: #5A2D82;
+    }
+    .n_background_tag {
+		background-color: #5A2D82;
+    }
+
+    .section_padding_bottom {
+      padding-bottom: 20px;
+    }
+
+</style>
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#page-top">TM</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#portfolio">Gigs</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about">About</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                  <img src="img/portfolio/prog.jpg" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
+                </div>
+                <div class="col-lg-8">
+                  <div class="row" align="left">
+                     <h2 style="color: black">Tomas Maiorino</h2>
+                  </div>
+                  <div class="row" align="left">
+                  </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Portfolio Grid Section -->
+    <section id="portfolio" class="section_padding_bottom">
+        <div class="container">
+                <hr>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Gigs</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row n_text_title_color"><h3>Netshoes</h3></div>
+            <div class="row">
+              <div class="col-md-4 portfolio-item" align="center">
+                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="img/portfolio/netshoes.png" class="img-responsive" alt="">
+                    </a>
+              </div>
+              <div class="col-md-6 portfolio-item">
+                  <div class="row">
+                        <div class="box box-full first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4" class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs li_content" id="content_1" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">BCC</li>
+                              <li class="pointer n_project_2">Droplets and Services</li>
+                              <li class="pointer n_project_3">Integrations</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                        <div class="box box-middle first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4"><h2 style="font-size: 10px">SPRING</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs li_content" id="content_2" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">Micro Services</li>
+                              <li class="pointer n_project_2">String boot</li>
+                              <li class="pointer n_project_2">Maven</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                        <div class="box box-middle-2 first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4"><h2 style="font-size: 10px">DB</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs hide" id="content_3" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">ORACLE</li>
+                              <li class="pointer n_project_2">REDIS</li>
+                              <li class="pointer n_project_2">MONGO</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <div class="row n_text_title_color"><h4>Sumary</h4></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG
+                      Commerce 10 also responsible for developing and maintenace microservices (Spring boot and rest services)
+                      that are consumed by the store. Analyzing and fixing problems in production environment. Managed Oracle
+                      Databases. Worked on the planning and implementation of approvals, holding meetings with users to define
+                      and gather system requirements.
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <div class="row n_text_title_color"><h5 class="pointer">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                      <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p></li>
+                      <li id="n_project_2"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
+                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order. 
+                      <li id="n_project_4"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
+            <div class="row pointer">
+            	<span class="label label-primary n_background_tag">REST</span>
+            	<span class="label label-primary n_background_tag">JUnit</span>
+            	<span class="label label-primary n_background_tag">Mockito</span>
+            	<span class="label label-primary n_background_tag">Ant</span>
+            	<span class="label label-primary n_background_tag">Maven</span>
+            	<span class="label label-primary n_background_tag">Weblogic</span>
+            	<span class="label label-primary n_background_tag">Jstl</span>
+            	<span class="label label-primary n_background_tag">SOAP</span>
+            </div>
+        </div>
+        <div class="container">
+          <hr>
+            <div class="row n_text_title_color"><h3>Netshoes</h3></div>
+            <div class="row">
+              <div class="col-md-4 portfolio-item" align="center">
+                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="img/portfolio/netshoes.png" class="img-responsive" alt="">
+                    </a>
+              </div>
+              <div class="col-md-6 portfolio-item">
+                  <div class="row">
+                        <div class="box box-full first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4" class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs li_content" id="content_1" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">BCC</li>
+                              <li class="pointer n_project_2">Droplets and Services</li>
+                              <li class="pointer n_project_3">Integrations</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                        <div class="box box-middle first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4"><h2 style="font-size: 10px">SPRING</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs hide" id="content_2" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">Micro Services</li>
+                              <li class="pointer n_project_2">String boot</li>
+                              <li class="pointer n_project_2">Maven</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                        <div class="box box-middle-2 first_div">
+                          <div class="linee linee1">
+                            <span></span>
+                          </div>
+                          <div class="circlee">
+                            <div class="circle bola circle_div">
+                                <a href="#section_4"><h2 style="font-size: 10px">DB</h2></a>
+                            </div>
+                          </div>
+                          <div class="specs hide" id="content_3" style="display: none">
+                            <ul class="list">
+                              <li class="pointer n_project_1">ORACLE</li>
+                              <li class="pointer n_project_2">REDIS</li>
+                              <li class="pointer n_project_2">MONGO</li>
+                            </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <div class="row n_text_title_color"><h4>Sumary</h4></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG
+                      Commerce 10 also responsible for developing and maintenace microservices (Spring boot and rest services)
+                      that are consumed by the store. Analyzing and fixing problems in production environment. Managed Oracle
+                      Databases. Worked on the planning and implementation of approvals, holding meetings with users to define
+                      and gather system requirements.
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <div class="row n_text_title_color"><h5 class="pointer">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                      <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p></li>
+                      <li id="n_project_2"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
+                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order. 
+                      <li id="n_project_4"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
+            <div class="row pointer">
+              <span class="label label-primary n_background_tag">REST</span>
+              <span class="label label-primary n_background_tag">JUnit</span>
+              <span class="label label-primary n_background_tag">Mockito</span>
+              <span class="label label-primary n_background_tag">Ant</span>
+              <span class="label label-primary n_background_tag">Maven</span>
+              <span class="label label-primary n_background_tag">Weblogic</span>
+              <span class="label label-primary n_background_tag">Jstl</span>
+              <span class="label label-primary n_background_tag">SOAP</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="success" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>About</h2>
+                    <hr class="star-light">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-2">
+                    <p>Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional LESS stylesheets for easy customization.</p>
+                </div>
+                <div class="col-lg-4">
+                    <p>Whether you're a student looking to showcase your work, a professional looking to attract clients, or a graphic artist looking to share your projects, this template is the perfect starting point!</p>
+                </div>
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <a href="#" class="btn btn-lg btn-outline">
+                        <i class="fa fa-download"></i> Download Theme
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Contact Me</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    <form name="sentMessage" id="contactForm" novalidate>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Name</label>
+                                <input type="text" class="form-control" placeholder="Name" id="name" required data-validation-required-message="Please enter your name.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Email Address</label>
+                                <input type="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Message</label>
+                                <textarea rows="5" class="form-control" placeholder="Message" id="message" required data-validation-required-message="Please enter a message."></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-success btn-lg">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="footer-above">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col col-md-4">
+                        <h3>Location</h3>
+                        <p>3481 Melrose Place
+                            <br>Beverly Hills, CA 90210</p>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>Around the Web</h3>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-github"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>About Freelancer</h3>
+                        <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; Tomas Maiorino 2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+    <!-- Portfolio Modals -->
+    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/cake.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/circus.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/game.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/safe.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Project Title</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/submarine.png" class="img-responsive img-centered" alt="">
+                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/freelancer.min.js"></script>
+
+    <script type="text/javascript">
+     function loadiont() {
+      $(".linee1").animate({width: '55%'}, "slow");
+      $('.circle_div').addClass('circle_change');
+      $('.li_content').show('slow');
+     }
+
+     function showDiv(id, nextFunction) {
+      if (nextFunction != undefined) {
+        $(id).show('slow', nextFunction);  
+      } else {
+        $(id).show('slow');
+      }
+     }
+
+     function show(call, id) {
+      $(id).show( "slow", call);
+     }
+        $(window).load(function(){
+            $('#linha').addClass('line_animation');
+            //$('#circle').addClass('circle_change');
+            $('.line_div').addClass('line_animation');
+            //$('.circle_div').addClass('circle_change');
+            $('.line_two_div').addClass('line_two_animation');
+            $('.line_tree_div').addClass('line_tree_animation');
+            $('.line_four_div').addClass('line_four_animation');
+            //$('.first_div').addClass('active');
+            loadiont();
+
+            $('.n_project_1').click(function(){
+//              $('n_project_1').
+            });
+        })
+    </script>
+
+</body>
+
+</html>
