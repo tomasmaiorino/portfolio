@@ -222,7 +222,7 @@
     .hide {
     }
 
-   
+
     .display {}
 
     .img-border {
@@ -234,12 +234,23 @@
     .n_text_title_color {
       color: #5A2D82;
     }
+
+    .tag {
+      font-size: 13px;
+      margin-right: 10px;
+    }
     .n_background_tag {
-		background-color: #5A2D82;
+		    background-color: #5A2D82;
     }
 
     .section_padding_bottom {
       padding-bottom: 20px;
+    }
+
+    .transparent {
+      opacity:.50;
+      -moz-opacity:.50;
+      filter:alpha(opacity=50);
     }
 
 </style>
@@ -282,6 +293,7 @@
 
     <!-- Header -->
     <header>
+        <!--
         <div class="container">
             <div class="row">
                 <div class="col-lg-4">
@@ -296,7 +308,9 @@
                 </div>
             </div>
         </div>
+        -->
     </header>
+
     <!-- Portfolio Grid Section -->
     <section id="portfolio" class="section_padding_bottom">
         <div class="container">
@@ -333,7 +347,7 @@
                           <div class="specs li_content" id="content_1" style="display: none">
                             <ul class="list">
                               <li class="pointer n_project_1">BCC</li>
-                              <li class="pointer n_project_2">Droplets and Services</li>
+                              <li class="pointer n_project_2">Endeca Segments</li>
                               <li class="pointer n_project_3">Integrations</li>
                             </ul>
                           </div>
@@ -370,9 +384,9 @@
                           </div>
                           <div class="specs hide" id="content_3" style="display: none">
                             <ul class="list">
-                              <li class="pointer n_project_1">ORACLE</li>
-                              <li class="pointer n_project_2">REDIS</li>
-                              <li class="pointer n_project_2">MONGO</li>
+                              <li class="pointer n_project_1">Oracle</li>
+                              <li class="pointer n_project_2">Redis</li>
+                              <li class="pointer n_project_2">Mongo</li>
                             </ul>
                           </div>
                       </div>
@@ -391,29 +405,21 @@
                 </div>
             </div>
             <hr>
-            <div class="row n_text_title_color"><h5 class="pointer">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
-            <div class="row">
+            <div class="row n_text_title_color"><h5 class="pointer" onclick="openMainProject('.n_main_project_div_1');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+            <div class="row transparent n_main_project_div_1">
                 <div class="col-md-12">
                     <ul>
-                      <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p></li>
-                      <li id="n_project_2"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
-                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order. 
-                      <li id="n_project_4"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
+                      <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p>
+                      </li>
+                      <li id="n_project_2" style="display:none"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
+                      <li id="n_project_3" style="display:none"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
+                      <li id="n_project_4" style="display:none"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
                     </ul>
                 </div>
             </div>
             <hr>
             <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
-            <div class="row pointer">
-            	<span class="label label-primary n_background_tag">REST</span>
-            	<span class="label label-primary n_background_tag">JUnit</span>
-            	<span class="label label-primary n_background_tag">Mockito</span>
-            	<span class="label label-primary n_background_tag">Ant</span>
-            	<span class="label label-primary n_background_tag">Maven</span>
-            	<span class="label label-primary n_background_tag">Weblogic</span>
-            	<span class="label label-primary n_background_tag">Jstl</span>
-            	<span class="label label-primary n_background_tag">SOAP</span>
-            </div>
+            <div class="row pointer" id="n_div_tags"></div>
         </div>
         <div class="container">
           <hr>
@@ -507,7 +513,7 @@
                     <ul>
                       <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p></li>
                       <li id="n_project_2"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
-                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order. 
+                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
                       <li id="n_project_4"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
                     </ul>
                 </div>
@@ -515,6 +521,7 @@
             <hr>
             <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
             <div class="row pointer">
+              <!--
               <span class="label label-primary n_background_tag">REST</span>
               <span class="label label-primary n_background_tag">JUnit</span>
               <span class="label label-primary n_background_tag">Mockito</span>
@@ -523,6 +530,7 @@
               <span class="label label-primary n_background_tag">Weblogic</span>
               <span class="label label-primary n_background_tag">Jstl</span>
               <span class="label label-primary n_background_tag">SOAP</span>
+            -->
             </div>
         </div>
     </section>
@@ -890,7 +898,7 @@
     <script src="js/contact_me.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="js/freelancer.min.js"></script>
+    <script src="js/freelancer.js"></script>
 
     <script type="text/javascript">
      function loadiont() {
@@ -901,7 +909,7 @@
 
      function showDiv(id, nextFunction) {
       if (nextFunction != undefined) {
-        $(id).show('slow', nextFunction);  
+        $(id).show('slow', nextFunction);
       } else {
         $(id).show('slow');
       }
@@ -910,21 +918,38 @@
      function show(call, id) {
       $(id).show( "slow", call);
      }
-        $(window).load(function(){
-            $('#linha').addClass('line_animation');
-            //$('#circle').addClass('circle_change');
-            $('.line_div').addClass('line_animation');
-            //$('.circle_div').addClass('circle_change');
-            $('.line_two_div').addClass('line_two_animation');
-            $('.line_tree_div').addClass('line_tree_animation');
-            $('.line_four_div').addClass('line_four_animation');
-            //$('.first_div').addClass('active');
-            loadiont();
 
-            $('.n_project_1').click(function(){
+     function createTechTags(divToAppend, cssClass, tags) {
+       $.each(tags, function( index, value ) {
+         $(divToAppend).append(
+           $('<span/>', {
+            'class': 'label tag label-primary ' + cssClass,
+            'html': value
+          }));
+          console.log('appending ' + value);
+       });
+   }
+
+     function loadNTags() {
+       var tags = ["REST","JUnit","Mockito","Ant","Maven","Weblogic","Jstl","SOAP"];
+       var divCss = 'n_background_tag';
+       createTechTags('#n_div_tags', divCss, tags);
+     }
+     loadNTags();
+      $(window).load(function(){
+          $('#linha').addClass('line_animation');
+          //$('#circle').addClass('circle_change');
+          $('.line_div').addClass('line_animation');
+          //$('.circle_div').addClass('circle_change');
+          $('.line_two_div').addClass('line_two_animation');
+          $('.line_tree_div').addClass('line_tree_animation');
+          $('.line_four_div').addClass('line_four_animation');
+          //$('.first_div').addClass('active');
+          loadiont();
+          $('.n_project_1').click(function(){
 //              $('n_project_1').
-            });
-        })
+          });
+      })
     </script>
 
 </body>

@@ -19,7 +19,7 @@
     });
 
     // Closes the Responsive Menu on Menu Item Click
-    $('.navbar-collapse ul li a').click(function(){ 
+    $('.navbar-collapse ul li a').click(function(){
             $('.navbar-toggle:visible').click();
     });
 
@@ -42,3 +42,21 @@
     });
 
 })(jQuery); // End of use strict
+
+function openMainProject(divToRemoveTranparent) {
+  if ($(divToRemoveTranparent).hasClass('transparent')) {
+    $(divToRemoveTranparent).find('li').each(function(){
+      $(this).show('slow');
+    });
+    $(divToRemoveTranparent).removeClass('transparent');
+  } else {
+    $(divToRemoveTranparent).find('li').each(function(){
+      $(this).hide('slow');
+    });
+    $(divToRemoveTranparent).addClass('transparent');
+    $(divToRemoveTranparent).find('ul > :first-child').show('slow');
+  }
+
+
+
+}
