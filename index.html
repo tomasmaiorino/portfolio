@@ -348,8 +348,8 @@
                           </div>
                           <div class="circlee">
                             <div class="circle bola circle_div pointer">
-                                <a  onclick="showProjects('.n_main_project_div', [1,2,3], 'n_destak_color_1', '.n_main_projects_title')"
-                                class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
+                                <a  href="#"
+                                class="n_projects" id="n_first_tech"><h2 style="font-size: 10px">ATG</h2></a>
                             </div>
                           </div>
                           <div class="specs li_content" id="content_1" style="display: none">
@@ -967,6 +967,12 @@
           loadiont();
           $('.n_project_1').click(function(){
 //              $('n_project_1').
+          });
+          $('#n_first_tech').focusin(function(){
+            showProjects('.n_main_project_div', [1,2,3], 'n_destak_color_1', '.n_main_projects_title')
+          });
+          $('#n_first_tech').focusout(function(){
+            resetColors($('.n_main_project_div').find('li'));
           });
       })
     </script>
