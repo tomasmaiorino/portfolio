@@ -212,18 +212,14 @@
       width: 55%;
     }
 
+    .box.active .smaller_line {
+      width: 35%;
+    }
    .box ul {
       list-style: none;
     }
 
-    .circle_div {
-    }
-
-    .hide {
-    }
-
-
-    .display {}
+    .circle_div {}
 
     .img-border {
       border-radius: 25px;
@@ -234,24 +230,35 @@
     .n_text_title_color {
       color: #5A2D82;
     }
-
     .tag {
       font-size: 13px;
       margin-right: 10px;
     }
+    .tag:hover {
+      opacity: 0.8;
+    }
     .n_background_tag {
 		    background-color: #5A2D82;
     }
-
     .section_padding_bottom {
       padding-bottom: 20px;
     }
-
     .transparent {
       opacity:.50;
       -moz-opacity:.50;
       filter:alpha(opacity=50);
     }
+    .n_destak_color_1 {
+      color: #5A2D82;
+    }
+
+    .n_destak_color_2 {
+      color: #b849f4;
+    }
+    .color-black {
+      color: black;
+    }
+
 
 </style>
 </head>
@@ -266,7 +273,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="#page-top">TM</a>
+                <a class="navbar-brand" href="#page-top"><span stye="color: white" class="fa fa-code"/></a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -340,8 +347,9 @@
                             <span></span>
                           </div>
                           <div class="circlee">
-                            <div class="circle bola circle_div">
-                                <a href="#section_4" class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
+                            <div class="circle bola circle_div pointer">
+                                <a  onclick="showProjects('.n_main_project_div', [1,2,3], 'n_destak_color_1', '.n_main_projects_title')"
+                                class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
                             </div>
                           </div>
                           <div class="specs li_content" id="content_1" style="display: none">
@@ -354,13 +362,14 @@
                       </div>
                   </div>
                   <div class="row">
-                        <div class="box box-middle first_div">
+                        <div class="box box-full first_div">
                           <div class="linee linee1">
                             <span></span>
                           </div>
                           <div class="circlee">
-                            <div class="circle bola circle_div">
-                                <a href="#section_4"><h2 style="font-size: 10px">SPRING</h2></a>
+                            <div class="circle bola circle_div pointer">
+                                <a  onclick="showProjects('.n_main_project_div', [1], 'n_destak_color_2', '.n_main_projects_title')">
+                                  <h2 style="font-size: 10px">SPRING</h2></a>
                             </div>
                           </div>
                           <div class="specs li_content" id="content_2" style="display: none">
@@ -382,7 +391,7 @@
                                 <a href="#section_4"><h2 style="font-size: 10px">DB</h2></a>
                             </div>
                           </div>
-                          <div class="specs hide" id="content_3" style="display: none">
+                          <div class="specs li_content" id="content_3" style="display: none">
                             <ul class="list">
                               <li class="pointer n_project_1">Oracle</li>
                               <li class="pointer n_project_2">Redis</li>
@@ -405,8 +414,9 @@
                 </div>
             </div>
             <hr>
-            <div class="row n_text_title_color"><h5 class="pointer" onclick="openMainProject('.n_main_project_div_1');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
-            <div class="row transparent n_main_project_div_1">
+            <div class="row n_text_title_color n_main_projects_title"><h5 class="pointer" style="text-transform: capitalize;"
+               onclick="openMainProject('.n_main_project_div');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+            <div class="row transparent n_main_project_div">
                 <div class="col-md-12">
                     <ul>
                       <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p>
@@ -421,6 +431,7 @@
             <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
             <div class="row pointer" id="n_div_tags"></div>
         </div>
+        <!--
         <div class="container">
           <hr>
             <div class="row n_text_title_color"><h3>Netshoes</h3></div>
@@ -520,19 +531,9 @@
             </div>
             <hr>
             <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
-            <div class="row pointer">
-              <!--
-              <span class="label label-primary n_background_tag">REST</span>
-              <span class="label label-primary n_background_tag">JUnit</span>
-              <span class="label label-primary n_background_tag">Mockito</span>
-              <span class="label label-primary n_background_tag">Ant</span>
-              <span class="label label-primary n_background_tag">Maven</span>
-              <span class="label label-primary n_background_tag">Weblogic</span>
-              <span class="label label-primary n_background_tag">Jstl</span>
-              <span class="label label-primary n_background_tag">SOAP</span>
-            -->
-            </div>
+            <div class="row pointer"></div>
         </div>
+      -->
     </section>
 
     <!-- About Section -->
@@ -615,17 +616,16 @@
                 <div class="row">
                     <div class="footer-col col-md-4">
                         <h3>Location</h3>
-                        <p>3481 Melrose Place
-                            <br>Beverly Hills, CA 90210</p>
+                        <p>Brazil, São Paulo</p>
                     </div>
                     <div class="footer-col col-md-4">
                         <h3>Around the Web</h3>
                         <ul class="list-inline">
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                                <a href="https://www.facebook.com/tomas.maiorino" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-github"></i></a>
+                                <a href="https://github.com/tomasmaiorino" class="btn-social btn-outline"><i class="fa fa-fw fa-github"></i></a>
                             </li>
                             <li>
                                 <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
@@ -915,8 +915,27 @@
       }
      }
 
+     function scrollTo(idDiv) {
+     		$('html,body').animate({
+     			scrollTop : $(idDiv).offset().top}, 'slow');
+     	}
+
      function show(call, id) {
       $(id).show( "slow", call);
+     }
+
+     function showProjects(mainDiv, projects, destakClass, divScrool) {
+       scrollTo(divScrool) ;
+       openMainProject(mainDiv, true);
+       $(mainDiv).find('li').each(function(index){
+         var liInstace = $(this);
+         $.each(projects, function (i, val) {
+           if (index == val) {
+             $(liInstace).removeClass('color-black');
+             $(liInstace).addClass(destakClass);
+           }
+         });
+       });
      }
 
      function createTechTags(divToAppend, cssClass, tags) {

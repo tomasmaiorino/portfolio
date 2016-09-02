@@ -43,7 +43,23 @@
 
 })(jQuery); // End of use strict
 
-function openMainProject(divToRemoveTranparent) {
+
+function resetColors(elem) {
+  $.each(elem, function(i, val) {
+    $(val).attr('class', '');
+    $(val).addClass('color-black');
+  });
+}
+
+function openMainProject(divToRemoveTranparent, show) {
+  resetColors($(divToRemoveTranparent).find('li'));
+  if (show != undefined && show === true) {
+    $(divToRemoveTranparent).find('li').each(function(){
+      $(this).show('slow');
+    });
+    $(divToRemoveTranparent).removeClass('transparent');
+    return;
+  }
   if ($(divToRemoveTranparent).hasClass('transparent')) {
     $(divToRemoveTranparent).find('li').each(function(){
       $(this).show('slow');
