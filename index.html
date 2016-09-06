@@ -88,7 +88,6 @@
   transform: scale(.9);
 }
 
-
 .circle_change {
     color: #fff;
 }
@@ -97,8 +96,8 @@
   color: #fff;
 }
 
-
-.circle_change::after {color: #fff;
+.circle_change::after {
+  color: #fff;
   background: #5c5eae;
   border-radius: 50%;
   -webkit-transform: scale(.9);
@@ -125,6 +124,85 @@
 }
 
 .circle:hover h2 {
+  color: #fff;
+}
+
+/* V CIRCLE*/
+.v_circle {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+  border: 2px solid #333333;
+  color: #333333;
+  line-height: 50px;
+  overflow: hidden;
+}
+
+.v_circle:hover::after {
+  background: #333333;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+.v_circle_change::after {
+  color: #fff;
+  background: #333333;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+
+.v_circle_change {
+    color: #fff;
+}
+
+.v_circle_change h2{
+  color: #fff;
+}
+
+.v_circle h2 small {
+  color: #333333;
+}
+.v_circle:hover h2 {
+  color: #fff;
+}
+/*E CIRCLE*/
+.e_circle {
+  position: relative;
+  z-index: 2;
+  background-color: #fff;
+  border: 2px solid #D00A0B;
+  color: #D00A0B;
+  line-height: 50px;
+  overflow: hidden;
+}
+
+.e_circle:hover::after {
+  background: #D00A0B;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+.e_circle_change::after {
+  color: #fff;
+  background: #D00A0B;
+  border-radius: 50%;
+  -webkit-transform: scale(.9);
+  transform: scale(.9);
+}
+
+.e_circle_change {
+    color: #fff;
+}
+
+.e_circle_change h2{
+  color: #fff;
+}
+
+.e_circle h2 small {
+  color: #D00A0B;
+}
+.e_circle:hover h2 {
   color: #fff;
 }
 
@@ -188,6 +266,35 @@
       */
     }
 
+
+    .box .v_line {
+        width: 0;
+        height: 2px;
+        width: 0;
+        display: inline-block;
+        background: #333333;
+        /*
+        -webkit-transition: width 2s ease-out;
+        -moz-transition: width 2s ease-out;
+        -ms-transition: width 2s ease-out;
+        -o-transition: width 2s ease-out;
+        transition: width 2s ease-out;
+        */
+      }
+      .box .e_line {
+          width: 0;
+          height: 2px;
+          width: 0;
+          display: inline-block;
+          background: #D00A0B;
+          /*
+          -webkit-transition: width 2s ease-out;
+          -moz-transition: width 2s ease-out;
+          -ms-transition: width 2s ease-out;
+          -o-transition: width 2s ease-out;
+          transition: width 2s ease-out;
+          */
+        }
     .box .circlee {
       width: 10%;
       text-align: center;
@@ -220,6 +327,8 @@
     }
 
     .circle_div {}
+    .v_circle_div {}
+    .e_circle_div {}
 
     .img-border {
       border-radius: 25px;
@@ -230,6 +339,12 @@
     .n_text_title_color {
       color: #5A2D82;
     }
+    .v_text_title_color {
+      color: #333333;
+    }
+    .e_text_title_color {
+      color: #D00A0B;
+    }
     .tag {
       font-size: 13px;
       margin-right: 10px;
@@ -238,10 +353,17 @@
       opacity: 0.8;
     }
     .n_background_tag {
-		    background-color: #5A2D82;
+		  background-color: #5A2D82;
+    }
+    .e_background_tag {
+      background-color: #D00A0B;
+    }
+    .v_background_tag {
+      background-color: #333333;
     }
     .section_padding_bottom {
       padding-bottom: 20px;
+      padding: 10px 0;
     }
     .transparent {
       opacity:.50;
@@ -258,8 +380,30 @@
     .color-black {
       color: black;
     }
-
-
+    .color-text {
+      color: #333;
+    }
+    .v_color {
+      color: #333333;
+    }
+    .v_color:hover {
+      color: #333333;
+    }
+    .e_color {
+      color: #D00A0B;
+    }
+    .e_color:hover {
+      color: #D00A0B;
+    }
+    .sumary {
+      font-size: 9px;
+    }
+    .main_projects {
+      font-size: 9px;
+    }
+    .gigs-space {
+      margin-top: 50px;
+    }
 </style>
 </head>
 
@@ -300,11 +444,10 @@
 
     <!-- Header -->
     <header>
-        <!--
         <div class="container">
             <div class="row">
                 <div class="col-lg-4">
-                  <img src="img/portfolio/prog.jpg" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
+                  <img src="img/portfolio/prog_2.jpg" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
                 </div>
                 <div class="col-lg-8">
                   <div class="row" align="left">
@@ -315,20 +458,25 @@
                 </div>
             </div>
         </div>
-        -->
     </header>
 
     <!-- Portfolio Grid Section -->
     <section id="portfolio" class="section_padding_bottom">
         <div class="container">
-                <hr>
+            <hr>
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2>Gigs</h2>
                     <hr class="star-primary">
                 </div>
             </div>
-            <div class="row n_text_title_color"><h3>Netshoes</h3></div>
+            <!-- Netshoes -->
+            <div class="row n_text_title_color">
+              <div class="col-md-2  n_text_title_color"><h3>Netshoes</h3>
+              </div>
+              <div class="col-md-10 n_text_title_color" style="vertical-align: middle;"> 12/16/2015 - Current
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-4 portfolio-item" align="center">
                     <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
@@ -402,40 +550,43 @@
                   </div>
               </div>
           </div>
-        <div class="row n_text_title_color"><h4>Sumary</h4></div>
-            <div class="row">
-                <div class="col-md-12">
-                    <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG
-                      Commerce 10 also responsible for developing and maintenace microservices (Spring boot and rest services)
-                      that are consumed by the store. Analyzing and fixing problems in production environment. Managed Oracle
-                      Databases. Worked on the planning and implementation of approvals, holding meetings with users to define
-                      and gather system requirements.
-                    </p>
-                </div>
+          <div class="row n_text_title_color"><h4>Sumary</h4></div>
+          <div class="row sumary">
+            <div class="col-md-12">
+                <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG
+                  Commerce 10 also responsible for developing and maintenace microservices (Spring boot and rest services)
+                  that are consumed by the store. Analyzing and fixing problems in production environment. Managed Oracle
+                  Databases. Worked on the planning and implementation of approvals, holding meetings with users to define
+                  and gather system requirements.
+                </p>
             </div>
-            <hr>
-            <div class="row n_text_title_color n_main_projects_title"><h5 class="pointer" style="text-transform: capitalize;"
-               onclick="openMainProject('.n_main_project_div');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
-            <div class="row transparent n_main_project_div">
-                <div class="col-md-12">
-                    <ul>
-                      <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p>
-                      </li>
-                      <li id="n_project_2" style="display:none"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
-                      <li id="n_project_3" style="display:none"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
-                      <li id="n_project_4" style="display:none"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-            <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
-            <div class="row pointer" id="n_div_tags"></div>
-        </div>
-        <!--
-        <div class="container">
+          </div>
           <hr>
-            <div class="row n_text_title_color"><h3>Netshoes</h3></div>
-            <div class="row">
+          <div class="row n_text_title_color n_main_projects_title"><h5 class="pointer" style="text-transform: capitalize;"
+               onclick="openMainProject('.n_main_project_div');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+          <div class="row transparent n_main_project_div">
+            <div class="col-md-12 main_projects">
+                <ul>
+                  <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p>
+                  </li>
+                  <li id="n_project_2" style="display:none"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
+                  <li id="n_project_3" style="display:none"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
+                  <li id="n_project_4" style="display:none"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
+                </ul>
+            </div>
+          </div>
+          <hr>
+          <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
+          <div class="row pointer" id="n_div_tags"></div>
+          <!-- Netshoes -->
+          <!-- Vivara/Etna -->
+          <div class="row n_text_title_color gigs-space">
+            <div class="col-md-2  v_text_title_color"><h5><a href="https://www.vivara.com.br" class="v_color" target="_blank" >Vivara </a>/
+              <a href="https://www,etna.com.br" target="_blank" ><span class="e_color"> Etna</span></a></h5>
+            </div>
+            <div class="col-md-10 v_text_title_color" style="vertical-align: middle;"> 05/16/2014 - 12/16/2015</div>
+          </div>
+          <div class="row">
               <div class="col-md-4 portfolio-item" align="center">
                     <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
                         <div class="caption">
@@ -448,92 +599,90 @@
               </div>
               <div class="col-md-6 portfolio-item">
                   <div class="row">
-                        <div class="box box-full first_div">
-                          <div class="linee linee1">
-                            <span></span>
-                          </div>
-                          <div class="circlee">
-                            <div class="circle bola circle_div">
-                                <a href="#section_4" class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
-                            </div>
-                          </div>
-                          <div class="specs li_content" id="content_1" style="display: none">
-                            <ul class="list">
-                              <li class="pointer n_project_1">BCC</li>
-                              <li class="pointer n_project_2">Droplets and Services</li>
-                              <li class="pointer n_project_3">Integrations</li>
-                            </ul>
-                          </div>
+                    <div class="box box-full first_div">
+                      <div class="linee v_line linee1">
+                        <span></span>
                       </div>
+                      <div class="circlee">
+                        <div class="circle v_circle bola v_circle_div pointer">
+                          <a onclick="showProjects('.n_main_project_div', [1,2,3], 'n_destak_color_1', '.n_main_projects_title')"
+                                class="n_projects"><h2 style="font-size: 10px">ATG</h2></a>
+                        </div>
+                      </div>
+                      <div class="specs li_content v_color" id="content_1" style="display: none">
+                        <ul class="list">
+                          <li class="pointer v_project_1">BCC</li>
+                          <li class="pointer v_project_2">Endeca Segments</li>
+                          <li class="pointer v_project_3">Integrations</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                   <div class="row">
-                        <div class="box box-middle first_div">
-                          <div class="linee linee1">
+                        <div class="box box-full first_div">
+                          <div class="e_line linee1">
                             <span></span>
                           </div>
                           <div class="circlee">
-                            <div class="circle bola circle_div">
-                                <a href="#section_4"><h2 style="font-size: 10px">SPRING</h2></a>
+                            <div class="circle e_circle bola e_circle_div pointer">
+                                <a  onclick="showProjects('.n_main_project_div', [1], 'n_destak_color_2', '.n_main_projects_title')">
+                                  <h2 style="font-size: 10px">SPRING</h2></a>
                             </div>
                           </div>
-                          <div class="specs hide" id="content_2" style="display: none">
+                          <div class="specs li_content e_color" id="content_2" style="display: none">
                             <ul class="list">
-                              <li class="pointer n_project_1">Micro Services</li>
-                              <li class="pointer n_project_2">String boot</li>
-                              <li class="pointer n_project_2">Maven</li>
+                              <li class="pointer e_project_1">Micro Services</li>
+                              <li class="pointer e_project_2">String boot</li>
+                              <li class="pointer e_project_2">Maven</li>
                             </ul>
                           </div>
                       </div>
                   </div>
                   <div class="row">
                         <div class="box box-middle-2 first_div">
-                          <div class="linee linee1">
+                          <div class="v_line linee1">
                             <span></span>
                           </div>
                           <div class="circlee">
-                            <div class="circle bola circle_div">
+                            <div class="circle v_circle bola v_circle_div pointer">
                                 <a href="#section_4"><h2 style="font-size: 10px">DB</h2></a>
                             </div>
                           </div>
-                          <div class="specs hide" id="content_3" style="display: none">
+                          <div class="specs li_content v_color" id="content_3" style="display: none">
                             <ul class="list">
-                              <li class="pointer n_project_1">ORACLE</li>
-                              <li class="pointer n_project_2">REDIS</li>
-                              <li class="pointer n_project_2">MONGO</li>
+                              <li class="pointer v_project_1">Oracle</li>
+                              <li class="pointer v_project_2">Redis</li>
+                              <li class="pointer v_project_2">Mongo</li>
                             </ul>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
-        <div class="row n_text_title_color"><h4>Sumary</h4></div>
-            <div class="row">
+          <div class="row v_text_title_color"><h4>Sumary</h4></div>
+            <div class="row sumary v_text_title_color">
                 <div class="col-md-12">
-                    <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG
-                      Commerce 10 also responsible for developing and maintenace microservices (Spring boot and rest services)
-                      that are consumed by the store. Analyzing and fixing problems in production environment. Managed Oracle
-                      Databases. Worked on the planning and implementation of approvals, holding meetings with users to define
-                      and gather system requirements.
+                    <p>Responsible for developing new features and maintenance for a brasilian ecommerce using Oracle ATG Commerce 11 also responsible for developing integrations services between ATG and client's ERP (webservices soap/rest). Analyzing and fixing problems in production environment. Managed Oracle Databases.
+                        Worked on the planning and implementation of approvals, holding meetings with users to define and gather system requirements.
                     </p>
                 </div>
             </div>
             <hr>
-            <div class="row n_text_title_color"><h5 class="pointer">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
-            <div class="row">
-                <div class="col-md-12">
+            <div class="row e_text_title_color e_main_projects_title"><h5 class="pointer" style="text-transform: capitalize;"
+               onclick="openMainProject('.v_main_project_div');">Main Projects <span class="glyphicon glyphicon-plus"></span></h5></div>
+            <div class="row transparent v_text_title_color v_main_project_div">
+                <div class="col-md-12 main_projects">
                     <ul>
                       <li id="n_project_1"><p>Change the default ATG's recover password workflow to return a link to user change his password instead automaticly change the password.</p></li>
-                      <li id="n_project_2"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
-                      <li id="n_project_3"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
-                      <li id="n_project_4"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
+                      <li id="n_project_2" style="display:none"><p>Send some order information to an external service during payment pipeline through JMS (JRabbit) integration.</p></li>
+                      <li id="n_project_3" style="display:none"><p>Update user's contact information in the confirmation page in order to help to contact the user if some problem happens with his order.
+                      <li id="n_project_4" style="display:none"><p>Use BCC's Content Group to choose which product data will be send to the external service.</p></li>
                     </ul>
                 </div>
             </div>
             <hr>
-            <div class="row n_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
-            <div class="row pointer"></div>
-        </div>
-      -->
+            <div class="row v_text_title_color"><h6 class="pointer">Another Technologies</h6></div>
+            <div class="row pointer" id="v_div_tags"></div>
     </section>
 
     <!-- About Section -->
@@ -547,10 +696,10 @@
             </div>
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-2">
-                    <p>Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional LESS stylesheets for easy customization.</p>
+                    <p>I'm also have a music degree, only if you want, you can see me playing my bass guitar at my graduate concert just <a style="color: white" href="https://www.youtube.com/watch?v=UkEP5RgO6ig" target="_blank">click here.</a></p>
                 </div>
                 <div class="col-lg-4">
-                    <p>Whether you're a student looking to showcase your work, a professional looking to attract clients, or a graphic artist looking to share your projects, this template is the perfect starting point!</p>
+                    <p>I also like to study another programming languages. You can find out a litle card game made using Ruby On Rails at this <a href="https://polar-sea-96842.herokuapp.com/" target="_blank" style="color: white" >link.</a></p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <a href="#" class="btn btn-lg btn-outline">
@@ -622,16 +771,16 @@
                         <h3>Around the Web</h3>
                         <ul class="list-inline">
                             <li>
-                                <a href="https://www.facebook.com/tomas.maiorino" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                                <a href="https://www.facebook.com/tomas.maiorino" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
                             </li>
                             <li>
-                                <a href="https://github.com/tomasmaiorino" class="btn-social btn-outline"><i class="fa fa-fw fa-github"></i></a>
+                                <a href="https://github.com/tomasmaiorino" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-github"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                                <a href="#" class="btn-social btn-outline" target="_blank" ><i class="fa fa-fw fa-twitter"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                                <a href="https://www.linkedin.com/in/tomas-maiorino-67971b19" target="_blank" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -660,230 +809,6 @@
         </a>
     </div>
 
-    <!-- Portfolio Modals -->
-    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/cake.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/circus.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/game.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/safe.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/submarine.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
 
@@ -904,6 +829,8 @@
      function loadiont() {
       $(".linee1").animate({width: '55%'}, "slow");
       $('.circle_div').addClass('circle_change');
+      $('.v_circle_div').addClass('v_circle_change');
+      $('.e_circle_div').addClass('e_circle_change');
       $('.li_content').show('slow');
      }
 
@@ -931,7 +858,7 @@
          var liInstace = $(this);
          $.each(projects, function (i, val) {
            if (index == val) {
-             $(liInstace).removeClass('color-black');
+             $(liInstace).removeClass('color-text');
              $(liInstace).addClass(destakClass);
            }
          });
@@ -953,6 +880,13 @@
        var tags = ["REST","JUnit","Mockito","Ant","Maven","Weblogic","Jstl","SOAP"];
        var divCss = 'n_background_tag';
        createTechTags('#n_div_tags', divCss, tags);
+
+       divCss = 'v_background_tag';
+       tags = ["SOAP","SOAP UI","Ant","Weblogic"]
+       createTechTags('#v_div_tags', divCss, tags);
+       tags = ["Jstl","Scriplet", "Oracle Queries", "OBIEE Reports"];
+       divCss = 'e_background_tag';
+       createTechTags('#v_div_tags', divCss, tags);
      }
      loadNTags();
       $(window).load(function(){

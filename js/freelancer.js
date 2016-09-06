@@ -47,7 +47,7 @@
 function resetColors(elem) {
   $.each(elem, function(i, val) {
     $(val).attr('class', '');
-    $(val).addClass('color-black');
+    $(val).addClass('color-text');
   });
 }
 
