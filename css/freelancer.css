@@ -76,7 +76,7 @@ hr.comp-primary {
 }
 hr.comp-light:after,
 hr.comp-primary:after {
-  content: "\f109";
+
   font-family: FontAwesome;
   display: inline-block;
   position: relative;
