@@ -39,10 +39,6 @@
         }).on("blur", ".floating-label-form-group", function() {
             $(this).removeClass("floating-label-form-group-with-focus");
         });
-        $("[rel=tooltip]").tooltip({html:true});
-
-        var content= "<ul class='ul_n_project_1'><li>Developed all the integrations between ecommerce (ATG 11) and client's ERP. It was cover the  It was developed using ATG 11, RQL's, BCC projects workflow and Soap Webservices.</li></ul>";
-        $('#n_project_1').attr('data-original-title', content);
     });
 
 })(jQuery); // End of use strict
