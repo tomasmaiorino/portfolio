@@ -22,7 +22,7 @@ $(function() {
             }
 
             $.ajax({
-                url: "http://localhost:3000/api/v1/sendEmail",
+                url: "http://boiling-stream-89308.herokuapp.com/api/v1/sendEmail",
                 type: "POST",
                 crossDomain: true,
                 dataType: "json",
@@ -31,7 +31,7 @@ $(function() {
                     sender_email: email,
                     message: message,
                     subject: 'Contact',
-                    token: '112211'
+                    token: '4bcwqzoi4gng4'
                 },
                 cache: false,
                 success: function() {
