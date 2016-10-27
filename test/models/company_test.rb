@@ -79,5 +79,5 @@ class CompanyTest < ActiveSupport::TestCase
     assert company.valid?
     assert company.save
 
-  end
+  end  
 end

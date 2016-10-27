@@ -16,9 +16,9 @@ class CreateCompanies < ActiveRecord::Migration[5.0]
       t.belongs_to :company, index: true
     end
 
-    create_table :teck_tags_projects, id: false do |t|
+    create_table :projects_tech_tags, id: false do |t|
       t.belongs_to :project, index: true
-      t.belongs_to :teck_tag, index: true
+      t.belongs_to :tech_tag, index: true
     end
 
     create_table :companies_skills, id: false do |t|

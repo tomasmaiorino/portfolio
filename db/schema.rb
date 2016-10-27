@@ -33,6 +33,20 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.index ["client_id"], name: "index_companies_on_client_id"
   end
 
+  create_table "companies_projects", id: false, force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "company_id"
+    t.index ["company_id"], name: "index_companies_projects_on_company_id"
+    t.index ["project_id"], name: "index_companies_projects_on_project_id"
+  end
+
+  create_table "companies_skills", id: false, force: :cascade do |t|
+    t.integer "skill_id"
+    t.integer "company_id"
+    t.index ["company_id"], name: "index_companies_skills_on_company_id"
+    t.index ["skill_id"], name: "index_companies_skills_on_skill_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string   "name"
     t.string   "img"
@@ -46,6 +60,13 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.datetime "project_date"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+  end
+
+  create_table "projects_tech_tags", id: false, force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "tech_tag_id"
+    t.index ["project_id"], name: "index_projects_tech_tags_on_project_id"
+    t.index ["tech_tag_id"], name: "index_projects_tech_tags_on_tech_tag_id"
   end
 
   create_table "skills", force: :cascade do |t|
