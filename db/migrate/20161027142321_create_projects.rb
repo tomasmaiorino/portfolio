@@ -8,6 +8,7 @@ class CreateProjects < ActiveRecord::Migration[5.0]
       t.text :description
       t.text :improvements
       t.string :time_spent
+      t.string :language, :default => 'en'
       t.boolean :active, :default => false
       t.boolean :future_project, :default => false
       t.timestamp :project_date

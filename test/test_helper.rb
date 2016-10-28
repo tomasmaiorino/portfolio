@@ -45,19 +45,60 @@ class ActiveSupport::TestCase
     return skill
   end
 
-  def get_valid_project(create = false)
-    project = Project.new
-    project.name = 'integration'
-    project.img = 'integration.png'
-    project.link_img = 'http://localhost/img.png'
-    project.summary = 'Integration between systems'
-    project.project_date = Time.now
-    project.time_spent = '2 weeks'
-    project.save unless !create
-    return project
+  def get_valid_project(create = false, qt = 1)
+    if (qt == 1)
+      project = Project.new
+      project.name = 'integration'
+      project.img = 'integration.png'
+      project.link_img = 'http://localhost/img.png'
+      project.summary = 'Integration between systems'
+      project.project_date = Time.now
+      project.time_spent = '2 weeks'
+      project.save unless !create
+      return project
+    else
+      temp = []
+      (1..qt).each{|t|
+        project = Project.new
+        project.name = "integration #{t}"
+        project.img = 'integration.png'
+        project.link_img = 'http://localhost/img.png'
+        project.summary = "Integration between systems #{t}"
+        project.project_date = Time.now
+        project.time_spent = '2 weeks'
+        project.save unless !create
+        temp << project
+      }
+      return temp
+    end
   end
 
-  def get_valid_company (create = false, client = nil)
+  def get_valid_company (create = false, client = nil, qt = 1)
+    if (qt == 1)
+      company = Company.new
+      company.name = 'monsters'
+      company.token = 'xxss12'
+      company.active = true
+      company.client = client
+      company.email = 'monsters@monsters.com'
+      company.manager_name = 'David'
+      company.save unless !create
+      return company
+    else
+      temp = []
+      (1..qt).each{|n|
+        company = Company.new
+        company.name = "monsters #{n}"
+        company.token = "token#{n}"
+        company.active = true
+        company.client = client
+        company.email = "monsters#{n}@monsters.com"
+        company.manager_name = "David #{n}"
+        company.save unless !create
+        temp << company
+      }
+      return temp
+    end
     company = Company.new
     company.name = 'monsters'
     company.token = 'xxss12'
@@ -68,4 +109,19 @@ class ActiveSupport::TestCase
     company.save unless !create
     return company
   end
+
+  def get_full_project(create = false)
+
+    client = get_valid_client(true)
+
+    project = get_valid_project(false)
+    companies = get_valid_company(true, client, 2)
+    project.companies = companies
+
+    tech_tags = get_valid_teck_tag(true, ['JAVA', 'JSP', 'JQUERY'])
+    project.tech_tags = tech_tags
+    project.save unless !create
+    return project
+  end
+
 end

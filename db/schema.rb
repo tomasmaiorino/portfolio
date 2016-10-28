@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.text     "description"
     t.text     "improvements"
     t.string   "time_spent"
+    t.string   "language",       default: "en"
     t.boolean  "active",         default: false
     t.boolean  "future_project", default: false
     t.datetime "project_date"
