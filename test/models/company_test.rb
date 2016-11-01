@@ -79,5 +79,30 @@ class CompanyTest < ActiveSupport::TestCase
     assert company.valid?
     assert company.save
 
-  end  
+  end
+
+  test "should_return_company_by_token" do
+    client = get_valid_client(true)
+    company = get_valid_company(true, client)
+    company_temp = Company.find_by(:token => company.token)
+    assert_not_nil company_temp
+    assert_equal company.id, company_temp.id
+    assert_equal company.token, company_temp.token
+    assert_equal company.client.id, company_temp.client.id
+  end
+
+  test "should_return_company_by_client" do
+    Company.delete_all
+    client = get_valid_client(true)
+    company = get_valid_company(true, client, 2)
+    companies = Company.where(:client => client)
+    assert_not_nil companies
+    assert_not_empty companies
+    assert_equal 2, companies.size
+    assert_equal company[0].token, companies[0].token
+    assert_equal company[1].token, companies[1].token
+    assert_equal company[0].client.id, companies[0].client.id
+    assert_equal company[0].client.id, companies[1].client.id
+  end
+
 end
