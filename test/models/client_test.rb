@@ -21,6 +21,26 @@ class ClientTest < ActiveSupport::TestCase
     assert !client.save
   end
 
+  test "should_not_update_client" do
+
+    client = Client.new
+    client.name = 'monsters'
+    client.token = 'xxss11'
+    assert client.valid?
+    assert client.save
+
+    client_2 = Client.new
+    client_2.name = 'monsters 2'
+    client_2.token = 'xxss112'
+    assert client_2.valid?
+    assert client_2.save
+
+    client_2 = Client.find_by(:token => client_2.token)
+    client_2.token = 'xxss11'
+    assert !client_2.valid?
+    assert !client_2.save
+  end
+
   test "should_not_save_client_passing_duplicate_token" do
     client = Client.new
     client.name = 'monsters'
@@ -78,6 +98,5 @@ class ClientTest < ActiveSupport::TestCase
     assert_equal company_2.id, companies[1].id
 
   end
-
 
 end

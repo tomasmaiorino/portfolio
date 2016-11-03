@@ -22,9 +22,10 @@ class BaseApiController < ApplicationController
     Rails.logger.debug "Request body #{request.body.read}"
     Rails.logger.debug "Request params #{request.params}"
     if !request.params.except(:action, :controller).nil? && !request.params.except(:action, :controller).empty?
-      Rails.logger.debug "Valid request->"
+      Rails.logger.debug "Valid request :)"
       Rails.logger.debug "Parsing json ->"
       @json = request.params.except(:action, :controller).to_json
+			Rails.logger.debug "Parsing json <-"
     end
   end
 end

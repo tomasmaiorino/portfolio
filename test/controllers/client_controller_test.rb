@@ -16,77 +16,113 @@ class ClientControllerTest < ActionDispatch::IntegrationTest
     params = @valid_params
     post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
     assert_response :success
-    #assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-  	message = JSON.parse(message)
-  	assert message.has_key?("id")
-    assert_not_nil message['id']
+    message = valid_success_request(response, {'id' => ''})
+
   end
 
   test "should return invalid client no name" do
     params = @invalid_params_no_name
     post '/api/v1/client', params
 
-    assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-  	message = JSON.parse(message)
-  	assert message.has_key?("name")
-    assert_not_nil message['name']
+    valid_bad_request(response, {'name' => ''})
+
   end
 
   test "should return invalid client no token" do
     params = @invalid_params_no_token
     post '/api/v1/client', params
 
-    assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-    message = JSON.parse(message)
-    assert message.has_key?("token")
-    assert_not_nil message['token']
+    valid_bad_request(response, {'token' => ''})
   end
 
   test "should return invalid client no required values" do
     params = @invalid_params_no_required_values
     post '/api/v1/client', params
 
-    assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-    message = JSON.parse(message)
-    assert message.has_key?("token")
-    assert_not_nil message['token']
-    assert message.has_key?("name")
-    assert_not_nil message['name']
-  end
+    valid_bad_request(response, {'token' => '', 'name' => ''})
+end
 
   test "should update client" do
+    Client.delete_all
     params = @valid_params
     post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
-    assert_response :success
-    #assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-    message = JSON.parse(message)
-    assert message.has_key?("id")
-    assert_not_nil message['id']
+
+    message = valid_success_request(response, {'id' => ''})
+
     old_id = message['id']
 
-    params['name'] = 'New Name'
+    params = {:id => old_id, :name => 'tomas updated', :active => true, :token => 'xxffwf', :security_permissions => 1}
 
-    post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
-    assert_response :success
-    #assert_response :bad_request
-    assert_not_nil message
-    message = JSON.parse(message)
-    assert message.has_key?("id")
-    assert_not_nil message['id']
+    response.body = nil
+    message = nil
+
+    put '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+
+    message = valid_success_request(response, {'id' => ''})
     assert_equal old_id, message['id']
   end
 
+  test "should not update client not passing id" do
+    Client.delete_all
+    params = @valid_params
+    post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+    valid_success_request(response, {'id' => ''})
 
+    params = {:name => 'tomas new', :active => true, :token => 'xxffwf', :security_permissions => 1}
+    response.body = nil
+    message = nil
+    put '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+
+    #valid_bad_request(response, {'token' => 'duplicate token'})
+    valid_bad_request(response, {'id' => 'Field required'})
+
+  end
+
+  test "should not update client passing duplicate token" do
+    Client.delete_all
+    #creating first client
+    params = @valid_params
+    post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+    valid_success_request(response, {'id' => ''}, true)
+
+    response.body = nil
+    message = nil
+    #second user
+    params = {:name => 'tomas new', :active => true, :token => 'xxffwf2', :security_permissions => 1}
+    post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+
+    message = valid_success_request(response, {'id' => ''})
+
+    params = {:id => message['id'], :name => 'tomas updated', :active => true, :token => 'xxffwf', :security_permissions => 1}
+    put '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+
+    valid_bad_request(response, {'token' => 'duplicate token'})
+
+  end
+
+  test "should_find_client_by_id" do
+    Client.delete_all
+    #creating first client
+    params = @valid_params
+    post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
+    message = valid_success_request(response, {'id' => ''}, true)
+    old_id = message['id']
+    message = nil
+    response.body = nil
+
+    get "/api/v1/client/#{old_id}", params
+    message = valid_success_request(response)
+    assert_equal message['id'], old_id
+    assert_equal message['token'], params[:token]
+    assert_equal message['name'], params[:name]
+    assert_equal message['active'], params[:active]
+    assert_equal message['security_permissions'], params[:security_permissions]
+  end
+
+  test "should_not_find_client_by_id" do
+    get "/api/v1/client/xx11"
+    assert_response :not_found
+  end
 
 
 end
