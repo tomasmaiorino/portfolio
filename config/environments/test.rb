@@ -44,4 +44,11 @@ Rails.application.configure do
 
   # Set log level
 #  config.log_level = :DEBUG
+
+
+  # Enable stdout logger
+  config.logger = Logger.new(STDOUT)
+
+  # Set log level
+  config.log_level = :DEBUG
 end
