@@ -127,7 +127,7 @@ class CompanyTest < ActiveSupport::TestCase
     company = get_valid_company(false, client)
     skills = get_valid_skill(false, 3)
     company.skills = skills
-
+    #initial test with 3 skills
     assert company.valid?
     assert company.save
     company_temp = Company.find(company.id)
@@ -141,10 +141,11 @@ class CompanyTest < ActiveSupport::TestCase
 
     skill = get_valid_skill(false)
     skill.name = 'java'
-
+    #add new skill
     company.skills << skill
     assert company.valid?
     assert company.save
+    #test with four skills
     company_temp = Company.find(company.id)
     assert_not_nil company_temp
     assert_equal old_size + 1, company_temp.skills.size
@@ -153,9 +154,8 @@ class CompanyTest < ActiveSupport::TestCase
     assert_equal skill.name, company_temp.skills[company_temp.skills.size - 1].name
     assert_equal company.skills, company_temp.skills
 
-    Rails.logger.debug "skills #{company_temp.skills}"
-    company.skills.delete_at(company.skills.index{|x| x.name == 'atg 1'})
-
+    #remove one skill
+    company.delete_skill(['atg 1'])
     assert company.valid?
     assert company.save
 
@@ -163,11 +163,73 @@ class CompanyTest < ActiveSupport::TestCase
     assert_not_nil company_temp
     assert_equal old_size, company_temp.skills.size
     assert_equal company.client.id, company_temp.client.id
-    assert_equal skills[0].id, company_temp.skills[0].id
+    assert !company.contains_skill('atg 1')
     assert_equal skill.name, company_temp.skills[company_temp.skills.size - 1].name
     assert_equal company.skills, company_temp.skills
 
+  end
 
+  test "should_remove_skill_from_skills" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+
+    old_size = company.skills.size
+
+    company.delete_skill([skills[0].name])
+    assert_equal old_size - 1, company.skills.size
+    assert_not_nil Skill.find(skills[0].id)
+    assert_equal skills[1].id, company.skills[0].id
+    assert_equal skills[2].id, company.skills[1].id
+  end
+
+  test "should_remove_skill_from_skills_deleting_skill" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+
+    old_size = company.skills.size
+    skill_id = skills[0].id
+    company.delete_skill([skills[0].name], true)
+    assert_equal old_size - 1, company.skills.size
+    assert_raise (ActiveRecord::RecordNotFound){
+      assert_nil Skill.find(skill_id)
+    }
+  end
+
+  test "should_contains_skill_in_company" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+    assert company.contains_skill(skills[0].name)
+    assert company.contains_skill(skills[1].name)
+    assert company.contains_skill(skills[2].name)
+  end
+
+  test "should_not_contains_skill_in_company" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+
+    assert !company.contains_skill('java')
+    assert !company.contains_skill('oracle')
+    assert !company.contains_skill('ruby')
   end
 
 end

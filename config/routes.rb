@@ -19,4 +19,13 @@ Rails.application.routes.draw do
   match 'api/v1/tech_tag/:id' => 'tech_tag#get', constraints: { id: /\d+/ }, via: [:get]
   match 'api/v1/tech_tag/:name' => 'tech_tag#get_name', via: [:get]
 
+  #company
+  match 'api/v1/company' => 'company#create', via: [:post]
+=begin
+  match 'api/v1/skill' => 'skill#update', via: [:put]
+  match 'api/v1/skill' => 'skill#get', via: [:get]
+  match 'api/v1/skill/:id' => 'skill#get', constraints: { id: /\d+/ }, via: [:get]
+  match 'api/v1/skill/:name' => 'skill#get_name', via: [:get]
+=end
+
 end

@@ -138,24 +138,12 @@ class ActiveSupport::TestCase
 
   def valid_bad_request(response, params = {}, debug = false)
     return valid_basic(:bad_request, response, params, debug)
-=begin
-    assert_response :bad_request
-    message = response.body
-    assert_not_nil message
-    message = JSON.parse(message)
-
-    params.each {|key, value|
-      if debug
-        Rails.logger.debug "params key = #{key}, value = #{value}"
-        Rails.logger.debug "message key = #{message[key]}, value = #{message[key]}"
-      end
-       assert message.has_key?(key)
-       assert_not_nil message[key]
-       assert_equal value, message[key].kind_of?(Array) ? message[key][0] : message[key] unless value.blank?
-    }
-=end
   end
 
+  def print_response(response)
+    message = response.body
+    Rails.logger.debug message
+  end
 
  def valid_basic(code, response, params = {}, debug = false)
    assert_response code

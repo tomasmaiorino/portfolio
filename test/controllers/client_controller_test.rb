@@ -15,7 +15,7 @@ class ClientControllerTest < ActionDispatch::IntegrationTest
   test "should create client" do
     params = @valid_params
     post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
-    assert_response :success
+
     message = valid_success_request(response, {'id' => ''})
 
   end
