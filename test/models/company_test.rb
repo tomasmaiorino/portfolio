@@ -105,4 +105,69 @@ class CompanyTest < ActiveSupport::TestCase
     assert_equal company[0].client.id, companies[1].client.id
   end
 
+  test "should_save_company_with_skills" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+    company_temp = Company.find(company.id)
+
+    assert_not_nil company_temp
+    assert_equal skills.size, company_temp.skills.size
+    assert_equal company.client.id, company_temp.client.id
+    assert_equal skills[0].id, company_temp.skills[0].id
+
+  end
+
+  test "should_update_company_with_skills" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(false, 3)
+    company.skills = skills
+
+    assert company.valid?
+    assert company.save
+    company_temp = Company.find(company.id)
+
+    assert_not_nil company_temp
+    assert_equal skills.size, company_temp.skills.size
+    assert_equal company.client.id, company_temp.client.id
+    assert_equal skills[0].id, company_temp.skills[0].id
+
+    old_size = company_temp.skills.size
+
+    skill = get_valid_skill(false)
+    skill.name = 'java'
+
+    company.skills << skill
+    assert company.valid?
+    assert company.save
+    company_temp = Company.find(company.id)
+    assert_not_nil company_temp
+    assert_equal old_size + 1, company_temp.skills.size
+    assert_equal company.client.id, company_temp.client.id
+    assert_equal skills[0].id, company_temp.skills[0].id
+    assert_equal skill.name, company_temp.skills[company_temp.skills.size - 1].name
+    assert_equal company.skills, company_temp.skills
+
+    Rails.logger.debug "skills #{company_temp.skills}"
+    company.skills.delete_at(company.skills.index{|x| x.name == 'atg 1'})
+
+    assert company.valid?
+    assert company.save
+
+    company_temp = Company.find(company.id)
+    assert_not_nil company_temp
+    assert_equal old_size, company_temp.skills.size
+    assert_equal company.client.id, company_temp.client.id
+    assert_equal skills[0].id, company_temp.skills[0].id
+    assert_equal skill.name, company_temp.skills[company_temp.skills.size - 1].name
+    assert_equal company.skills, company_temp.skills
+
+
+  end
+
 end

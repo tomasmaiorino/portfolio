@@ -30,7 +30,15 @@ class SkillController < BaseApiController
     end
 
     Rails.logger.error "Error #{message} skill with name: " << skill.name
-
     return head(:bad_request)
   end
+
+  def get_name
+    base_get {Skill.find_by(:name => params[:name])}
+  end
+
+  def get
+    base_get {Skill.find(params[:id])}
+  end
+
 end

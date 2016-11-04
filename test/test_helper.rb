@@ -37,12 +37,24 @@ class ActiveSupport::TestCase
     end
   end
 
-  def get_valid_skill(create = false)
+  def get_valid_skill(create = false, qt = 1)
+    if (qt == 1)
     skill = Skill.new
     skill.name = 'atg'
     skill.points = 2
     skill.save unless !create
     return skill
+    else
+      temp = []
+      (1..qt).each{|t|
+        skill = Skill.new
+        skill.name = "atg #{t}"
+        skill.points = 2 + t.to_i
+        skill.save unless !create
+        temp << skill
+      }
+      return temp
+    end
   end
 
   def get_valid_project(create = false, qt = 1)
@@ -149,19 +161,22 @@ class ActiveSupport::TestCase
    assert_response code
    message = response.body
    assert_not_nil message
-   message = JSON.parse(message)
+   if (!message.blank?)
+     message = JSON.parse(message)
 
-   params.each {|key, value|
-     if debug
-       Rails.logger.debug "params key = #{key}, value = #{value}"
-       Rails.logger.debug "message key = #{message[key]}, value = #{message[key]}"
-     end
-      assert message.has_key?(key)
-      assert_not_nil message[key]
-      assert_equal value, message[key].kind_of?(Array) ? message[key][0] : message[key] unless value.blank?
-   }
-   return message
+     params.each {|key, value|
+       if debug
+         Rails.logger.debug "params key = #{key}, value = #{value}"
+         Rails.logger.debug "message key = #{message[key]}, value = #{message[key]}"
+       end
+        assert message.has_key?(key)
+        assert_not_nil message[key]
+        assert_equal value, message[key].kind_of?(Array) ? message[key][0] : message[key] unless value.blank?
+     }
+     return message
+   end
  end
+
   def valid_success_request(response, params = {}, debug = false)
     return valid_basic(:success, response, params, debug)
   end

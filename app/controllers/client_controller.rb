@@ -7,9 +7,8 @@ class ClientController < BaseApiController
       return render nothing: true, status: :bad_request
     end
 
-    puts 'parsing json to class->'
     client = JSON.parse( @json, object_class: Client)
-    puts 'parsing json to class->'
+
     if !client.valid?
         return render json: client.errors.to_json, status: :bad_request
     end
@@ -35,23 +34,8 @@ class ClientController < BaseApiController
     return head(:bad_request)
   end
 
-  def update
-    if (@json.nil?)
-      Rails.logger.debug "Json nil :("
-      return render nothing: true, status: :bad_request
-    end
-    if (@json['id'].nil?)
-      return render json:{'id':'Field required'}, status: :bad_request
-    end
-    create
+  def get
+    base_get {Client.find(params[:id])}
   end
 
-  def get
-    begin
-      client = Client.find(params[:id])
-    rescue ActiveResource::ResourceNotFound
-      redirect_to :action => 'not_found'
-    end
-    return render json:client
-  end
 end

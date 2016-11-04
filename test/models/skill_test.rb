@@ -41,6 +41,30 @@ class SkillTest < ActiveSupport::TestCase
 
   end
 
+  test "should_not_save_skill_not_points_as_text" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.points = '2e'
+    assert !skill.valid?
+    assert !skill.save
+  end
+
+  test "should_not_save_skill_passing_invalid_points" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.points = 101
+    assert !skill.valid?
+    assert !skill.save
+
+    skill.points = -1
+    assert !skill.valid?
+    assert !skill.save
+
+    skill.points = 100
+    assert skill.valid?
+    assert skill.save
+  end
+
   test "should_save_skill" do
     skill = Skill.new
     skill.name = 'atg'

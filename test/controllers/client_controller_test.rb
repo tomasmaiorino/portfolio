@@ -110,19 +110,18 @@ end
     message = nil
     response.body = nil
 
-    get "/api/v1/client/#{old_id}", params
+    get "/api/v1/client/#{old_id}"
     message = valid_success_request(response)
-    assert_equal message['id'], old_id
-    assert_equal message['token'], params[:token]
-    assert_equal message['name'], params[:name]
-    assert_equal message['active'], params[:active]
-    assert_equal message['security_permissions'], params[:security_permissions]
+    assert_equal old_id, message['id']
+    assert_equal params[:token], message['token']
+    assert_equal params[:name], message['name']
+    assert_equal params[:active], message['active']
+    assert_equal params[:security_permissions], message['security_permissions']
   end
 
   test "should_not_find_client_by_id" do
     get "/api/v1/client/xx11"
     assert_response :not_found
   end
-
 
 end

@@ -3,6 +3,48 @@ class BaseApiController < ApplicationController
 
 	before_action :parse_request#, :authenticate_user_from_token!
 
+=begin
+	def pre_create(clazz)
+
+		if (@json.nil?)
+			Rails.logger.debug "Json nil :("
+			return render nothing: true, status: :bad_request
+		end
+
+		obj = JSON.parse( @json, object_class: clazz)
+
+		if !obj.valid?
+				return render json: obj.errors.to_json, status: :bad_request
+		end
+
+		return obj
+
+	end
+=end
+
+	def update
+    if (@json.nil?)
+      Rails.logger.debug "Json nil :("
+      return render nothing: true, status: :bad_request
+    end
+    if (@json['id'].nil?)
+      return render json:{'id':'Field required'}, status: :bad_request
+    end
+    create
+  end
+
+	def base_get
+		obj = nil
+		begin
+			obj = yield
+      #client = Client.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      #redirect_to :action => 'not_found'
+      return head(:not_found)
+    end
+		if !obj.nil? then return render json:obj else return head(:not_found) end
+	end
+
   private
 =begin
        def authenticate_user_from_token!
