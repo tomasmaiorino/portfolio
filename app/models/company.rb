@@ -1,7 +1,7 @@
 class Company < ApplicationRecord
 
   belongs_to :client
-  has_many :skill
+  has_many :skills
   has_and_belongs_to_many :projects
   has_and_belongs_to_many :skills
 

@@ -153,7 +153,7 @@ class ActiveSupport::TestCase
 
   def print_response(response)
     message = response.body
-    Rails.logger.debug message
+    Rails.logger.debug "Response: #{message}"
   end
 
  def valid_basic(code, response, params = {}, debug = false)

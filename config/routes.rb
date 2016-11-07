@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
   #company
   match 'api/v1/company' => 'company#create', via: [:post]
+  match 'api/v1/company/:token' => 'company#get', constraints: { id: /\d+/ }, via: [:get]
 =begin
   match 'api/v1/skill' => 'skill#update', via: [:put]
   match 'api/v1/skill' => 'skill#get', via: [:get]

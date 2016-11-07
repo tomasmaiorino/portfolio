@@ -33,20 +33,18 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_create_company_with_skills" do
-    client = get_valid_client(true)
+    client = Client.new
+    client.id = 553323
     params = @valid_params
     params[:client_id] = client.id
-    @valid_params[:client_id] = client.id
-
-    Client.expects(:find).with(client.id).returns(client)
-    Client.unstub(:find)
+    Client.stubs(:find).returns(client)
+    Client.any_instance.stubs(:find).returns(client)
     skills = get_valid_skill(true, -1, @skills)
     @valid_params[:skills] = skills
     post '/api/v1/company', params
     print_response(response)
     message = valid_success_request(response, {'id' => ''})
   end
-
 
   test "should_return_nil_skills" do
     company_controlle = CompanyController.new
@@ -58,16 +56,44 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_return_skills" do
-    skills = get_valid_skill(true, -1, @skills)
-    Skill.expects(:load_skills).with(@skills).returns(skills)
-    Skill.unstub(:load_skills)
+    skills = get_valid_skill(false, -1, @skills)
+    params = @valid_params
+    Skill.stubs(:load_skills).returns(skills)
     company_controlle = CompanyController.new
     company = {:skills => @skills}
     skills_temp = company_controlle.configure_skills(company)
     assert_not_nil skills_temp
     assert_not_empty skills_temp
     assert_equal skills.size, skills_temp.size
-    assert_equal skills[0].id, skills_temp[0].id
+    assert_equal skills[0].name, skills_temp[0].name
+  end
+
+  test "should_find_company_by_token" do
+    company_temp = get_valid_company(false)
+    client = get_valid_client(false)
+    skills = get_valid_skill(false, -1, @skills)
+
+    company_temp.client = client
+    company_temp.skills = skills
+
+    Company.stubs(:find_by).returns(company_temp)
+
+    get "/api/v1/company/#{company_temp.token}"
+    message = valid_success_request(response)
+    assert_equal company_temp.id, message["id"]
+    assert_equal company_temp.name, message["name"]
+    assert_equal skills.size, message["skills"].size
+    assert_equal skills[0].name, message["skills"][0]['name']
+    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[1].name, message["skills"][1]['name']
+    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[2].name, message["skills"][2]['name']
+    assert_equal skills[2].points, message["skills"][2]['points']
+  end
+
+  test "should_find_company_by_token_not_found" do
+    get "/api/v1/company/33"
+    assert_response :not_found
   end
 
 

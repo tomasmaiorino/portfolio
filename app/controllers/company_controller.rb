@@ -2,45 +2,6 @@ class CompanyController < BaseApiController
 
   @my_class = Company
 
-  before_action :before_create, only: [:create]
-
-  def before_create
-    if (@json.nil?)
-      Rails.logger.debug "Json nil :("
-      return render nothing: true, status: :bad_request
-    end
-
-    company = JSON.parse( @json, symbolize_names: true)
-
-    #check if the client id was informed
-    client_id = nil
-    client = nil
-    if (!company[:client_id].blank?)
-      begin
-        client = Client.find(company[:client_id])
-      rescue ActiveRecord::RecordNotFound
-        return render json:{'client_id': 'client not found'}, :status => :bad_request
-      end
-    end
-
-    final_company = Company.new
-
-    final_company.client = client
-    #
-    # => skill block
-    #
-    skills = configure_skills(company)
-
-    final_company.skills = skills unless skills.empty?
-    final_company.name = company[:name]
-    final_company.token = company[:token]
-
-    if !final_company.valid?
-        return render json: final_company.errors.to_json, status: :bad_request
-    end
-
-  end
-
   def parse_json(value, clazz)
     Rails.logger.debug "Parsing #{clazz.to_s}: #{value}"
     obj = nil
@@ -113,6 +74,16 @@ class CompanyController < BaseApiController
   def configure_skills(company)
     return nil if company.nil? || company[:skills].blank?
     return Skill.load_skills(company[:skills])
+  end
+
+  def get
+    obj = nil
+		begin
+		  obj = Company.find_by(:token => params[:token])
+    rescue ActiveRecord::RecordNotFound
+      return head(:not_found)
+    end
+    if !obj.nil? then return render :json => obj, :include => [:skills => {:only => [:name, :points]}] else return head(:not_found) end
   end
 
 end
