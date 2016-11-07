@@ -18,7 +18,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
       :skills => @skills
     }
   end
-  test "should_create_company" do
+
+  test "should_create_company_without_skills" do
     client = get_valid_client(true)
     params = @valid_params
     params[:client_id] = client.id
@@ -30,6 +31,22 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     print_response(response)
     message = valid_success_request(response, {'id' => ''})
   end
+
+  test "should_create_company_with_skills" do
+    client = get_valid_client(true)
+    params = @valid_params
+    params[:client_id] = client.id
+    @valid_params[:client_id] = client.id
+
+    Client.expects(:find).with(client.id).returns(client)
+    Client.unstub(:find)
+    skills = get_valid_skill(true, -1, @skills)
+    @valid_params[:skills] = skills
+    post '/api/v1/company', params
+    print_response(response)
+    message = valid_success_request(response, {'id' => ''})
+  end
+
 
   test "should_return_nil_skills" do
     company_controlle = CompanyController.new
