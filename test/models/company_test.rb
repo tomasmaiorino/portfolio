@@ -154,7 +154,7 @@ class CompanyTest < ActiveSupport::TestCase
     assert_equal skill.name, company_temp.skills[company_temp.skills.size - 1].name
     assert_equal company.skills, company_temp.skills
 
-    #remove one skill
+    #remove one skillpo
     company.delete_skill(['atg 1'])
     assert company.valid?
     assert company.save

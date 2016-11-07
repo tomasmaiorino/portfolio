@@ -1,6 +1,7 @@
-ENV['RAILS_ENV'] ||= 'test'
+ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'mocha/mini_test'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
@@ -37,13 +38,23 @@ class ActiveSupport::TestCase
     end
   end
 
-  def get_valid_skill(create = false, qt = 1)
+  def get_valid_skill(create = false, qt = 1, skills = [])
     if (qt == 1)
     skill = Skill.new
     skill.name = 'atg'
     skill.points = 2
     skill.save unless !create
     return skill
+    elsif !skills.empty?
+      temp = []
+      skills.each_with_index{|x, i|
+        skill = Skill.new
+        skill.name = x
+        skill.points = 2 + i.to_i
+        skill.save unless !create
+        temp << skill
+      }
+      return temp
     else
       temp = []
       (1..qt).each{|t|

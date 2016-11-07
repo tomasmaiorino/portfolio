@@ -13,7 +13,7 @@ class Skill < ApplicationRecord
      skill.id != Skill.find_by(:name => skill.name).id
    }
 
-   def self.load_skills(p_skills = [], add_not_found_class = nil)
+   def self.load_skills(p_skills = [], add_not_found_class = false)
      skills = []
      is_string = p_skills[0].kind_of? String
      p_skills.each{ |s|

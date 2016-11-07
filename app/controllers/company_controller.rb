@@ -17,7 +17,7 @@ class CompanyController < BaseApiController
     client = nil
     if (!company[:client_id].blank?)
       begin
-        client = Client.find(company['client_id'])
+        client = Client.find(company[:client_id])
       rescue ActiveRecord::RecordNotFound
         return render json:{'client_id': 'client not found'}, :status => :bad_request
       end
@@ -25,11 +25,13 @@ class CompanyController < BaseApiController
 
     final_company = Company.new
 
-    final_company.client = if client.nil? then configure_client(company) else client end
+    final_company.client = client
     #
     # => skill block
     #
+    skills = configure_skills(company)
 
+    final_company.skills = skills unless skills.empty?
     final_company.name = company[:name]
     final_company.token = company[:token]
 
@@ -76,18 +78,9 @@ class CompanyController < BaseApiController
     return head(:bad_request)
   end
 
-  def configure_client(company)
-      client = parse_json(company[:client], Client)
-      return client if client.nil? || !client.valid?
-      #check if the client exist
-      client_temp = Client.find_by(:token => client.token)
-      if (client_temp.nil?)
-        Rails.logger.info("Creating client, name(#{client.name}), token(#{client.token})")
-        client = client unless !client.save
-      else
-        client = client_temp
-      end
-      return client
+  def configure_skills(company)
+    return nil if company.nil? || company[:skills].blank?
+    return Skill.load_skills(company[:skills])
   end
 
 end
