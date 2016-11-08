@@ -27,6 +27,7 @@ class BaseApiController < ApplicationController
       Rails.logger.debug "Json nil :("
       return render nothing: true, status: :bad_request
     end
+		Rails.logger.debug "Item id " << @json['id']
     if (@json['id'].nil?)
       return render json:{'id':'Field required'}, status: :bad_request
     end

@@ -76,14 +76,22 @@ class CompanyController < BaseApiController
     return Skill.load_skills(company[:skills])
   end
 
-  def get
+  def base_get
     obj = nil
-		begin
-		  obj = Company.find_by(:token => params[:token])
+    begin
+      obj = yield
     rescue ActiveRecord::RecordNotFound
       return head(:not_found)
     end
     if !obj.nil? then return render :json => obj, :include => [:skills => {:only => [:name, :points]}] else return head(:not_found) end
+  end
+
+  def get
+    base_get{Company.find_by(:token => params[:token])}
+  end
+
+  def get_company_client
+    base_get{Company.find_by(:client => Client.find(params[:client_id]))}
   end
 
 end

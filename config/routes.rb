@@ -1,3 +1,4 @@
+
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #client
@@ -21,7 +22,9 @@ Rails.application.routes.draw do
 
   #company
   match 'api/v1/company' => 'company#create', via: [:post]
-  match 'api/v1/company/:token' => 'company#get', constraints: { id: /\d+/ }, via: [:get]
+  match 'api/v1/company' => 'company#update', via: [:put]
+  match 'api/v1/company/:client_id' => 'company#get_company_client', constraints: { client_id: /\d+/ }, via: [:get]
+  match 'api/v1/company/:token' => 'company#get', constraints: { token: /\D+/ }, via: [:get]
 =begin
   match 'api/v1/skill' => 'skill#update', via: [:put]
   match 'api/v1/skill' => 'skill#get', via: [:get]
