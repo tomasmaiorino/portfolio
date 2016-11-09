@@ -25,11 +25,12 @@ Rails.application.routes.draw do
   match 'api/v1/company' => 'company#update', via: [:put]
   match 'api/v1/company/:client_id' => 'company#get_company_client', constraints: { client_id: /\d+/ }, via: [:get]
   match 'api/v1/company/:token' => 'company#get', constraints: { token: /\D+/ }, via: [:get]
-=begin
-  match 'api/v1/skill' => 'skill#update', via: [:put]
-  match 'api/v1/skill' => 'skill#get', via: [:get]
-  match 'api/v1/skill/:id' => 'skill#get', constraints: { id: /\d+/ }, via: [:get]
-  match 'api/v1/skill/:name' => 'skill#get_name', via: [:get]
-=end
+
+  #project
+  match 'api/v1/project' => 'project#create', via: [:post]
+  match 'api/v1/project' => 'project#update', via: [:put]
+  match 'api/v1/project' => 'project#get', via: [:get]
+  match 'api/v1/project/:id' => 'project#get', constraints: { id: /\d+/ }, via: [:get]
+  match 'api/v1/project/company/:id' => 'project#get_company', via: [:get]
 
 end

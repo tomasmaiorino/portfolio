@@ -70,6 +70,8 @@ class BaseApiController < ApplicationController
       Rails.logger.debug "Parsing json ->"
       @json = request.params.except(:action, :controller)
 			Rails.logger.debug "Parsing json <-"
+		else
+			Rails.logger.debug "Invalid request :("
     end
   end
 end

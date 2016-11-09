@@ -59,9 +59,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     skills = get_valid_skill(false, -1, @skills)
     @valid_params[:skills] = skills
 
-    Company.stubs(:save).returns(false)
-    Company.stubs(:valid).returns(false)
-    Client.stubs(:errors).returns(@duplicate_token_message.to_json)
+    Company.any_instance.stubs(:save).returns(false)
+    Company.any_instance.stubs(:valid?).returns(false)
+    Company.any_instance.stubs(:errors).returns(@duplicate_token_message)
 
     params[:id] = 4433
     put '/api/v1/company', params
