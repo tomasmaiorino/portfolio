@@ -59,6 +59,31 @@ class CompanyTest < ActiveSupport::TestCase
 
   end
 
+  test "should_not_update_company_passing_duplicate_token" do
+    client = get_client
+    company = Company.new
+    company.name = 'monsters'
+    company.token = 'xxss11'
+    company.client = client
+    assert company.save
+
+    company = nil
+    company = Company.new
+    company.name = 'monsters'
+    company.token = 'xxss12'
+    company.client = client
+    assert company.valid?
+    assert company.save
+
+    company_temp = Company.find(company.id)
+    company_temp.token = 'xxss11'
+    assert !company_temp.valid?
+    puts '+++__++_'
+    puts company_temp.errors.messages
+    assert company_temp.errors.messages.has_key?(:token)
+    assert !company_temp.save
+  end
+
   test "should_save_company" do
     client = get_client
 

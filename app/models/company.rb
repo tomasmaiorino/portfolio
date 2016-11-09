@@ -6,7 +6,14 @@ class Company < ApplicationRecord
   has_and_belongs_to_many :skills
 
   validates :name, :token,  :presence => { :message => "Field Required" }
-  validates_uniqueness_of :token, :case_sensitive => false, :message => "duplicate token"
+  validates_uniqueness_of :token, :case_sensitive => false, :message => "duplicate token",
+    :if =>  Proc.new {
+     |company|
+     company.id.nil? ||
+     Company.find_by(:token => company.token).nil? ||
+     company.id != Company.find_by(:token => company.token).id
+   }
+
   validates_presence_of :client
 
   def delete_skill(skill_name = [], del = false)

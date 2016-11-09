@@ -82,6 +82,7 @@ end
     Client.delete_all
     #creating first client
     params = @valid_params
+    params[:id] = 332
     post '/api/v1/client', params#, {'ACCEPT' => "application/json", 'CONTENT_TYPE' => 'application/json'}
     valid_success_request(response, {'id' => ''}, true)
 

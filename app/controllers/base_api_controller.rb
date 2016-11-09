@@ -27,8 +27,8 @@ class BaseApiController < ApplicationController
       Rails.logger.debug "Json nil :("
       return render nothing: true, status: :bad_request
     end
-		Rails.logger.debug "Item id " << @json['id']
-    if (@json['id'].nil?)
+		Rails.logger.debug "Item id " << @json["id"] unless @json["id"].nil?
+    if (@json["id"].nil?)
       return render json:{'id':'Field required'}, status: :bad_request
     end
     create
@@ -62,12 +62,13 @@ class BaseApiController < ApplicationController
        end
 =end
   def parse_request
+		Rails.logger.debug params.inspect
     Rails.logger.debug "Request body #{request.body.read}"
     Rails.logger.debug "Request params #{request.params}"
     if !request.params.except(:action, :controller).nil? && !request.params.except(:action, :controller).empty?
       Rails.logger.debug "Valid request :)"
       Rails.logger.debug "Parsing json ->"
-      @json = request.params.except(:action, :controller).to_json
+      @json = request.params.except(:action, :controller)
 			Rails.logger.debug "Parsing json <-"
     end
   end

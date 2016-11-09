@@ -21,7 +21,7 @@ class CompanyController < BaseApiController
       return render nothing: true, status: :bad_request
     end
 
-    company = JSON.parse( @json, symbolize_names: true)
+    company = @json#JSON.parse( @json, symbolize_names: true)
 
     #check if the client id was informed
     client_id = nil
@@ -42,7 +42,7 @@ class CompanyController < BaseApiController
     #
     skills = configure_skills(company)
 
-    final_company.skills = skills unless skills.empty?
+    final_company.skills = skills unless skills.nil? || skills.empty?
     final_company.name = company[:name]
     final_company.token = company[:token]
 

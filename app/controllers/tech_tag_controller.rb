@@ -7,7 +7,7 @@ class TechTagController < BaseApiController
 			return render nothing: true, status: :bad_request
 		end
 
-		tech_tag = JSON.parse( @json, object_class: TechTag)
+		tech_tag = JSON.parse( @json.to_json, object_class: TechTag)
 
 		if !tech_tag.valid?
 				return render json: tech_tag.errors.to_json, status: :bad_request

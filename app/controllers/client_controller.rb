@@ -7,7 +7,7 @@ class ClientController < BaseApiController
       return render nothing: true, status: :bad_request
     end
 
-    client = JSON.parse( @json, object_class: Client)
+    client = JSON.parse(@json.to_json, object_class: Client)
 
     if !client.valid?
         return render json: client.errors.to_json, status: :bad_request

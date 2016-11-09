@@ -10,10 +10,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     @client_id = 323
     @client_invalid = {:name => 'tomas', :active => true}
     @client_broken = {:temp => 'tomas', :active => true}
+    @duplicate_token_message = {:token=>["duplicate token"]}
     @valid_params = {
       :name => 'tomas',
       :token => 'xxffwf',
-      :client_id => @client_id      
+      :client_id => @client_id
     }
   end
 
@@ -48,6 +49,26 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     message = valid_success_request(response, {'id' => ''})
   end
 
+  test "should_not_update_company_duplicate_token" do
+    client = Client.new
+    client.id = 553323
+    params = @valid_params
+    params[:client_id] = client.id
+    Client.stubs(:find).returns(client)
+
+    skills = get_valid_skill(false, -1, @skills)
+    @valid_params[:skills] = skills
+
+    Company.stubs(:save).returns(false)
+    Company.stubs(:valid).returns(false)
+    Client.stubs(:errors).returns(@duplicate_token_message.to_json)
+
+    params[:id] = 4433
+    put '/api/v1/company', params
+    print_response(response)
+    message = valid_bad_request(response, {'token' => ''})
+  end
+
   test "should_update_company_with_skills" do
     client = Client.new
     client.id = 553323
@@ -68,21 +89,10 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_not_update_company_with_skills" do
-
     params = @valid_params
-#    params[:client_id] = client.id
-    #Client.stubs(:find).returns(client)
-
-    #skills = get_valid_skill(false, -1, @skills)
-    #skills.each_with_index{|s,i|
-  #    s.id = i
-#    }
-    #@valid_params[:skills] = skills
-
     put '/api/v1/company', params
     print_response(response)
     valid_bad_request(response, {'id' => 'Field required'})
-
   end
 
   test "should_return_nil_skills" do

@@ -7,7 +7,7 @@ class SkillController < BaseApiController
       return render nothing: true, status: :bad_request
     end
 
-    skill = JSON.parse( @json, object_class: Skill)
+    skill = JSON.parse( @json.to_json, object_class: Skill)
 
     if !skill.valid?
       return render json: skill.errors.to_json, status: :bad_request
