@@ -257,4 +257,70 @@ class CompanyTest < ActiveSupport::TestCase
     assert !company.contains_skill('ruby')
   end
 
+  test "should_load_companies" do
+    client = get_client
+
+    company = Company.new
+    company.name = 'monsters'
+    company.token = 'xxss11'
+    company.client = client
+    assert company.valid?
+    assert company.save
+    firs_id = company.id
+
+    company = Company.new
+    company.name = 'monsters'
+    company.token = 'xxss12'
+    company.client = client
+    company.active = true
+    company.email = 'monsters@monsters.com'
+    company.manager_name = 'David'
+    assert company.valid?
+    assert company.save
+
+    companies = Company.find([firs_id, company.id])
+    assert_not_nil companies
+    assert_not_empty companies
+    assert_equal 2, companies.size
+    assert_equal firs_id, companies[0].id
+    assert_equal company.id, companies[1].id
+
+  end
+
+  test "should_not_load_companies" do
+    assert_nil Company.load_companies([])
+    assert_nil Company.load_companies(nil)
+  end
+
+  test "should_load_companies_passing_invalid_id" do
+    assert_empty Company.load_companies([3322])
+  end
+
+  test "should_not_load_all_companies" do
+    client = get_client
+
+    company = Company.new
+    company.name = 'monsters'
+    company.token = 'xxss11'
+    company.client = client
+    assert company.valid?
+    assert company.save
+    first_id = company.id
+
+    company = Company.new
+    company.name = 'monsters 2'
+    company.token = '34xxss11'
+    company.client = client
+    assert company.valid?
+    assert company.save
+
+    companies = Company.where(:id => [332, company.id, first_id])
+    assert_not_nil companies
+    assert companies
+    assert_not_empty companies
+    assert_equal 2, companies.size
+    assert companies.to_a.index{|x| x.id == first_id} > 0
+    assert companies.to_a.index{|x| x.id == company.id} > 0
+  end
+
 end

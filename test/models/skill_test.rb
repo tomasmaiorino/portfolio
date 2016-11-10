@@ -209,8 +209,8 @@ class SkillTest < ActiveSupport::TestCase
     assert_equal skills_in.size, skills.size
     assert_not_nil skills[0].id
     assert_equal skill_2.id, skills[0].id
-    assert_equal skills[0].name, skill_3.name
-    assert_equal skills[1].name, skill_4.name
+    assert_equal skill_3.name, skills[0].name
+    assert_equal skill_4.name, skills[1].name
     assert_nil skills[1].id
   end
 
