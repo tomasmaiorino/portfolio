@@ -1,4 +1,4 @@
-class ProjectController < ApplicationController
+class ProjectController < BaseApiController
 
   def create
 
@@ -19,12 +19,14 @@ class ProjectController < ApplicationController
     #
     tech_tags = configure_tech_tags(project_req)
 
-    project.delete(:companies) unless !project.has_key?(:companies)
-    project.delete(:tech_tags) unless !project.has_key?(:tech_tags)
+    project_req.delete(:companies) unless !project_req.has_key?(:companies)
+    project_req.delete(:tech_tags) unless !project_req.has_key?(:tech_tags)
 
-    project = JSON.parse(@json.to_json, object_class: Project)
-    if !project.valid?
-        return render json: project.errors.to_json, status: :bad_request
+
+    project_d = JSON.parse(project_req.to_json, object_class: Project)
+
+    if !project_d.valid?
+        return render json: project_d.errors.to_json, status: :bad_request
     end
 
     project_temp = Project.find(project.id)
@@ -61,6 +63,12 @@ class ProjectController < ApplicationController
 
   def get
     base_get {Project.find(params[:id])}
+  end
+
+  def configure_companies(company)
+  end
+
+  def configure_tech_tags(company)
   end
 
 end
