@@ -81,7 +81,7 @@ class TechTagTest < ActiveSupport::TestCase
       assert tech_tag.save
       assert tech_tag.active
 
-      tech_tags = TechTag.load_tech_tags([tech_tag_id, tech_tag.id], false, true)
+      tech_tags = TechTag.where(:id =>[tech_tag_id, tech_tag.id])
       assert_not_nil tech_tags
       assert_not_empty tech_tags
       assert_equal 2, tech_tags.size
@@ -120,14 +120,13 @@ class TechTagTest < ActiveSupport::TestCase
 
     end
 
-
     test "should_not_load_tech_tags" do
       assert_nil TechTag.load_tech_tags([])
       assert_nil TechTag.load_tech_tags(nil)
     end
 
     test "should_load_tech_tags_passing_invalid_id" do
-      assert_empty TechTag.load_tech_tags([3322])
+      assert_empty TechTag.where(:id =>[443211, 4433])
     end
 
 end

@@ -66,13 +66,11 @@ class ProjectController < BaseApiController
   end
 
   def configure_companies(company)
-    return nil if company.nil? || company[:commpanies].nil?
-    #commpanies = []
-
-    #companies = company[:commpanies] unless company.nil? || company[:commpanies].nil?
+    return nil if company.nil? || company[:companies].blank?
+    return Company.where(:id => company[:companies])
   end
 
-  def configure_tech_tags(company)
+  def configure_tech_tags(tech_tag)
   end
 
 end

@@ -287,13 +287,8 @@ class CompanyTest < ActiveSupport::TestCase
 
   end
 
-  test "should_not_load_companies" do
-    assert_nil Company.load_companies([])
-    assert_nil Company.load_companies(nil)
-  end
-
   test "should_load_companies_passing_invalid_id" do
-    assert_empty Company.load_companies([3322])
+    assert_empty Company.where(:id => [3322])
   end
 
   test "should_not_load_all_companies" do
@@ -319,8 +314,8 @@ class CompanyTest < ActiveSupport::TestCase
     assert companies
     assert_not_empty companies
     assert_equal 2, companies.size
-    assert companies.to_a.index{|x| x.id == first_id} > 0
-    assert companies.to_a.index{|x| x.id == company.id} > 0
+    assert companies.to_a.index{|x| x.id == first_id} >= 0
+    assert companies.to_a.index{|x| x.id == company.id} >= 0
   end
 
 end

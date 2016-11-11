@@ -31,8 +31,9 @@ class Company < ApplicationRecord
     end
     return false
   end
-
+=begin
   def self.load_companies(p_companies = [])
     load_model_list(p_companies, 'Company', false) {|s| Company.find(s)}
   end
+=end
 end
