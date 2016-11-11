@@ -50,8 +50,9 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
 
     @companies = [1, 2, 3]
     @tech_tags = [1, 2, 3]
-    @name_required = {:name=>["Field Required"]}
-    @project_date_required = {:project_date=>["Field Required"]}
+    @name_required = {:name => ["Field Required"]}
+    @project_date_required = {:project_date => ["Field Required"]}
+    @summary_required = {:summary => ["Field Required"]}
 
   end
 
@@ -75,7 +76,80 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     message = valid_bad_request(response, {'project_date' => 'Field Required'})
   end
 
-  test "should_return_companes" do
+  test "should_not_create_project_not_summary" do
+    params = @valid_params
+    params.delete(:summary)
+    Project.any_instance.stubs(:valid?).returns(false)
+    Project.any_instance.stubs(:errors).returns(@summary_required)
+
+    post "/api/v1/project", params
+    message = valid_bad_request(response, {'summary' => 'Field Required'})
+  end
+
+  test "should_create_project_without_companies_and_tech_tags" do
+    params = @valid_params
+
+    Project.any_instance.stubs(:valid?).returns(true)
+    Project.any_instance.stubs(:save).returns(true)
+    Project.any_instance.stubs(:find).returns(nil)
+    Project.any_instance.stubs(:id).returns(1)
+
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+  end
+
+  test "should_create_project_with_companies_and_without_tech_tags" do
+    params = @valid_params
+    params[:companies] = @companies
+
+    #mocks configuration
+    client = get_valid_client(false)
+    companies = get_valid_company(false, client, 3)
+    companies.each_with_index {|c,i|
+      c.id = i
+    }
+
+    Company.stubs(:where).returns(companies)
+
+    Project.any_instance.stubs(:valid?).returns(true)
+    Project.any_instance.stubs(:save).returns(true)
+    Project.any_instance.stubs(:find).returns(nil)
+    Project.any_instance.stubs(:id).returns(1)
+
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+  end
+
+  test "should_create_project_with_companies_and_tech_tags" do
+    params = @valid_params
+    params[:companies] = @companies
+    params[:tech_tags] = @tech_tags
+
+    #mocks configuration
+    client = get_valid_client(false)
+    companies = get_valid_company(false, client, 3)
+    companies.each_with_index {|c,i|
+      c.id = i
+    }
+
+    tech_tags = get_valid_teck_tag(false, ['java', 'orale'])
+    tech_tags.each_with_index {|c,i|
+      c.id = i + 1
+    }
+
+    Company.stubs(:where).returns(companies)
+    TechTag.stubs(:where).returns(tech_tags)
+
+    Project.any_instance.stubs(:valid?).returns(true)
+    Project.any_instance.stubs(:save).returns(true)
+    Project.any_instance.stubs(:find).returns(nil)
+    Project.any_instance.stubs(:id).returns(1)
+
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+  end
+
+  test "should_return_companies" do
     client = get_valid_client(false)
     companies = get_valid_company(false, client, 3)
     companies.each_with_index {|c,i|
@@ -119,41 +193,48 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     assert_nil controller.configure_companies(nil)
   end
 
-  #-------------------------
   test "should_return_tech_tags" do
     client = get_valid_client(false)
     tech_tags = get_valid_company(false, client, 3)
     tech_tags.each_with_index {|c,i|
-      c.id = i
+      c.id = i + 1
     }
     params = @valid_params
     params[:tech_tags] = @tech_tags
 
-    Company.stubs(:where).returns(tech_tags)
+    TechTag.stubs(:where).returns(tech_tags)
 
     controller = ProjectController.new
     tech_tags = controller.configure_tech_tags(params)
     assert_not_nil tech_tags
     assert_equal @tech_tags.size, tech_tags.size
-    assert_equal @tech_tags[0], tech_tags[1].id
+    assert_equal @tech_tags[0], tech_tags[0].id
+    assert_equal @tech_tags[1], tech_tags[1].id
   end
 
-test "should_not_return_tech_tags" do
+  test "should_not_return_tech_tags" do
 
-  TechTag.stubs(:load_tech_tags).returns([])
+    client = get_valid_client(false)
+    tech_tags = get_valid_company(false, client, 3)
+    tech_tags.each_with_index {|c,i|
+      c.id = i + 1
+    }
+    params = @valid_params
+    params[:tech_tags] = @tech_tags
 
-  controller = ProjectController.new
-  assert_empty controller.configure_tech_tags([])
-end
+    TechTag.stubs(:where).returns([])
+    controller = ProjectController.new
+    assert_empty controller.configure_tech_tags(params)
+  end
 
-test "should_not_return_tech_tags_passing_invalid_id" do
-  controller = ProjectController.new
-  assert_nil controller.configure_tech_tags(@valid_params)
-end
+  test "should_not_return_tech_tags_not_passing_tech_tags" do
+    controller = ProjectController.new
+    assert_nil controller.configure_tech_tags(@valid_params)
+  end
 
-test "should_not_return_tech_tags_passing_nil" do
-  controller = ProjectController.new
-  assert_nil controller.configure_tech_tags(nil)
-end
+  test "should_not_return_tech_tags_passing_nil" do
+    controller = ProjectController.new
+    assert_nil controller.configure_tech_tags(nil)
+  end
 
 end

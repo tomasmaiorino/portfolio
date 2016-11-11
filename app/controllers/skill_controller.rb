@@ -23,14 +23,14 @@ class SkillController < BaseApiController
       skill_temp.points = skill.points
       skill = skill_temp
     end
-
+    Rails.logger.debug "Lets #{message} :O "
     if skill.save
       Rails.logger.debug "Skill was saved :)"
       return render json:{'id':skill.id}
     end
 
     Rails.logger.error "Error #{message} skill with name: " << skill.name
-    return head(:bad_request)
+    return head(:internal_server_error)
   end
 
   def get_name

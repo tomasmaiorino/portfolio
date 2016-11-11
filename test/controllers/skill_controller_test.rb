@@ -13,11 +13,19 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_create_skill" do
+    #params = @valid_params
+    #post '/api/v1/skill', params
+    #message = valid_success_request(response, {'id' => ''}, true)
+
+    skill = mock()
+    JSON.stubs(:parse).returns(skill)
+    Skill.stubs(:find_name).returns(nil)
+    skill = stub(:valid? => true, :save => true, :id => 2, :name => 'Java')
+    skill.expects(:save).at_least_once
+
     params = @valid_params
     post '/api/v1/skill', params
-
-    message = valid_success_request(response, {'id' => ''}, true)
-
+    valid_success_request(response, {'id' => ''})
   end
 
   test "should return invalid skill no name" do
