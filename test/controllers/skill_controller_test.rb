@@ -10,27 +10,35 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
     @invalid_params_no_name = {:points => 12}
     @invalid_params_no_token = {:name => 'tomas', :active => true, :security_permissions => 1}
     @invalid_params_no_required_values = {'':''}
+    @name_required = {:name => ["Field Required"]}
+    @name_points_required = {:name => ["Field Required"], :points => ["Field Required"] }
+    @project_date_required = {:project_date => ["Field Required"]}
+    @summary_required = {:summary => ["Field Required"]}
+    @duplicate_name_message = {:name => ["duplicate Skill name"]}
   end
 
   test "should_create_skill" do
-    #params = @valid_params
-    #post '/api/v1/skill', params
-    #message = valid_success_request(response, {'id' => ''}, true)
-
     skill = mock()
-    JSON.stubs(:parse).returns(skill)
     Skill.stubs(:find_name).returns(nil)
-    skill = stub(:valid? => true, :save => true, :id => 2, :name => 'Java')
-    skill.expects(:save).at_least_once
+    skill = stub(:valid? => true, :id => 2, :name => 'Java')
+    JSON.stubs(:parse).returns(skill)
+    skill.expects(:save).returns(true).at_least_once
 
     params = @valid_params
     post '/api/v1/skill', params
+    JSON.unstub(:parse)
     valid_success_request(response, {'id' => ''})
   end
 
   test "should return invalid skill no name" do
+    skill = mock()
+    Skill.stubs(:find_name).returns(nil)
+    skill = stub(:valid? => false, :name => '', :errors => @name_required)
+    JSON.stubs(:parse).returns(skill)
+
     params = @invalid_params_no_name
     post '/api/v1/skill', params
+    JSON.unstub(:parse)
     valid_bad_request(response, {'name' => ''})
   end
 
@@ -41,33 +49,44 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create skill duplicated name" do
+    skill = mock()
+    Skill.stubs(:find_name).returns(Skill.new)
+    skill = stub(:valid? => false, :name => 'Java', :errors => @duplicate_name_message)
+    JSON.stubs(:parse).returns(skill)
+
     params = @valid_params
     post '/api/v1/skill', params
-
-    message = valid_success_request(response, {'id' => ''}, true)
-
-    response.body = nil
-
-    params = {:name => 'java', :points => 40}
-    post '/api/v1/skill', params
+    JSON.unstub(:parse)
     valid_bad_request(response, {'name' => 'duplicate Skill name'})
+
   end
 
 # => TO FIX CASE INSENSITIVE
   test "should update skill" do
+    skill = Skill.new
+    skill.stubs(:name).returns('Java')
+    skill.stubs(:points).returns(20)
+    skill = stub(:valid? => true)
+    #skill.expects(:save).returns(true).once
+    JSON.stubs(:parse).returns(skill)
+    puts 'name '
+    puts skill.name
+    skill_temp = Skill.new
+    skill_temp.stubs(:name).returns('Java Old')
+    skill_temp.stubs(:points).returns(20)
+    skill_temp.stubs(:id).returns(32)
+    skill_temp = stub(:nil? => true)
+
+    Skill.stubs(:find_by).returns(skill_temp)
+    #skill_temp = stub(:id => 2, :nil?   false, :name => 'Java Old', :points => 3)
+
     params = @valid_params
-    post '/api/v1/skill', params
-
-    message = valid_success_request(response, {'id' => ''})
-    old_id = message['id']
-    response.body = nil
-
-    params = {:id => old_id, :name => 'java', :points => 50}
+    params[:id] = 2
     put '/api/v1/skill', params
+    JSON.unstub(:parse)
 
     message = valid_success_request(response, {'id' => ''}, true)
-    assert_equal params['name'], message['name']
-    assert_equal old_id, message['id']
+
   end
 
   test "should update skill not passing id" do
