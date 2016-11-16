@@ -64,21 +64,15 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 # => TO FIX CASE INSENSITIVE
   test "should update skill" do
     skill = Skill.new
-    skill.stubs(:name).returns('Java')
-    skill.stubs(:points).returns(20)
-    skill = stub(:valid? => true)
-    #skill.expects(:save).returns(true).once
+    skill = stub(:valid? => true, :id => 2, :name => "Java New", :points => 3, :save => true)
+
     JSON.stubs(:parse).returns(skill)
-    puts 'name '
-    puts skill.name
+
     skill_temp = Skill.new
-    skill_temp.stubs(:name).returns('Java Old')
-    skill_temp.stubs(:points).returns(20)
-    skill_temp.stubs(:id).returns(32)
-    skill_temp = stub(:nil? => true)
+    skill_temp = stub(:id => 2, :nil? => false, :name => "Java Old", :points => 32)
 
     Skill.stubs(:find_by).returns(skill_temp)
-    #skill_temp = stub(:id => 2, :nil?   false, :name => 'Java Old', :points => 3)
+    skill.expects(:save).returns(true).at_least_once
 
     params = @valid_params
     params[:id] = 2
