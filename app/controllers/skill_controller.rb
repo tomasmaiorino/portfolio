@@ -19,8 +19,8 @@ class SkillController < BaseApiController
     Rails.logger.info "#{message} skill with name :" << skill.name
 
     if !skill_temp.nil?
-      skill_temp.name(skill.name)
-      skill_temp.points(skill.points)
+      skill_temp.name skill.name
+      skill_temp.points skill.points
       skill = skill_temp
     end
 
@@ -40,6 +40,7 @@ class SkillController < BaseApiController
   end
 
   def get
+    Rails.logger.debug "Searching skill by id #{params[:id]}"
     base_get {Skill.find(params[:id])}
   end
 

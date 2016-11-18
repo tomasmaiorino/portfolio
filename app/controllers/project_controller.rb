@@ -22,7 +22,6 @@ class ProjectController < BaseApiController
     project_req.delete(:companies) unless !project_req.has_key?(:companies)
     project_req.delete(:tech_tags) unless !project_req.has_key?(:tech_tags)
 
-
     project = JSON.parse(project_req.to_json, object_class: Project)
 
     if !project.valid?

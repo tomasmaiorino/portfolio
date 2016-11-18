@@ -8,32 +8,20 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
   def setup
     @valid_params = {:name => 'oracle'}
     @invalid_params_no_name = {'':''}
-    @name_required = {:name => ["Field Required"]}
   end
 
   test "should_create_tech_tag" do
-    tech_tag = TechTag.new
-    TechTag.stubs(:find_by).returns(nil)
-    tech_tag = stub(:valid? => true, :name => 'Java', :id => 3)
-    JSON.stubs(:parse).returns(tech_tag)
-    tech_tag.expects(:save).returns(true).once
-
     params = @valid_params
     post '/api/v1/tech_tag', params
-    JSON.unstub(:parse)
-    valid_success_request(response, {'id' => ''})
+
+    message = valid_success_request(response, {'id' => ''})
 
   end
 
   test "should_not_create_tech_tag_invalid_tech_name" do
-    tech_tag = TechTag.new
-    TechTag.stubs(:find_by).returns(nil)
-    tech_tag = stub(:valid? => false, :errors => @name_required)
-    JSON.stubs(:parse).returns(tech_tag)
-
     params = @invalid_params_no_name
     post '/api/v1/tech_tag', params
-    JSON.unstub(:parse)
+
     message = valid_bad_request(response, {'name' => ''})
 
   end

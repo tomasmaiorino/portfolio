@@ -16,7 +16,7 @@ class TechTagController < BaseApiController
     tech_tag_temp = TechTag.find_by(:name => tech_tag.name)
     message = tech_tag_temp.nil? ? "Creating" : "Updating"
 
-    Rails.logger.info "#{message} skill with token :" << tech_tag.name
+    Rails.logger.info "#{message} tech_tag with name :" << tech_tag.name
 
     if !tech_tag_temp.nil?
       tech_tag_temp.name = tech_tag.name
