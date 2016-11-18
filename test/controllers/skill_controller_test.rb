@@ -19,9 +19,10 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 
   test "should_create_skill" do
     skill = Skill.new
+    skill.name = 'Java'
+    skill.points = 'Java'
     Skill.stubs(:find_by).returns(nil)
-    skill = stub(:valid? => true, :id => 2, :name => 'Java', :points => 40
-    )
+    skill = stub(:valid? => true, :name => 'Java', :id => 1)
     JSON.stubs(:parse).returns(skill)
     skill.expects(:save).returns(true).once
 
@@ -30,6 +31,29 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
     JSON.unstub(:parse)
     valid_success_request(response, {'id' => ''})
   end
+
+  # => TO FIX CASE INSENSITIVE
+    test "should update skill" do
+      skill = Skill.new
+      skill = stub(:valid? => true, :id => 2,
+        :name => "Java New", :points => 3)
+
+      JSON.stubs(:parse).returns(skill)
+
+      skill_temp = Skill.new
+      skill_temp = stub(:nil? => false, :name= => 'Old Java', :points= => 3, :id => 2)
+
+      Skill.stubs(:find_by).returns(skill_temp)
+      skill_temp.expects(:save).returns(true).once
+
+      params = @valid_params
+      params[:id] = 2
+      put '/api/v1/skill', params
+      JSON.unstub(:parse)
+
+      message = valid_success_request(response, {'id' => ''})
+
+    end
 
   test "should return invalid skill no name" do
     skill = Skill.new
@@ -61,30 +85,6 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 
   end
 
-# => TO FIX CASE INSENSITIVE
-  test "should update skill" do
-    skill = Skill.new
-    skill = stub(:valid? => true, :id => 2,
-      :name => "Java New", :points => 3)
-
-    JSON.stubs(:parse).returns(skill)
-
-    skill_temp = Skill.new
-    skill_temp = stub(:id => 2, :nil? => false,
-                    :name => "Java Old", :points => 32)
-
-    Skill.stubs(:find_by).returns(skill_temp)
-    skill_temp.expects(:save).returns(true).once
-
-    params = @valid_params
-    params[:id] = 2
-    put '/api/v1/skill', params
-    JSON.unstub(:parse)
-
-    message = valid_success_request(response, {'id' => ''})
-
-  end
-
   test "should update skill not passing id" do
     params = @valid_params
     put '/api/v1/skill', params
@@ -95,7 +95,8 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 
   test "should update skill not passing duplicate name" do
     skill = Skill.new
-    skill = stub(:valid? => false, :name => 'Java', :errors => @duplicate_name_message, :id => 2)
+    skill = stub(:valid? => false, :name => 'Java',
+                          :errors => @duplicate_name_message, :id => 2)
     JSON.stubs(:parse).returns(skill)
 
     params = @valid_params

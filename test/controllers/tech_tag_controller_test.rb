@@ -8,7 +8,7 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
   def setup
     @valid_params = {:name => 'oracle'}
     @invalid_params_no_name = {'':''}
-    @name_required = {:name => ["Field Required"]}
+    @duplicate_name_message = {:name => ["duplicate tech"]}
   end
 
   test "should_create_tech_tag" do
@@ -30,6 +30,7 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
     TechTag.stubs(:find_by).returns(nil)
     tech_tag = stub(:valid? => false, :errors => @name_required)
     JSON.stubs(:parse).returns(tech_tag)
+    tech_tag.expects(:save).never
 
     params = @invalid_params_no_name
     post '/api/v1/tech_tag', params
@@ -40,29 +41,28 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
   test "should_update_tech_tag" do
     params = @valid_params
-    post '/api/v1/tech_tag', params
 
-    message = valid_success_request(response, {'id' => ''})
-    old_id = message['id']
+    tech_tag = TechTag.new
+    tech_tag = stub(:valid? => true, :name => 'New Orale', :id => 1)
 
-    params[:name] = 'oracle'
-    params[:id] = old_id
+    tech_tag_temp = TechTag.new
+    tech_tag_temp = stub(:nil? => false, :name= => 'Orale', :id => 1)
+
+    JSON.stubs(:parse).returns(tech_tag)
+
+    TechTag.stubs(:find_by).returns(tech_tag_temp)
+    tech_tag_temp.expects(:save).returns(true).once
+
+    params[:id] = 1
 
     put "/api/v1/tech_tag", params
+    JSON.unstub(:parse)
     message = valid_success_request(response, {'id' => ''})
-    assert_equal old_id, message['id']
 
   end
 
   test "should_not_update_tech_tag_not_passing_id" do
     params = @valid_params
-    post '/api/v1/tech_tag', params
-
-    message = valid_success_request(response, {'id' => ''})
-    old_id = message['id']
-
-    params[:name] = 'oracle'
-
     put "/api/v1/tech_tag", params
     message = valid_bad_request(response, {'id' => ''})
 
@@ -70,44 +70,36 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
   test "should_not_update_tech_tag_not_duplicate_name" do
     params = @valid_params
-    #first tech
-    post '/api/v1/tech_tag', params
+    tech_tag = TechTag.new
+    tech_tag = stub(:valid? => false, :errors => @duplicate_name_message, :name => 'Name', :id => 3)
 
-    message = valid_success_request(response, {'id' => ''})
+    JSON.stubs(:parse).returns(tech_tag)
 
-    params[:name] = 'mysql'
-    #second tech
-    post '/api/v1/tech_tag', params
-
-    message = valid_success_request(response, {'id' => ''})
-    old_id = message['id']
-
-    params[:name] = 'oracle'
-    params[:id] = old_id
+    tech_tag.expects(:save).never
+    params[:id] = 1
 
     put "/api/v1/tech_tag", params
-    message = valid_bad_request(response, {'name' => 'duplicate tech'})
+    JSON.unstub(:parse)
+    message = valid_bad_request(response, {'name' => 'duplicate tech'}, true)
 
   end
 
-  test "should_find_tech_tag_by_id" do
+  test "should_not_find_tech_tag_by_id" do
     get "/api/v1/tech_tag/222"
     assert_response :not_found
   end
 
-  test "should_not_find_tech_tag_by_id" do
-    TechTag.delete_all
-    params = @valid_params
-    #first tech
-    post '/api/v1/tech_tag', params
+  test "should_find_tech_tag_by_id" do
+    tech = TechTag.new
+    tech.id = 1
+    tech.name = 'Java'
 
-    message = valid_success_request(response, {'id' => ''})
-    id = message['id']
+    TechTag.stubs(:find).returns(tech)
 
-    get "/api/v1/tech_tag/#{id}"
+    get "/api/v1/tech_tag/#{tech.id}"
     message = valid_success_request(response)
-    assert_equal id, message['id']
-    assert_equal params[:name], message['name']
+    assert_equal tech.id, message['id']
+    assert_equal tech.name, message['name']
 
   end
 
@@ -117,18 +109,18 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_find_tech_tag_by_name" do
-    TechTag.delete_all
+
     params = @valid_params
-    #first tech
-    post '/api/v1/tech_tag', params
+    tech = TechTag.new
+    tech.id = 1
+    tech.name = 'Java'
 
-    message = valid_success_request(response, {'id' => ''})
-    id = message['id']
+    TechTag.stubs(:find_by).returns(tech)
 
-    get "/api/v1/tech_tag/#{params[:name]}"
+    get "/api/v1/tech_tag/#{tech.name}"
     message = valid_success_request(response)
-    assert_equal id, message['id']
-    assert_equal params[:name], message['name']
+    assert_equal tech.id, message['id']
+    assert_equal tech.name, message['name']
 
   end
 

@@ -23,6 +23,8 @@ class TechTagController < BaseApiController
       tech_tag = tech_tag_temp
     end
 
+    Rails.logger.debug "Lets #{message} :O "
+
     if tech_tag.save
       Rails.logger.debug "Tech_tag was saved :)"
       return render json:{'id':tech_tag.id}

@@ -8,7 +8,7 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
-
+  
   def get_valid_client(create = false)
     client = Client.new
     client.name = 'monsters'

@@ -63,6 +63,8 @@ class CompanyController < BaseApiController
       final_company = company_temp
     end
 
+    Rails.logger.debug "Lets #{message} :O "
+
     if final_company.save
       Rails.logger.debug "Company was saved :)"
       return render json:{'id':final_company.id}
@@ -83,7 +85,18 @@ class CompanyController < BaseApiController
     rescue ActiveRecord::RecordNotFound
       return head(:not_found)
     end
-    if !obj.nil? then return render :json => obj, :include => [:skills => {:only => [:name, :points]}] else return head(:not_found) end
+    if !obj.nil? then return render :json => obj, :include => {
+      :skills => {:only => [:name, :points]}, :projects => {:only =>
+        [:name,
+        :img,
+        :link_img,
+        :summary,
+        :description,
+        :improvements,
+        :time_spent,
+        :future_project,
+        :project_date]}
+      } else return head(:not_found) end
   end
 
   def get

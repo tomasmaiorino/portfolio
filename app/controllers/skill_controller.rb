@@ -19,8 +19,8 @@ class SkillController < BaseApiController
     Rails.logger.info "#{message} skill with name :" << skill.name
 
     if !skill_temp.nil?
-      skill_temp.name skill.name
-      skill_temp.points skill.points
+      skill_temp.name = skill.name
+      skill_temp.points = skill.points
       skill = skill_temp
     end
 

@@ -19,12 +19,14 @@ class ClientController < BaseApiController
     Rails.logger.info "#{message} client with token :" << client.token
 
     if !client_temp.nil?
-      client_temp.companies = client.companies
       client_temp.name = client.name
       client_temp.active = client.active
+      client_temp.token = client.token
       client_temp.security_permissions = client.security_permissions
       client = client_temp
     end
+
+    Rails.logger.debug "Lets #{message} :O "
 
     if client.save
       Rails.logger.debug "Client was saved :)"
