@@ -95,7 +95,8 @@ class CompanyController < BaseApiController
         :improvements,
         :time_spent,
         :future_project,
-        :project_date]}
+        :project_date,
+        :tech_tags]}
       } else return head(:not_found) end
   end
 

@@ -20,6 +20,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
       :token => 'xxffwf',
       :client_id => @client_id
     }
+    @invalid_params_no_token = {
+      :token => '',
+      :name => 'monster',
+      :client_id => @client_id
+    }
+
     @name_required = {:name => ["Field Required"]}
     @token_required = {:token => ["Field Required"]}
 
@@ -356,7 +362,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "shoul_find_company_full_by_token" do
+  test "shoul_find_full_company_by_token" do
     company_temp = get_valid_company(false)
     projects = get_valid_project(false, 2)
     projects.each_with_index{|s,i|
@@ -369,9 +375,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Company.stubs(:find_by).returns(company_temp)
 
     get "/api/v1/company/token/cmpToken"
+    puts 'response'
+    puts response.body
     message = valid_success_request(response)
-    puts "message"
-    puts message
     assert_equal company_temp.id, message["id"]
     assert_equal company_temp.name, message["name"]
     assert_equal skills.size, message["skills"].size
@@ -382,8 +388,15 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal skills[2].name, message["skills"][2]['name']
     assert_equal skills[2].points, message["skills"][2]['points']
     assert_equal projects.size, message["projects"].size
-    assert_nil message["created_at"]
-    assert_nil message["language"]
+    assert_equal projects[0].name, message["projects"][0]['name']
+    assert_equal projects[0].summary, message["projects"][0]['summary']
+    assert_equal projects[0].project_date, message["projects"][0]['project_date']
+    assert_equal projects[1].name, message["projects"][1]['name']
+    assert_equal projects[1].summary, message["projects"][1]['summary']
+    assert_equal projects[1].project_date, message["projects"][1]['project_date']
+    assert_nil message["projects"][0]['created_at']
+    assert_nil message["projects"][0]['language']
+
   end
 
 end
