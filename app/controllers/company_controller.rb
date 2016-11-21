@@ -86,7 +86,8 @@ class CompanyController < BaseApiController
       return head(:not_found)
     end
     if !obj.nil? then return render :json => obj, :include => {
-      :skills => {:only => [:name, :points]}, :projects => {:only =>
+      :skills => {:only => [:name, :points]}, :projects => {
+        :only =>
         [:name,
         :img,
         :link_img,
@@ -95,17 +96,34 @@ class CompanyController < BaseApiController
         :improvements,
         :time_spent,
         :future_project,
-        :project_date,
-        :tech_tags]}
+        :project_date
+        ],
+        :include => {:tech_tags => {:only => :name}}
+      }
       } else return head(:not_found) end
   end
 
   def get
-    base_get{Company.find_by(:token => params[:token])}
+    #base_get{Company.find_by(:token => params[:token])}
+    token  = params[:token]
+    base_get{Company.includes(:projects).where(:projects => {active: true}, :token => token)[0]}
   end
 
   def get_company_client
     base_get{Company.find_by(:client => Client.find(params[:client_id]))}
+  end
+
+  def get_projects_tech_tags_by_company
+    Rails.logger.debug "Searching tech tags for this token #{params[:token]}"
+    companies = Company.includes(:projects).where(:projects => {active: true}, :token => params[:token])[0]
+    return head(:not_found) unless !companies.nil? || !companies.empty?
+    tech_tags = []
+    companies.projects.each{|p|
+      p.tech_tags.each{|t|
+        tech_tags << t.name
+      }
+    }
+    return render json:{'tech_tags':tech_tags.uniq}
   end
 
 end

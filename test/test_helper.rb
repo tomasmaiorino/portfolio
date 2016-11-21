@@ -8,7 +8,7 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
-  
+
   def get_valid_client(create = false)
     client = Client.new
     client.name = 'monsters'
@@ -77,6 +77,7 @@ class ActiveSupport::TestCase
       project.summary = 'Integration between systems'
       project.project_date = Time.now
       project.time_spent = '2 weeks'
+      project.active = true
       project.save unless !create
       return project
     else
@@ -89,6 +90,7 @@ class ActiveSupport::TestCase
         project.summary = "Integration between systems #{t}"
         project.project_date = Time.now
         project.time_spent = '2 weeks'
+        project.active = true
         project.save unless !create
         temp << project
       }

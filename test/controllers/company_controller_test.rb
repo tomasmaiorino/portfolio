@@ -314,9 +314,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     company_temp.skills = skills
     company_temp.token = 'hhtii'
 
-    Company.stubs(:find_by).returns(company_temp)
+    #Company.stubs(:find_by).returns(company_temp)
+    projects = mock()
+    Company.stubs(:includes).returns(projects)
+    projects.stubs(:where).returns([company_temp])
 
-    get "/api/v1/company/#{company_temp.token}"
+    get "/api/v1/company/token/#{company_temp.token}"
     message = valid_success_request(response)
     assert_equal company_temp.id, message["id"]
     assert_equal company_temp.name, message["name"]
@@ -330,7 +333,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_find_company_by_token_not_found" do
-    get "/api/v1/company/token"
+    get "/api/v1/company/token/e3"
     assert_response :not_found
   end
 
@@ -362,21 +365,31 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "shoul_find_full_company_by_token" do
+  test "should_find_full_company_by_token" do
     company_temp = get_valid_company(false)
+    tech_tags = get_valid_teck_tag(false, ['JAVA', 'ORACLE', 'RUBY', 'GIT'])
+    tech_tags.each_with_index{|s,i|
+      s.id = i
+    }
     projects = get_valid_project(false, 2)
     projects.each_with_index{|s,i|
       s.id = i
     }
+
+    projects[0].tech_tags = tech_tags[0..1]
+    projects[1].tech_tags = tech_tags[2..3]
+
     skills = get_valid_skill(false, -1, @skills)
     company_temp.skills = skills
     company_temp.projects = projects
 
-    Company.stubs(:find_by).returns(company_temp)
+    projects_mock = mock()
+    Company.stubs(:includes).returns(projects_mock)
+    projects_mock.stubs(:where).returns([company_temp])
 
     get "/api/v1/company/token/cmpToken"
-    puts 'response'
-    puts response.body
+#    puts 'response'
+#    puts response.body
     message = valid_success_request(response)
     assert_equal company_temp.id, message["id"]
     assert_equal company_temp.name, message["name"]
@@ -390,13 +403,50 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal projects.size, message["projects"].size
     assert_equal projects[0].name, message["projects"][0]['name']
     assert_equal projects[0].summary, message["projects"][0]['summary']
-    assert_equal projects[0].project_date, message["projects"][0]['project_date']
+    assert_equal projects[0].project_date.strftime('%D'),
+                      Date.parse(message["projects"][0]['project_date']).strftime('%D')
     assert_equal projects[1].name, message["projects"][1]['name']
     assert_equal projects[1].summary, message["projects"][1]['summary']
-    assert_equal projects[1].project_date, message["projects"][1]['project_date']
+    assert_equal projects[1].project_date.strftime('%D'),
+                      Date.parse(message["projects"][1]['project_date']).strftime('%D')
+    assert_not_nil message["projects"][0]['tech_tags']
+    assert_equal projects[0].tech_tags[0].name, message["projects"][0]['tech_tags'][0]['name']
+    assert_equal projects[1].tech_tags[0].name, message["projects"][1]['tech_tags'][0]['name']
+    assert_equal 2, message["projects"][0]['tech_tags'].size
+    assert_equal 2, message["projects"][1]['tech_tags'].size
     assert_nil message["projects"][0]['created_at']
     assert_nil message["projects"][0]['language']
 
   end
 
+  test "should_return_tech_tags_by_company_token" do
+
+    tech_tag_1 = TechTag.new
+    tech_tag_1 = stub(:name => 'JAVA')
+    tech_tag_2 = TechTag.new
+    tech_tag_2 = stub(:name => 'SQL')
+    tech_tag_3 = TechTag.new
+    tech_tag_3 = stub(:name => 'ORACLE')
+    tech_tag_4 = TechTag.new
+    tech_tag_4 = stub(:name => 'SQL')
+
+    project_1 = Project.new
+    project_1 = stub(:tech_tags => [tech_tag_1, tech_tag_2])
+    project_2 = Project.new
+    project_2 = stub(:tech_tags => [tech_tag_3, tech_tag_4])
+
+    company = Company.new
+    company = stub(:projects => [project_1, project_2])
+
+    projects_mock = mock()
+    Company.stubs(:includes).returns(projects_mock)
+    projects_mock.stubs(:where).returns([company])
+
+    get "/api/v1/company/tech/cmpToken"
+    message = valid_success_request(response)
+    assert_equal 3, message["tech_tags"].size
+    assert_equal tech_tag_1.name, message["tech_tags"][0]
+    assert_equal tech_tag_2.name, message["tech_tags"][1]
+    assert_equal tech_tag_3.name, message["tech_tags"][2]
+  end
 end

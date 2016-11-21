@@ -126,9 +126,11 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     company_temp.skills = skills
     company_temp.token = 'hhtii'
 
-    Company.stubs(:find_by).returns(company_temp)
+    projects = mock()
+    Company.stubs(:includes).returns(projects)
+    projects.stubs(:where).returns([company_temp])
 
-    get "/api/v1/company/#{company_temp.token}"
+    get "/api/v1/company/token/#{company_temp.token}"
     message = valid_success_request(response)
     assert_equal company_temp.id, message["id"]
     assert_equal company_temp.name, message["name"]
@@ -142,7 +144,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_by_token_not_found" do
-    get "/api/v1/company/token"
+    get "/api/v1/company/token/tk"
     assert_response :not_found
   end
 
@@ -172,6 +174,129 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   test "integration_should_find_company_by_client_id_not_found" do
     get "/api/v1/company/33"
     assert_response :not_found
+  end
+
+  test "integration_should_find_full_company_by_token" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    #
+    # => tech_tag session
+    #
+    tech_tags = get_valid_teck_tag(true, ['JAVA', 'ORACLE', 'GIT', 'RUBY', 'RAILS'])
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+
+    project_1.tech_tags = tech_tags[0..2]
+
+    project_2 = projects[1]
+    project_2.tech_tags = tech_tags[1..4]
+
+    params = project_1.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/token/#{company.token}"
+    puts "response"
+    puts response.body
+    company_get = valid_success_request(response)
+    assert_not_nil company_get
+    assert_equal company_id, company_get["id"]
+    assert_equal company.name, company_get["name"]
+    assert_equal projects.size - 1, company_get["projects"].size
+    assert_equal project_1.name, company_get["projects"][0]['name']
+    assert_equal project_1.img, company_get["projects"][0]['img']
+    assert_equal project_1.tech_tags.size, company_get["projects"][0]['tech_tags'].size
+    assert_equal project_1.tech_tags[0].name, company_get["projects"][0]['tech_tags'][0]['name']
+    assert_equal project_1.tech_tags[1].name, company_get["projects"][0]['tech_tags'][1]['name']
+
+    assert_equal project_2.name, company_get["projects"][1]['name']
+    assert_equal project_2.img, company_get["projects"][1]['img']
+    assert_equal project_2.tech_tags.size, company_get["projects"][1]['tech_tags'].size
+    assert_equal project_2.tech_tags[0].name, company_get["projects"][1]['tech_tags'][0]['name']
+    assert_equal project_2.tech_tags[1].name, company_get["projects"][1]['tech_tags'][1]['name']
+    assert_equal project_2.tech_tags[2].name, company_get["projects"][1]['tech_tags'][2]['name']
+
+  end
+
+  test "integration_should_find_full_company_by_token_using_inactive_projects" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    #
+    # => tech_tag session
+    #
+    tech_tags = get_valid_teck_tag(true, ['JAVA', 'ORACLE', 'GIT', 'RUBY', 'RAILS'])
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+
+    project_1.tech_tags = tech_tags[0..2]
+
+    project_2 = projects[1]
+    project_2.active = false
+    project_2.save
+    project_2.tech_tags = tech_tags[1..4]
+
+    params = project_1.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/token/#{company.token}"
+    puts "response"
+    puts response.body
+    company_get = valid_success_request(response)
+    assert_not_nil company_get
+    assert_equal company_id, company_get["id"]
+    assert_equal company.name, company_get["name"]
+    assert_equal project_1.name, company_get["projects"][0]['name']
+    assert_equal project_1.img, company_get["projects"][0]['img']
+    assert_equal project_1.tech_tags.size, company_get["projects"][0]['tech_tags'].size
+    assert_equal project_1.tech_tags[0].name, company_get["projects"][0]['tech_tags'][0]['name']
+    assert_equal project_1.tech_tags[1].name, company_get["projects"][0]['tech_tags'][1]['name']
+    assert_equal projects.size - 2, company_get["projects"].size
+
   end
 
 

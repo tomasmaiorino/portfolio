@@ -73,6 +73,6 @@ class ProjectController < BaseApiController
   def configure_tech_tags(project)
     return nil if project.nil? || project[:tech_tags].blank?
     return TechTag.where(:id => project[:tech_tags])
-  end
+  end  
 
 end
