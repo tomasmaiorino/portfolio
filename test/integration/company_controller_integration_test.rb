@@ -19,73 +19,86 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_create_company_without_skills" do
-    client = get_valid_client(false)
-    client.id = 4433
-    params = @valid_params
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    params = company.attributes
     params[:client_id] = client.id
-    @valid_params[:client_id] = client.id
-
-    Client.stubs(:find).returns(client)
 
     post '/api/v1/company', params
-    print_response(response)
     message = valid_success_request(response, {'id' => ''})
   end
 
   test "integration_should_create_company_with_skills" do
-    client = Client.new
-    client.id = 553323
-    params = @valid_params
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    params = company.attributes
     params[:client_id] = client.id
-    Client.stubs(:find).returns(client)
 
-    skills = get_valid_skill(false, -1, @skills)
-    @valid_params[:skills] = skills
-
-    Company.stubs(:save).returns(true)
-
+    skills = get_valid_skill(true, -1, @skills)
+    params[:skills] = skills
     post '/api/v1/company', params
-    print_response(response)
     message = valid_success_request(response, {'id' => ''})
+
   end
 
   test "integration_should_not_update_company_duplicate_token" do
-    client = Client.new
-    client.id = 553323
-    params = @valid_params
+    client = get_valid_client(true)
+    companies = get_valid_company(false, client, 2)
+    params = companies[0].attributes
     params[:client_id] = client.id
-    Client.stubs(:find).returns(client)
 
     skills = get_valid_skill(false, -1, @skills)
-    @valid_params[:skills] = skills
+    params[:skills] = skills
+    #company 1
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_1_id = message['id']
 
-    Company.any_instance.stubs(:save).returns(false)
-    Company.any_instance.stubs(:valid?).returns(false)
-    Company.any_instance.stubs(:errors).returns(@duplicate_token_message)
+    params = companies[1].attributes
+    params[:client_id] = client.id
 
-    params[:id] = 4433
+    skills = get_valid_skill(false, -1, @skills)
+    params[:skills] = skills
+
+    #company 2
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+
+    params[:id] = company_1_id
+    companies[0].token = companies[1].token
+    companies[0].id = company_1_id
+    params = companies[0].attributes
+    params[:client_id] = client.id
+    params[:skills] = skills
+
+    #update
     put '/api/v1/company', params
     print_response(response)
     message = valid_bad_request(response, {'token' => ''})
   end
 
   test "integration_should_update_company_with_skills" do
-    client = Client.new
-    client.id = 553323
-    params = @valid_params
-    params[:client_id] = client.id
-    Client.stubs(:find).returns(client)
-
+    client = get_valid_client(true)
+    companies = get_valid_company(false, client, 2)
     skills = get_valid_skill(false, -1, @skills)
-    skills.each_with_index{|s,i|
-      s.id = i
-    }
-    @valid_params[:skills] = skills
-    @valid_params[:id] = 22
-    Company.stubs(:save).returns(true)
+
+    params = companies[0].attributes
+    params[:client_id] = client.id
+    params[:skills] = skills
+    #company 1
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message['id']
+
+    companies[0].id = company_id
+    companies[0].token = 'new_token'
+    params = companies[0].attributes
+    params[:client_id] = client.id
+    params[:skills] = skills[0..1]
+
     put '/api/v1/company', params
     print_response(response)
-    message = valid_success_request(response, {'id' => ''})
+    message = valid_success_request(response, {'id' => company_id})
   end
 
   test "integration_should_not_update_company_with_skills" do
@@ -299,5 +312,174 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
   end
 
+  test "integration_should_find_company_tech_tags" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    #
+    # => tech_tag session
+    #
+    tech_tags = get_valid_teck_tag(true, ['JAVA', 'ORACLE', 'GIT', 'RUBY', 'RAILS'])
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+
+    project_1.tech_tags = tech_tags[0..2]
+
+    project_2 = projects[1]
+    #project_2.active = false
+    project_2.save
+    project_2.tech_tags = tech_tags[1..3]
+
+    params = project_1.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/tech/#{company.token}"
+    tech_tags_temp = valid_success_request(response)
+    assert_not_empty tech_tags
+    assert_equal tech_tags.size - 1, tech_tags_temp["tech_tags"].size
+    assert 'JAVA'.in? tech_tags_temp["tech_tags"]
+    assert 'ORACLE'.in? tech_tags_temp["tech_tags"]
+    assert 'GIT'.in? tech_tags_temp["tech_tags"]
+    assert 'RUBY'.in? tech_tags_temp["tech_tags"]
+
+  end
+
+  test "integration_should_not_find_company_tech_tags" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    #
+    # => tech_tag session
+    #
+    tech_tags = get_valid_teck_tag(true, ['JAVA', 'ORACLE', 'GIT', 'RUBY', 'RAILS'])
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+    project_1.active = false
+    project_1.save
+
+    project_1.tech_tags = tech_tags[0..2]
+
+    project_2 = projects[1]
+    project_2.active = false
+    project_2.save
+    project_2.tech_tags = tech_tags[1..3]
+
+    params = project_1.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/tech/#{company.token}"
+    assert_response :not_found
+
+  end
+
+  test "integration_should_not_find_company_project_tech_tags" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+
+    project_2 = projects[1]
+
+    params = project_1.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = company_id
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/tech/#{company.token}"
+    assert_response :not_found
+
+  end
+
+  test "integration_should_find_company_skills" do
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
+    company.token = 'tOkTT'
+    #
+    # => company session
+    #
+    params = company.attributes
+    params[:skills] = [skills[0].id, skills[1].id]
+
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message["id"]
+
+    get "/api/v1/company/skill/#{company.token}"
+    message = valid_success_request(response)
+    puts 'response'
+    puts message
+    assert_not_nil message['skills']
+    assert_not_empty message['skills']
+    assert_equal skills.size, message['skills'].size
+    assert_equal skills[0].name, message['skills'][0].name
+    assert_equal skills[1].name, message['skills'][1].name
+    assert_equal skills[2].name, message['skills'][2].name
+  end
 
 end

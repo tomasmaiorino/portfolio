@@ -449,4 +449,73 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal tech_tag_2.name, message["tech_tags"][1]
     assert_equal tech_tag_3.name, message["tech_tags"][2]
   end
+
+  test "should_not_return_tech_tags_by_company_token_returning_empty" do
+    projects_mock = mock()
+    Company.stubs(:includes).returns(projects_mock)
+
+    companies = mock()
+    companies = stub(:empty? => true, :nil? => false)
+    projects_mock.stubs(:where).returns(companies)
+    get "/api/v1/company/tech/cmpToken"
+    assert_response :not_found
+  end
+
+  test "should_not_return_tech_tags_by_company_token_returning_nil" do
+    projects_mock = mock()
+    Company.stubs(:includes).returns(projects_mock)
+
+    companies = mock()
+    companies = stub(:nil? => true)
+    projects_mock.stubs(:where).returns(companies)
+    get "/api/v1/company/tech/cmpToken"
+    assert_response :not_found
+  end
+
+  test "should_find_company_skills_by_token" do
+    skills = get_valid_skill(false, -1, @skills)
+    company_temp = Company.new
+    company_temp = stub(:skills => skills, :nil? => false)
+    Company.stubs(:find_by).returns(company_temp)
+
+    get "/api/v1/company/skill/cmpToken"
+    message = valid_success_request(response)
+#    puts 'response'
+#    puts message
+    assert_equal 3, message['skills'].size
+    assert_equal @skills[0], message['skills'][0]['name']
+    assert_equal @skills[1], message['skills'][1]['name']
+    assert_equal @skills[2], message['skills'][2]['name']
+
+  end
+
+  test "should_not_find_company_skills_by_token" do
+    company_temp = Company.new
+    company_temp = stub(:nil? => true)
+    Company.stubs(:find_by).returns(company_temp)
+
+    get "/api/v1/company/skill/cmpToken"
+    assert_response :not_found
+  end
+
+  test "should_not_find_company_skills_by_token_returning_nil_skills" do
+    company_temp = Company.new
+    company_temp = stub(:nil? => false, :skills => nil)
+    Company.stubs(:find_by).returns(company_temp)
+
+    get "/api/v1/company/skill/cmpToken"
+    assert_response :not_found
+  end
+
+  test "should_not_find_company_skills_by_token_returning_empty_skills" do
+    skills = mock()
+    skills = stub(:empty? => true)
+    company_temp = Company.new
+    company_temp = stub(:nil? => false, :skills => skills)
+    Company.stubs(:find_by).returns(company_temp)
+
+    get "/api/v1/company/skill/cmpToken"
+    assert_response :not_found
+  end
+
 end

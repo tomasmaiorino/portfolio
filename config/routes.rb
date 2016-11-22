@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   match 'api/v1/company/:client_id' => 'company#get_company_client', constraints: { client_id: /\d+/ }, via: [:get]
   match 'api/v1/company/token/:token' => 'company#get', via: [:get]
   match 'api/v1/company/tech/:token' => 'company#get_projects_tech_tags_by_company', via: [:get]
+  match 'api/v1/company/skill/:token' => 'company#get_company_skills', via: [:get]
 
   #project
   match 'api/v1/project' => 'project#create', via: [:post]

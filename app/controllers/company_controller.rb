@@ -45,12 +45,13 @@ class CompanyController < BaseApiController
     final_company.skills = skills unless skills.nil? || skills.empty?
     final_company.name = company[:name]
     final_company.token = company[:token]
+    final_company.id = company[:id]
 
     if !final_company.valid?
         return render json: final_company.errors.to_json, status: :bad_request
     end
 
-    company_temp = Company.find_by(:token => final_company.token)
+    company_temp = if final_company.id.nil? then Company.find_by(:token => final_company.token) else Company.find_by(:id => final_company.id) end
     message = company_temp.nil? ? "Creating" : "Updating"
 
     Rails.logger.info "#{message} company with token :" << final_company.token
@@ -113,16 +114,24 @@ class CompanyController < BaseApiController
     base_get{Company.find_by(:client => Client.find(params[:client_id]))}
   end
 
+  def get_company_skills
+    company = Company.find_by(:token => params[:token])
+    return head(:not_found) if company.nil? || company.skills.nil? || company.skills.empty?
+    render :json => {:skills => company.skills.as_json(only: [:name, :points])}
+  end
+
+
   def get_projects_tech_tags_by_company
     Rails.logger.debug "Searching tech tags for this token #{params[:token]}"
-    companies = Company.includes(:projects).where(:projects => {active: true}, :token => params[:token])[0]
-    return head(:not_found) unless !companies.nil? || !companies.empty?
+    companies = Company.includes(:projects).where(:projects => {active: true}, :token => params[:token])
+    return head(:not_found) if companies.nil? || companies.empty?
     tech_tags = []
-    companies.projects.each{|p|
+    companies[0].projects.each{|p|
       p.tech_tags.each{|t|
         tech_tags << t.name
       }
     }
+    return head(:not_found) if tech_tags.empty?
     return render json:{'tech_tags':tech_tags.uniq}
   end
 
