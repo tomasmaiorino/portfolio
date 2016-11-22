@@ -17,15 +17,5 @@ class Skill < ApplicationRecord
      return nil if p_skills.nil? || p_skills.empty?
      is_string = p_skills[0].kind_of? String
      load_model_list(p_skills, 'Skill', add_not_found_class) {|s| Skill.find_by(:name => is_string == true ? s : s.name)}
-=begin
-     skills = []
-     is_string = p_skills[0].kind_of? String
-     p_skills.each{ |s|
-       skill = Skill.find_by(:name => is_string == true ? s : s.name)
-       skills << skill unless skill.nil?
-       skills << s if add_not_found_class && skill.nil?
-     }
-     return skills
-=end
    end
 end

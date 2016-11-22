@@ -118,9 +118,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_return_skills" do
-    skills = get_valid_skill(false, -1, @skills)
-    params = @valid_params
-    Skill.stubs(:load_skills).returns(skills)
+    skills = get_valid_skill(true, -1, @skills)
     company_controlle = CompanyController.new
     company = {:skills => @skills}
     skills_temp = company_controlle.configure_skills(company)
@@ -198,7 +196,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     # => company session
     #
     params = company.attributes
-    params[:skills] = [skills[0].id, skills[1].id]
+    params[:skills] = [skills[0].name, skills[1].name]
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
@@ -237,6 +235,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     assert_not_nil company_get
     assert_equal company_id, company_get["id"]
     assert_equal company.name, company_get["name"]
+    assert_not_empty company_get["skills"]
     assert_equal projects.size - 1, company_get["projects"].size
     assert_equal project_1.name, company_get["projects"][0]['name']
     assert_equal project_1.img, company_get["projects"][0]['img']
@@ -262,7 +261,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     # => company session
     #
     params = company.attributes
-    params[:skills] = [skills[0].id, skills[1].id]
+    params[:skills] = [skills[0].name, skills[1].name]
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
@@ -321,7 +320,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     # => company session
     #
     params = company.attributes
-    params[:skills] = [skills[0].id, skills[1].id]
+    params[:skills] = [skills[0].name, skills[1].name]
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
@@ -464,7 +463,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     # => company session
     #
     params = company.attributes
-    params[:skills] = [skills[0].id, skills[1].id]
+    params[:skills] = [skills[0].name, skills[1].name]
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
@@ -472,14 +471,99 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     get "/api/v1/company/skill/#{company.token}"
     message = valid_success_request(response)
-    puts 'response'
-    puts message
+    #puts 'response'
+    #puts message
     assert_not_nil message['skills']
     assert_not_empty message['skills']
     assert_equal skills.size, message['skills'].size
-    assert_equal skills[0].name, message['skills'][0].name
-    assert_equal skills[1].name, message['skills'][1].name
-    assert_equal skills[2].name, message['skills'][2].name
+    assert_equal skills[0].name, message['skills'][0]['name']
+    assert_equal skills[1].name, message['skills'][1]['name']
   end
+
+  test "integration_should_find_client_company_by_token" do
+    client = get_valid_client(true)
+    companies = get_valid_company(false, client, 3)
+    skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG', 'Javascript', 'ATG'])
+
+    #
+    # => company session
+    #
+    #company 1
+    params = companies[0].attributes
+    params[:skills] = [skills[0].name, skills[1].name]
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_1_id = message["id"]
+
+    #company 2
+    params = companies[1].attributes
+    params[:skills] = [skills[2].name, skills[3].name]
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_2_id = message["id"]
+
+    #company 3
+    params = companies[2].attributes
+    params[:skills] = [skills[0].name, skills[3].name]
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_3_id = message["id"]
+
+    #
+    # => project session
+    #
+    projects = get_valid_project(true, 3)
+    #create first project
+    project_1 = projects[0]
+
+    project_2 = projects[1]
+
+    project_3 = projects[2]
+
+    params = project_1.attributes
+    params[:companies] = [company_1_id, company_2_id]
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_2.attributes
+    params[:companies] = [company_3_id]
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    params = project_3.attributes
+    params[:companies] = [company_1_id, company_2_id, company_3_id]
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/#{client.id}"
+    company_get = valid_success_request(response)
+    print_response(response)
+    assert_not_nil company_get
+    assert_not_empty company_get
+    assert_equal companies.size, company_get.size
+    assert_equal companies[0].id, company_get[0].id
+
+
+
+=begin
+    assert_equal company_id, company_get["id"]
+    assert_equal company.name, company_get["name"]
+    assert_not_empty company_get["skills"]
+    assert_equal projects.size - 1, company_get["projects"].size
+    assert_equal project_1.name, company_get["projects"][0]['name']
+    assert_equal project_1.img, company_get["projects"][0]['img']
+    assert_equal project_1.tech_tags.size, company_get["projects"][0]['tech_tags'].size
+    assert_equal project_1.tech_tags[0].name, company_get["projects"][0]['tech_tags'][0]['name']
+    assert_equal project_1.tech_tags[1].name, company_get["projects"][0]['tech_tags'][1]['name']
+
+    assert_equal project_2.name, company_get["projects"][1]['name']
+    assert_equal project_2.img, company_get["projects"][1]['img']
+    assert_equal project_2.tech_tags.size, company_get["projects"][1]['tech_tags'].size
+    assert_equal project_2.tech_tags[0].name, company_get["projects"][1]['tech_tags'][0]['name']
+    assert_equal project_2.tech_tags[1].name, company_get["projects"][1]['tech_tags'][1]['name']
+    assert_equal project_2.tech_tags[2].name, company_get["projects"][1]['tech_tags'][2]['name']
+=end
+  end
+
 
 end

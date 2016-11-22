@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.string   "email"
     t.string   "manager_name"
     t.string   "name"
+    t.string   "main_color"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.index ["client_id"], name: "index_companies_on_client_id"

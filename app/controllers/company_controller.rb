@@ -43,6 +43,9 @@ class CompanyController < BaseApiController
     skills = configure_skills(company)
 
     final_company.skills = skills unless skills.nil? || skills.empty?
+
+    Rails.logger.debug "Updating company skills" unless final_company.skills.nil? || final_company.skills.empty?
+
     final_company.name = company[:name]
     final_company.token = company[:token]
     final_company.id = company[:id]
@@ -60,6 +63,10 @@ class CompanyController < BaseApiController
       company_temp.skills = final_company.skills unless final_company.skills.nil? || final_company.skills.empty?
       company_temp.name = final_company.name
       company_temp.token = final_company.token
+      company_temp.manager_name = final_company.manager_name
+      company_temp.email = final_company.email
+      company_temp.main_color = final_company.main_color
+      company_temp.active = final_company.active
       company_temp.client = final_company.client
       final_company = company_temp
     end
@@ -76,6 +83,7 @@ class CompanyController < BaseApiController
 
   def configure_skills(company)
     return nil if company.nil? || company[:skills].blank?
+    Rails.logger.debug "Lets load skills :"
     return Skill.load_skills(company[:skills])
   end
 
@@ -111,7 +119,7 @@ class CompanyController < BaseApiController
   end
 
   def get_company_client
-    base_get{Company.find_by(:client => Client.find(params[:client_id]))}
+    base_get{Company.find_by(:client => Client.find_by(:id => params[:client_id], :active => true))}
   end
 
   def get_company_skills
