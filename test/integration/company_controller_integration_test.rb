@@ -160,19 +160,24 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_by_client_id" do
-    company_temp = get_valid_company(false)
-    client_id = 334
-    skills = get_valid_skill(false, -1, @skills)
-    Client.stubs(:find).returns(client_id)
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    params = company.attributes
+    params[:client_id] = client.id
 
-    company_temp.skills = skills
+    skills = get_valid_skill(true, -1, @skills)
+    params[:skills] = [skills[0].name,skills[1].name,skills[2].name ]
 
-    Company.stubs(:find_by).returns(company_temp)
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message['id']
 
-    get "/api/v1/company/#{client_id}"
+    get "/api/v1/company/#{client.id}"
     message = valid_success_request(response)
-    assert_equal company_temp.id, message["id"]
-    assert_equal company_temp.name, message["name"]
+    print_response(response)
+    message = message[0]
+    assert_equal company_id, message["id"]
+    assert_equal company.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
     assert_equal skills[0].points, message["skills"][0]['points']
@@ -183,7 +188,23 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_by_client_id_not_found" do
-    get "/api/v1/company/33"
+    get "/api/v1/company/355445"
+    assert_response :not_found
+  end
+
+  test "integration_should_find_company_by_client_id_not_found_with_company" do
+    #create company
+    client = get_valid_client(true)
+    company = get_valid_company(false, client)
+    params = company.attributes
+    params[:client_id] = client.id
+
+    skills = get_valid_skill(true, -1, @skills)
+    params[:skills] = skills
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/company/355445"
     assert_response :not_found
   end
 
@@ -482,7 +503,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
   test "integration_should_find_client_company_by_token" do
     client = get_valid_client(true)
-    companies = get_valid_company(false, client, 3)
+    companies = get_valid_company(false, client, 4)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG', 'Javascript', 'ATG'])
 
     #
@@ -509,6 +530,14 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     message = valid_success_request(response, {'id' => ''})
     company_3_id = message["id"]
 
+    #company 4
+    params = companies[3].attributes
+    params[:active] = false
+    params[:skills] = [skills[0].name, skills[3].name]
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_4_id = message["id"]
+
     #
     # => project session
     #
@@ -524,26 +553,49 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     params[:companies] = [company_1_id, company_2_id]
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
+    project_1_id = message['id']
 
     params = project_2.attributes
-    params[:companies] = [company_3_id]
+    params[:companies] = [company_3_id, company_4_id]
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
+    project_2_id = message['id']
 
     params = project_3.attributes
-    params[:companies] = [company_1_id, company_2_id, company_3_id]
+    params[:companies] = [company_1_id, company_2_id]
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
+    project_3_id = message['id']
 
     get "/api/v1/company/#{client.id}"
     company_get = valid_success_request(response)
-    print_response(response)
+    #print_response(response)
     assert_not_nil company_get
     assert_not_empty company_get
-    assert_equal companies.size, company_get.size
-    assert_equal companies[0].id, company_get[0].id
+    assert_equal companies.size - 1, company_get.size
 
+    #checks company 1
+    assert_equal company_1_id, company_get[0]['id']
+    #company 1 should have 2 projects
+    assert_equal 2, company_get[0]['projects'].size
+    assert_equal project_1.name, company_get[0]['projects'][0]['name']
+    assert_equal project_1.img, company_get[0]['projects'][0]['img']
+    assert_equal project_3.name, company_get[0]['projects'][1]['name']
+    assert_equal project_3.img, company_get[0]['projects'][1]['img']
 
+    #checks company 2
+    assert_equal company_2_id, company_get[1]['id']
+    #company 2 should have 2 projects
+    assert_equal 2, company_get[1]['projects'].size
+    assert_equal project_1.name, company_get[1]['projects'][0]['name']
+    assert_equal project_1.img, company_get[1]['projects'][0]['img']
+    assert_equal project_3.name, company_get[1]['projects'][1]['name']
+    assert_equal project_3.img, company_get[1]['projects'][1]['img']
+
+    #checks company 3
+    assert_equal company_3_id, company_get[2]['id']
+    assert_equal project_2.name, company_get[2]['projects'][0]['name']
+    assert_equal project_2.img, company_get[2]['projects'][0]['img']
 
 =begin
     assert_equal company_id, company_get["id"]

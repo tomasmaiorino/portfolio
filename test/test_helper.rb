@@ -128,11 +128,12 @@ class ActiveSupport::TestCase
     end
     company = Company.new
     company.name = 'monsters'
-    company.token = 'xxss12'
+    company.token = SecureRandom.uuid.gsub("-", "")[0..10]
     company.active = true
     company.client = client
     company.email = 'monsters@monsters.com'
     company.manager_name = 'David'
+    company.main_color = '#FF00FF'
     company.save unless !create
     return company
   end

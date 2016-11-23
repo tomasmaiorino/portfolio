@@ -48,6 +48,10 @@ class CompanyController < BaseApiController
 
     final_company.name = company[:name]
     final_company.token = company[:token]
+    final_company.email = company[:email]
+    final_company.manager_name = company[:manager_name]
+    final_company.active = company[:active]
+    final_company.main_color = company[:main_color]
     final_company.id = company[:id]
 
     if !final_company.valid?
@@ -119,7 +123,9 @@ class CompanyController < BaseApiController
   end
 
   def get_company_client
-    base_get{Company.find_by(:client => Client.find_by(:id => params[:client_id], :active => true))}
+    client = Client.find_by(:id => params[:client_id], :active => true)
+    return head(:not_found) if client.nil?
+    base_get{Company.where(:client => client, :active => true).all}
   end
 
   def get_company_skills

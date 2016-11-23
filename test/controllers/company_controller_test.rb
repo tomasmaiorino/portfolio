@@ -80,7 +80,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Client.stubs(:find).returns(client)
 
     company = Company.new
-    company = stub(:name= => 'Lab', :token= => 'tk12', :main_color => '#FF00FF', :main_color= => '#FF00FF',
+    company = stub(:name= => 'Lab',
+          :token= => 'tk12', :main_color => '#FF00FF', :main_color= => '#FF00FF',
+          :manager_name= => 'manager name',
+          :email= => 'manager@company.com',
+          :active= => true,
           :client= => client, :token => 'tk12', :id => 1, :skills => nil, :id= => 1)
 
     company.stubs(:save).returns(true).once
@@ -102,8 +106,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Client.stubs(:find).returns(client)
 
     company = Company.new
-    company = stub(:token= => 'tk12', :name= => '',:main_color => '#FF00FF', :main_color= => '#FF00FF',
-          :client= => client, :token => 'tk12', :id => 1, :id= => 1, :errors => @name_required, :skills => nil)
+    company = stub(:token= => 'tk12', :name= => '',
+          :main_color= => '#FF00FF',
+          :manager_name= => 'manager name',
+          :email= => 'manager@company.com',
+          :active= => true,
+          :client= => client, :id= => 1, :errors => @name_required, :skills => nil)
 
     company.stubs(:valid?).returns(false)
     Company.stubs(:new).returns(company)
@@ -121,9 +129,14 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Client.stubs(:find).returns(client)
 
     company = Company.new
-    company = stub(:token= => 'tk12', :name= => '',
-          :main_color => '#FF00FF', :main_color= => '#FF00FF',
-          :client= => client, :token => '',
+    company = stub(:token= => 'tk12',
+          :name= => '',
+          :main_color= => '#FF00FF',
+          :email= => 'manager@company.com',
+          :manager_name= => 'manager name',
+          :active= => true,
+          :client= => client,
+          :token => '',
           :id => 1, :id= => 1, :errors => @token_required, :skills => nil)
 
     company.stubs(:valid?).returns(false)
@@ -164,10 +177,15 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Skill.stubs(:load_skills).returns(skills)
 
     company = Company.new
-    company = stub(:name= => 'Lab', :token= => 'tk12',
-          :client= => client, :client => client,
-          :token => 'tk12', :id => 1, :id= => 1,
-          :main_color => '#FF00FF', :main_color= => '#FF00FF',
+    company = stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :token => 'tk12',
+          :client= => client,
+          :id= => 1, :id => 1,
+          :manager_name= => 'manager name',
+          :email= => 'manager@company.com',
+          :main_color= => '#FF00FF',
+          :active= => true,
           :valid? => true, :nil? => false, :skills= => skills, :skills => skills)
     company.stubs(:save).returns(true).once
 
@@ -201,9 +219,13 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :main_color => '#FF00FF', :main_color= => '#FF00FF',
           :token => 'tk12', :id => 1, :id= => 1,
           :manager_name => 'manager name',
+          :manager_name= => 'manager name',
           :email => 'manager@company.com',
+          :email= => 'manager@company.com',
           :active => true,
+          :active= => true,
           :main_color => '#FF00FF',
+          :main_color= => '#FF00FF',
           :valid? => true, :nil? => false, :skills= => skills, :skills => skills)
 
     company_temp = Company.new
@@ -245,9 +267,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
 
     company = Company.new
     company = stub(:name= => '', :token= => 'tk12',
-          :client= => client, :client => client,
-          :main_color => '#FF00FF', :main_color= => '#FF00FF',
-          :token => 'tk12', :id => 1, :id= => 1,
+          :client= => client,
+          :main_color= => '#FF00FF',
+          :id= => 1,
+          :manager_name= => 'manager name',
+          :email= => 'manager@company.com',
+          :active= => true,
           :valid? => false, :nil? => false, :skills= => skills, :skills => skills, :errors => @name_required)
 
     Company.stubs(:new).returns(company)
@@ -273,10 +298,14 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Client.stubs(:find).returns(client)
 
     company = Company.new
-    company = stub(:name= => 'Lab', :token= => 'tk12',
-          :client= => client, :client => client,
-          :main_color => '#FF00FF', :main_color= => '#FF00FF',
-          :token => 'tk12', :id => 1, :id= => 1, :skills => nil,
+    company = stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :client= => client,
+          :main_color= => '#FF00FF',
+          :email= => 'manager@company.com',
+          :manager_name= => 'manager name',
+          :active= => true,
+          :id= => 1, :skills => nil,
           :valid? => false, :errors => @duplicate_token_message)
     company.stubs(:save).returns(true).never
 
@@ -357,19 +386,48 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should_find_company_by_client_id" do
-    company_temp = get_valid_company(false)
+    client = Client.new
+    client = stub(:nil? => false, :to_i => 1)
     client_id = 334
     skills = get_valid_skill(false, -1, @skills)
-    Client.stubs(:find).returns(client_id)
 
-    company_temp.skills = skills
+    #company_temp = get_valid_company(false)
+    #company_ret = Company.new
 
-    Company.stubs(:find_by).returns(company_temp)
+    company_temp = Company.new
+    company_temp = stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :client= => client,
+          :main_color= => '#FF00FF',
+          :name => 'Lab',
+          :email= => 'manager@company.com',
+          :manager_name= => 'manager name',
+          :active= => true,
+          :id= => 1,
+          :skills => skills)
+
+    company = Company.new
+    company = stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :client= => client,
+          :main_color= => '#FF00FF',
+          :name => 'Lab',
+          :email= => 'manager@company.com',
+          :manager_name= => 'manager name',
+          :active= => true,
+          :id= => 1,
+          :skills => skills,
+          :all => company_temp)
+
+    Client.stubs(:find_by).returns(client)
+    Company.stubs(:where).returns(company)
+    Company.stubs(:all).returns(company)
 
     get "/api/v1/company/#{client_id}"
     message = valid_success_request(response)
-    assert_equal company_temp.id, message["id"]
-    assert_equal company_temp.name, message["name"]
+    print_response(response)
+    #assert_equal company_temp.id, message["id"]
+    assert_equal company.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
     assert_equal skills[0].points, message["skills"][0]['points']
@@ -379,8 +437,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal skills[2].points, message["skills"][2]['points']
   end
 
-  test "should_find_company_by_client_id_not_found" do
-    get "/api/v1/company/33"
+  test "should_not_find_company_by_client_id" do
+    get "/api/v1/company/80808080980"
     assert_response :not_found
   end
 
