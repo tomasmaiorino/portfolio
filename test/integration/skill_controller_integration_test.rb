@@ -10,10 +10,12 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
       @invalid_params_no_name = {:points => 12}
       @invalid_params_no_token = {:name => 'tomas', :active => true, :security_permissions => 1}
       @invalid_params_no_required_values = {'':''}
+      @client = get_valid_client(true)
     end
 
     test "integration_should_create_skill" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -22,18 +24,21 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     test "integration_should return invalid skill no name" do
       params = @invalid_params_no_name
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
       valid_bad_request(response, {'name' => ''})
     end
 
     test "integration_should return invalid skill no required values" do
       params = @invalid_params_no_required_values
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
       valid_bad_request(response, {'name' => '', 'points' => ''})
     end
 
     test "integration_should not create skill duplicated name" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -41,6 +46,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
       response.body = nil
 
       params = {:name => 'java', :points => 40}
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
       valid_bad_request(response, {'name' => 'duplicate Skill name'})
     end
@@ -48,6 +54,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
   # => TO FIX CASE INSENSITIVE
     test "integration_should update skill" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''})
@@ -55,6 +62,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
       response.body = nil
 
       params = {:id => old_id, :name => 'java', :points => 50}
+      add_client_token_param(params, @client)
       put '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -64,12 +72,14 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     test "integration_should update skill not passing id" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       valid_success_request(response, {'id' => ''})
       response.body = nil
-
+      add_client_token_param(params, @client)
       params = {:name => 'java', :points => 50}
+      add_client_token_param(params, @client)
       put '/api/v1/skill', params
 
       valid_bad_request(response, {'id' => 'Field required'})
@@ -79,6 +89,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
     test "integration_should update skill not passing duplicate name" do
       params = @valid_params
       #first user
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       valid_success_request(response, {'id' => ''})
@@ -86,12 +97,14 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
 
       params = {:name => 'sql', :points => 50}
       #second user
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''})
       old_id = message['id']
 
       params = {:id => old_id, :name => 'java', :points => 50}
+      add_client_token_param(params, @client)
       put '/api/v1/skill', params
 
       valid_bad_request(response, {'name' => 'duplicate Skill name'})
@@ -100,6 +113,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     test "integration_should_find_skill_by_id" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''})
@@ -126,6 +140,7 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     test "integration_should_find_skill_by_name" do
       params = @valid_params
+      add_client_token_param(params, @client)
       post '/api/v1/skill', params
 
       message = valid_success_request(response, {'id' => ''})

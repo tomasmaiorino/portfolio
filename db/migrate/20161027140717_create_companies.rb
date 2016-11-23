@@ -8,7 +8,7 @@ class CreateCompanies < ActiveRecord::Migration[5.0]
       t.string :manager_name
       t.string :name
       t.string :main_color
-
+      t.text :cover_letter
       t.timestamps
     end
 

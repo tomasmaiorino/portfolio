@@ -1,5 +1,7 @@
 class ClientController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   def create
 
     if (@json.nil?)

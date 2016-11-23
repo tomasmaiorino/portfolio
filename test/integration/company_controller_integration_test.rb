@@ -16,51 +16,56 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
       :token => 'xxffwf',
       :client_id => @client_id
     }
+    @client = get_valid_client(true)
   end
 
   test "integration_should_create_company_without_skills" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     params = company.attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
+
+    add_client_token_param(params, @client)
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
   end
 
   test "integration_should_create_company_with_skills" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     params = company.attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
 
     skills = get_valid_skill(true, -1, @skills)
     params[:skills] = skills
+
+    add_client_token_param(params, @client)
+
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
 
   end
 
   test "integration_should_not_update_company_duplicate_token" do
-    client = get_valid_client(true)
-    companies = get_valid_company(false, client, 2)
+    companies = get_valid_company(false, @client, 2)
     params = companies[0].attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
 
     skills = get_valid_skill(false, -1, @skills)
     params[:skills] = skills
     #company 1
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_1_id = message['id']
 
     params = companies[1].attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
 
     skills = get_valid_skill(false, -1, @skills)
     params[:skills] = skills
 
     #company 2
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
 
@@ -68,24 +73,25 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     companies[0].token = companies[1].token
     companies[0].id = company_1_id
     params = companies[0].attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
     params[:skills] = skills
 
     #update
+    add_client_token_param(params, @client)
     put '/api/v1/company', params
     print_response(response)
     message = valid_bad_request(response, {'token' => ''})
   end
 
   test "integration_should_update_company_with_skills" do
-    client = get_valid_client(true)
-    companies = get_valid_company(false, client, 2)
+    companies = get_valid_company(false, @client, 2)
     skills = get_valid_skill(false, -1, @skills)
 
     params = companies[0].attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
     params[:skills] = skills
     #company 1
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message['id']
@@ -93,9 +99,10 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     companies[0].id = company_id
     companies[0].token = 'new_token'
     params = companies[0].attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
     params[:skills] = skills[0..1]
 
+    add_client_token_param(params, @client)
     put '/api/v1/company', params
     print_response(response)
     message = valid_success_request(response, {'id' => company_id})
@@ -103,6 +110,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
   test "integration_should_not_update_company_with_skills" do
     params = @valid_params
+    add_client_token_param(params)
     put '/api/v1/company', params
     print_response(response)
     valid_bad_request(response, {'id' => 'Field required'})
@@ -128,31 +136,6 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal skills[0].name, skills_temp[0].name
   end
 
-  test "integration_should_find_company_by_token" do
-    company_temp = get_valid_company(false)
-    client = get_valid_client(false)
-    skills = get_valid_skill(false, -1, @skills)
-
-    company_temp.client = client
-    company_temp.skills = skills
-    company_temp.token = 'hhtii'
-
-    projects = mock()
-    Company.stubs(:includes).returns(projects)
-    projects.stubs(:where).returns([company_temp])
-
-    get "/api/v1/company/token/#{company_temp.token}"
-    message = valid_success_request(response)
-    assert_equal company_temp.id, message["id"]
-    assert_equal company_temp.name, message["name"]
-    assert_equal skills.size, message["skills"].size
-    assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
-    assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
-    assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
-  end
 
   test "integration_should_find_company_by_token_not_found" do
     get "/api/v1/company/token/tk"
@@ -160,21 +143,22 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_by_client_id" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     params = company.attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
 
     skills = get_valid_skill(true, -1, @skills)
     params[:skills] = [skills[0].name,skills[1].name,skills[2].name ]
+
+    add_client_token_param(params, @client)
 
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message['id']
 
-    get "/api/v1/company/#{client.id}"
+    get "/api/v1/company/#{@client.id}"
     message = valid_success_request(response)
-    print_response(response)
+    #print_response(response)
     message = message[0]
     assert_equal company_id, message["id"]
     assert_equal company.name, message["name"]
@@ -194,13 +178,13 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
   test "integration_should_find_company_by_client_id_not_found_with_company" do
     #create company
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     params = company.attributes
-    params[:client_id] = client.id
+    params[:client_id] = @client.id
 
     skills = get_valid_skill(true, -1, @skills)
     params[:skills] = skills
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
 
@@ -209,8 +193,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_full_company_by_token" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -219,6 +202,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     params = company.attributes
     params[:skills] = [skills[0].name, skills[1].name]
 
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -241,17 +225,17 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     params = project_2.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     get "/api/v1/company/token/#{company.token}"
-    puts "response"
-    puts response.body
     company_get = valid_success_request(response)
     assert_not_nil company_get
     assert_equal company_id, company_get["id"]
@@ -274,8 +258,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_full_company_by_token_using_inactive_projects" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -283,7 +266,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #
     params = company.attributes
     params[:skills] = [skills[0].name, skills[1].name]
-
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -308,17 +291,17 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     params = project_2.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     get "/api/v1/company/token/#{company.token}"
-    puts "response"
-    puts response.body
     company_get = valid_success_request(response)
     assert_not_nil company_get
     assert_equal company_id, company_get["id"]
@@ -333,8 +316,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_tech_tags" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -342,7 +324,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #
     params = company.attributes
     params[:skills] = [skills[0].name, skills[1].name]
-
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -367,11 +349,13 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     params = project_2.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
@@ -387,8 +371,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_not_find_company_tech_tags" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -396,7 +379,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #
     params = company.attributes
     params[:skills] = [skills[0].id, skills[1].id]
-
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -423,11 +406,13 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     params = project_2.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
@@ -437,8 +422,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_not_find_company_project_tech_tags" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -446,7 +430,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #
     params = company.attributes
     params[:skills] = [skills[0].id, skills[1].id]
-
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -462,11 +446,13 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
     params = project_2.attributes
     params[:companies] = company_id
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
 
@@ -476,8 +462,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_company_skills" do
-    client = get_valid_client(true)
-    company = get_valid_company(false, client)
+    company = get_valid_company(false, @client)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG'])
     company.token = 'tOkTT'
     #
@@ -485,7 +470,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #
     params = company.attributes
     params[:skills] = [skills[0].name, skills[1].name]
-
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_id = message["id"]
@@ -502,8 +487,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "integration_should_find_client_company_by_token" do
-    client = get_valid_client(true)
-    companies = get_valid_company(false, client, 4)
+    companies = get_valid_company(false, @client, 4)
     skills = get_valid_skill(true, 0, ['Java Programmer', 'Oracle ATG', 'Javascript', 'ATG'])
 
     #
@@ -512,6 +496,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #company 1
     params = companies[0].attributes
     params[:skills] = [skills[0].name, skills[1].name]
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_1_id = message["id"]
@@ -519,6 +504,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #company 2
     params = companies[1].attributes
     params[:skills] = [skills[2].name, skills[3].name]
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_2_id = message["id"]
@@ -526,6 +512,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     #company 3
     params = companies[2].attributes
     params[:skills] = [skills[0].name, skills[3].name]
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_3_id = message["id"]
@@ -534,6 +521,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     params = companies[3].attributes
     params[:active] = false
     params[:skills] = [skills[0].name, skills[3].name]
+    add_client_token_param(params, @client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
     company_4_id = message["id"]
@@ -551,23 +539,26 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     params = project_1.attributes
     params[:companies] = [company_1_id, company_2_id]
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
     project_1_id = message['id']
 
     params = project_2.attributes
     params[:companies] = [company_3_id, company_4_id]
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
     project_2_id = message['id']
 
     params = project_3.attributes
     params[:companies] = [company_1_id, company_2_id]
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
     project_3_id = message['id']
 
-    get "/api/v1/company/#{client.id}"
+    get "/api/v1/company/#{@client.id}"
     company_get = valid_success_request(response)
     #print_response(response)
     assert_not_nil company_get
@@ -596,26 +587,6 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal company_3_id, company_get[2]['id']
     assert_equal project_2.name, company_get[2]['projects'][0]['name']
     assert_equal project_2.img, company_get[2]['projects'][0]['img']
-
-=begin
-    assert_equal company_id, company_get["id"]
-    assert_equal company.name, company_get["name"]
-    assert_not_empty company_get["skills"]
-    assert_equal projects.size - 1, company_get["projects"].size
-    assert_equal project_1.name, company_get["projects"][0]['name']
-    assert_equal project_1.img, company_get["projects"][0]['img']
-    assert_equal project_1.tech_tags.size, company_get["projects"][0]['tech_tags'].size
-    assert_equal project_1.tech_tags[0].name, company_get["projects"][0]['tech_tags'][0]['name']
-    assert_equal project_1.tech_tags[1].name, company_get["projects"][0]['tech_tags'][1]['name']
-
-    assert_equal project_2.name, company_get["projects"][1]['name']
-    assert_equal project_2.img, company_get["projects"][1]['img']
-    assert_equal project_2.tech_tags.size, company_get["projects"][1]['tech_tags'].size
-    assert_equal project_2.tech_tags[0].name, company_get["projects"][1]['tech_tags'][0]['name']
-    assert_equal project_2.tech_tags[1].name, company_get["projects"][1]['tech_tags'][1]['name']
-    assert_equal project_2.tech_tags[2].name, company_get["projects"][1]['tech_tags'][2]['name']
-=end
   end
-
-
+  
 end

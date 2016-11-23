@@ -53,12 +53,14 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
     @name_required = {:name => ["Field Required"]}
     @project_date_required = {:project_date => ["Field Required"]}
     @summary_required = {:summary => ["Field Required"]}
+    @client = get_valid_client(true)
 
   end
 
   test "should_not_create_project_not_passing_name" do
     params = @valid_params
     params.delete(:name)
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_bad_request(response, {'name' => 'Field Required'})
   end
@@ -66,6 +68,7 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
   test "should_not_create_project_not_project_date" do
     params = @valid_params
     params.delete(:project_date)
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_bad_request(response, {'project_date' => 'Field Required'})
   end
@@ -73,45 +76,44 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
   test "should_not_create_project_not_summary" do
     params = @valid_params
     params.delete(:summary)
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_bad_request(response, {'summary' => 'Field Required'})
   end
 
   test "should_create_project_without_companies_and_tech_tags" do
     params = @valid_params
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''}, true)
   end
 
   test "should_create_project_with_companies_and_without_tech_tags" do
-    client = get_valid_client(true)
-    company = get_valid_company(true, client)
+    company = get_valid_company(true, @client)
 
     params = @valid_params
     params[:companies] = company.id
-
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
   end
 
   test "should_create_project_with_companies_and_tech_tags" do
     params = @valid_params
-    client = get_valid_client(true)
-    company = get_valid_company(true, client)
+    company = get_valid_company(true, @client)
 
     params = @valid_params
     params[:companies] = company.id
 
     tech_tags = get_valid_teck_tag(true, ['java', 'orale'])
     params[:tech_tags] = tech_tags
-
+    add_client_token_param(params, @client)
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
   end
 
   test "should_return_companies" do
-    client = get_valid_client(true)
-    companies = get_valid_company(true, client, 2)
+    companies = get_valid_company(true, @client, 2)
     params = @valid_params
     params[:companies] = [companies[0].id, companies[1].id]
 
@@ -124,8 +126,7 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "should_not_return_companies" do
-    client = get_valid_client(true)
-    companies = get_valid_company(true, client, 2)
+    companies = get_valid_company(true, @client, 2)
     invalid_company = [2, 4, 1]
     params = @valid_params
     params[:companies] = invalid_company

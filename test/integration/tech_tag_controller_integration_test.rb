@@ -8,10 +8,12 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
   def setup
     @valid_params = {:name => 'oracle'}
     @invalid_params_no_name = {'':''}
+    @client = get_valid_client(true)
   end
 
   test "integration_should_create_tech_tag" do
     params = @valid_params
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
@@ -20,6 +22,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
   test "integration_should_not_create_tech_tag_invalid_tech_name" do
     params = @invalid_params_no_name
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_bad_request(response, {'name' => ''})
@@ -28,6 +31,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
   test "integration_should_update_tech_tag" do
     params = @valid_params
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
@@ -35,7 +39,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
     params[:name] = 'oracle'
     params[:id] = old_id
-
+    add_client_token_param(params, @client)
     put "/api/v1/tech_tag", params
     message = valid_success_request(response, {'id' => ''}, true)
     assert_equal old_id, message['id']
@@ -44,13 +48,14 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
   test "integration_should_not_update_tech_tag_not_passing_id" do
     params = @valid_params
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
     old_id = message['id']
 
     params[:name] = 'oracle'
-
+    add_client_token_param(params, @client)
     put "/api/v1/tech_tag", params
     message = valid_bad_request(response, {'id' => ''})
 
@@ -59,12 +64,14 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
   test "integration_should_not_update_tech_tag_not_duplicate_name" do
     params = @valid_params
     #first tech
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
 
     params[:name] = 'mysql'
     #second tech
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
@@ -72,7 +79,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
     params[:name] = 'oracle'
     params[:id] = old_id
-
+    add_client_token_param(params, @client)
     put "/api/v1/tech_tag", params
     message = valid_bad_request(response, {'name' => 'duplicate tech'})
 
@@ -87,6 +94,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
     TechTag.delete_all
     params = @valid_params
     #first tech
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
@@ -108,6 +116,7 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
     TechTag.delete_all
     params = @valid_params
     #first tech
+    add_client_token_param(params, @client)
     post '/api/v1/tech_tag', params
 
     message = valid_success_request(response, {'id' => ''})
