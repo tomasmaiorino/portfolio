@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.string   "name"
     t.boolean  "active",               default: false
     t.string   "token"
+    t.string   "host"
     t.integer  "security_permissions", default: 0
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
@@ -29,6 +30,7 @@ ActiveRecord::Schema.define(version: 20161027151936) do
     t.string   "manager_name"
     t.string   "name"
     t.string   "main_color"
+    t.text     "cover_letter"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.index ["client_id"], name: "index_companies_on_client_id"

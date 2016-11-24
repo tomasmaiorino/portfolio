@@ -3,25 +3,6 @@ class BaseApiController < ApplicationController
 
 	before_action :parse_request, :authenticate_user_from_token
 
-=begin
-	def pre_create(clazz)
-
-		if (@json.nil?)
-			Rails.logger.debug "Json nil :("
-			return render nothing: true, status: :bad_request
-		end
-
-		obj = JSON.parse( @json, object_class: clazz)
-
-		if !obj.valid?
-				return render json: obj.errors.to_json, status: :bad_request
-		end
-
-		return obj
-
-	end
-=end
-
 	def update
     if (@json.nil?)
       Rails.logger.debug "Json nil :("
@@ -56,12 +37,20 @@ class BaseApiController < ApplicationController
 		     else
 					 client = Client.find_by(:token => @ct)
 					 if (client.nil?)
-						 render nothing: true, status: :unauthorized
+						 render nothing: true, status: :unauthorized, message: "invalid ct"
+					 #elsif !valid_host(client.host, request.host)
+		 			 #	render nothing: true, status: :unauthorized, message: "invalid host request"
 					 end
 		     end
 			 end
 		 end
    end
+
+	def valid_host(client_host, host)
+  	Rails.logger.debug "Request host(#{host}) - Client host(#{client_host}) "
+		puts client_host == host
+    return client_host == host
+  end
 
   def parse_request
 		Rails.logger.debug params.inspect
@@ -69,8 +58,10 @@ class BaseApiController < ApplicationController
     Rails.logger.debug "Request params #{request.params}"
     if !request.params.except(:action, :controller).nil? && !request.params.except(:action, :controller).empty?
       Rails.logger.debug "Valid request :)"
-      Rails.logger.debug "Parsing json ->"
+			Rails.logger.debug "Recovering ct ->"
 			@ct = request.params[:ct]
+			Rails.logger.debug "Recovering ct <-"
+      Rails.logger.debug "Parsing json ->"
       @json = request.params.except(:action, :controller, :ct)
 			Rails.logger.debug "Parsing json <-"
 		else

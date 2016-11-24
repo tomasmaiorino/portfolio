@@ -19,6 +19,9 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
     tech_tag.expects(:save).returns(true).once
 
     params = @valid_params
+
+    configure_valid_mock_token_params(params)
+
     post '/api/v1/tech_tag', params
     JSON.unstub(:parse)
     valid_success_request(response, {'id' => ''})
@@ -27,12 +30,15 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
   test "should_not_create_tech_tag_invalid_tech_name" do
     tech_tag = TechTag.new
-    TechTag.stubs(:find_by).returns(nil)
+    #TechTag.stubs(:find_by).returns(nil)
     tech_tag = stub(:valid? => false, :errors => @name_required)
     JSON.stubs(:parse).returns(tech_tag)
     tech_tag.expects(:save).never
 
     params = @invalid_params_no_name
+
+    configure_valid_mock_token_params(params)
+
     post '/api/v1/tech_tag', params
     JSON.unstub(:parse)
     message = valid_bad_request(response, {'name' => ''})
@@ -55,6 +61,8 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
     params[:id] = 1
 
+    configure_valid_mock_token_params(params)
+
     put "/api/v1/tech_tag", params
     JSON.unstub(:parse)
     message = valid_success_request(response, {'id' => ''})
@@ -63,6 +71,9 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
   test "should_not_update_tech_tag_not_passing_id" do
     params = @valid_params
+
+    configure_valid_mock_token_params(params)
+
     put "/api/v1/tech_tag", params
     message = valid_bad_request(response, {'id' => ''})
 
@@ -77,6 +88,8 @@ class TechTagControllerTest < ActionDispatch::IntegrationTest
 
     tech_tag.expects(:save).never
     params[:id] = 1
+
+    configure_valid_mock_token_params(params)
 
     put "/api/v1/tech_tag", params
     JSON.unstub(:parse)

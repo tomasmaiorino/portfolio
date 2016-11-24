@@ -4,6 +4,7 @@ class CreateClients < ActiveRecord::Migration[5.0]
       t.string :name
       t.boolean :active, :default => false
       t.string :token
+      t.string :host
       t.integer :security_permissions, :default => 0
 
       t.timestamps

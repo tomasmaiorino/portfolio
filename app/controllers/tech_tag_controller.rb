@@ -2,8 +2,8 @@ class TechTagController < BaseApiController
 
   def create
 
-    if (@json.nil?)
-			Rails.logger.debug "Json nil :("
+    if (@json.nil? || @json.empty?)
+			Rails.logger.debug "Json nil or empty :("
 			return render nothing: true, status: :bad_request
 		end
 

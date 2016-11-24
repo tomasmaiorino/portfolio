@@ -4,9 +4,10 @@ require 'rails/test_help'
 require 'mocha/mini_test'
 
 class ActiveSupport::TestCase
+
+  TEST_REQUEST_HOST = "http://localhost"
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
-
 
   def add_client_token_param(params, client = nil)
     if (client.nil?)
@@ -16,14 +17,35 @@ class ActiveSupport::TestCase
     return params
   end
 
+  def configure_valid_mock_token_params(params)
+    client = get_valid_mock_client
+    Client.stubs(:find_by).returns(client)
+    return add_client_token_param(params, client)
+  end
+
   # Add more helper methods to be used by all tests here...
   def get_valid_client(create = false)
     client = Client.new
     client.name = 'monsters'
     client.token = 'xxss12'
     client.active = true
+    client.host = 'localhost'
     client.save unless !create
     return client
+  end
+
+  def get_valid_mock_client
+    client = Client.new
+    return stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :active= => true,
+          :token => 'tk12',
+          :id => 1,
+          :id= => 1,
+          :security_permissions => 1,
+          :security_permissions= => 1,
+          :host => 'http://localhost',
+          :host= => 'http://localhost')
   end
 
   def get_valid_teck_tag(create = false, tags = [])

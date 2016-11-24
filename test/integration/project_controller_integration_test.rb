@@ -81,6 +81,13 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
     message = valid_bad_request(response, {'summary' => 'Field Required'})
   end
 
+  test "should_not_create_project_without_companies_and_tech_tags_unauthorized" do
+    params = @valid_params
+    params.delete(:summary)
+    post "/api/v1/project", params
+    assert_response :unauthorized
+  end
+
   test "should_create_project_without_companies_and_tech_tags" do
     params = @valid_params
     add_client_token_param(params, @client)
@@ -109,6 +116,48 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
     params[:tech_tags] = tech_tags
     add_client_token_param(params, @client)
     post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+  end
+
+  test "should_not_update_project_with_companies_and_tech_tags_unauthorized" do
+    project = get_valid_project(false)
+    company = get_valid_company(true, @client)
+
+    params = project.attributes
+    params[:companies] = company.id
+
+    tech_tags = get_valid_teck_tag(true, ['java', 'orale'])
+    params[:tech_tags] = tech_tags
+    add_client_token_param(params, @client)
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+    project_id = message['id']
+
+    params[:ct] = ''
+    params[:name] = 'New name'
+    params[:id] = project_id
+    put "/api/v1/project", params
+    assert_response :unauthorized
+  end
+
+  test "should_update_project_with_companies_and_tech_tags" do
+    project = get_valid_project(false)
+    company = get_valid_company(true, @client)
+
+    params = project.attributes
+    params[:companies] = company.id
+
+    tech_tags = get_valid_teck_tag(true, ['java', 'orale'])
+    params[:tech_tags] = tech_tags
+    add_client_token_param(params, @client)
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
+    project_id = message['id']
+
+    params[:name] = 'New name'
+    params[:id] = project_id
+    add_client_token_param(params, @client)
+    put "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
   end
 
