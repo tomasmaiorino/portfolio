@@ -1,6 +1,6 @@
 class Skill < ApplicationRecord
-  validates :name, :points, :presence => { :message => "Field Required" }
-  validates :points, numericality: { only_integer: true,
+  validates :name, :level, :presence => { :message => "Field Required" }
+  validates :level, numericality: { only_integer: true,
     less_than_or_equal_to: 100,
     greater_than_or_equal_to: 0
    }

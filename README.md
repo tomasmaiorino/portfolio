@@ -51,19 +51,19 @@ Sample response:
 {"id":1,"name":"monsters","active":true,"created_at":"2016-11-25T20:41:21.510Z","updated_at":"2016-11-25T20:41:21.510Z"}
 
 * Creating Skill tags:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Java JavaEE\",\"points\":94,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Java JavaEE\",\"level\":94,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
 Sample response:
 {"id":1}
 
 * Update Skill tags:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"id\":1,\"name\":\"Java Developer JavaEE\",\"points\":54,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"id\":1,\"name\":\"Java Developer JavaEE\",\"level\":54,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
 Sample response:
 {"id":1}
 
 * Find Skill
 curl http://localhost:3000/api/v1/skill/1
 Sample response:
-{"id":1,"name":"Java JavaEE","points":94,"created_at":"2016-11-25T21:12:51.135Z","updated_at":"2016-11-25T21:12:51.135Z"}
+{"id":1,"name":"Java JavaEE","level":94,"created_at":"2016-11-25T21:12:51.135Z","updated_at":"2016-11-25T21:12:51.135Z"}
 
 
 * Creating Projects:
@@ -87,4 +87,4 @@ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -
 * Find company by token (For now the company is being returned only if it has at least a project associated to it)
 $ curl -ihttp://localhost:3000/api/v1/company/token/labtk
 Sample response:
-{"id":1,"client_id":2,"active":true,"token":"labtk","email":"lab@lab.com","manager_name":null,"name":"Lab","main_color":"#FF0000","cover_letter":null,"created_at":"2016-11-25T23:12:58.640Z","updated_at":"2016-11-25T23:12:58.640Z","skills":[{"name":"Java Developer JavaEE","points":54}],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"3 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"JAVA"}]}]}
+{"id":1,"client_id":2,"active":true,"token":"labtk","email":"lab@lab.com","manager_name":null,"name":"Lab","main_color":"#FF0000","cover_letter":null,"created_at":"2016-11-25T23:12:58.640Z","updated_at":"2016-11-25T23:12:58.640Z","skills":[{"name":"Java Developer JavaEE","level":54}],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"3 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"JAVA"}]}]}

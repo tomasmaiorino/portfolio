@@ -6,12 +6,12 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   # end
 
   def setup
-    @valid_params = {:name => 'java', :points => 60}
-    @invalid_params_no_name = {:points => 12}
+    @valid_params = {:name => 'java', :level => 60}
+    @invalid_params_no_name = {:level => 12}
     @invalid_params_no_token = {:name => 'tomas', :active => true, :security_permissions => 1}
     @invalid_params_no_required_values = {'':''}
     @name_required = {:name => ["Field Required"]}
-    @name_points_required = {:name => ["Field Required"], :points => ["Field Required"] }
+    @name_level_required = {:name => ["Field Required"], :level => ["Field Required"] }
     @project_date_required = {:project_date => ["Field Required"]}
     @summary_required = {:summary => ["Field Required"]}
     @duplicate_name_message = {:name => ["duplicate Skill name"]}
@@ -20,7 +20,7 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   test "should_create_skill" do
     skill = Skill.new
     skill.name = 'Java'
-    skill.points = 'Java'
+    skill.level = 'Java'
     Skill.stubs(:find_by).returns(nil)
     skill = stub(:valid? => true, :name => 'Java', :id => 1)
     JSON.stubs(:parse).returns(skill)
@@ -38,7 +38,7 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   test "should_not_create_skill_unauthorized" do
     skill = Skill.new
     skill.name = 'Java'
-    skill.points = 'Java'
+    skill.level = 'Java'
     Skill.stubs(:find_by).returns(nil)
     skill = stub(:valid? => true, :name => 'Java', :id => 1)
     JSON.stubs(:parse).returns(skill)
@@ -59,12 +59,12 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   test "should update skill" do
     skill = Skill.new
     skill = stub(:valid? => true, :id => 2,
-      :name => "Java New", :points => 3)
+      :name => "Java New", :level => 3)
 
     JSON.stubs(:parse).returns(skill)
 
     skill_temp = Skill.new
-    skill_temp = stub(:nil? => false, :name= => 'Old Java', :points= => 3, :id => 2)
+    skill_temp = stub(:nil? => false, :name= => 'Old Java', :level= => 3, :id => 2)
 
     Skill.stubs(:find_by).returns(skill_temp)
     skill_temp.expects(:save).returns(true).once
@@ -84,12 +84,12 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   test "should_not_update_skill_unauthorized" do
     skill = Skill.new
     skill = stub(:valid? => true, :id => 2,
-      :name => "Java New", :points => 3)
+      :name => "Java New", :level => 3)
 
     JSON.stubs(:parse).returns(skill)
 
     skill_temp = Skill.new
-    skill_temp = stub(:nil? => false, :name= => 'Old Java', :points= => 3, :id => 2)
+    skill_temp = stub(:nil? => false, :name= => 'Old Java', :level= => 3, :id => 2)
 
     Skill.stubs(:find_by).returns(skill_temp)
     skill_temp.expects(:save).returns(true).never
@@ -127,7 +127,7 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
     configure_valid_mock_token_params(params)
 
     post '/api/v1/skill', params
-    valid_bad_request(response, {'name' => '', 'points' => ''})
+    valid_bad_request(response, {'name' => '', 'level' => ''})
   end
 
   test "should not create skill duplicated name" do
@@ -179,12 +179,12 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
   test "should_find_skill_by_id" do
     skill_id = 3
     skill_name = 'Java'
-    skill_points = 43
+    skill_level = 43
 
     skill = Skill.new
     skill.id = skill_id
     skill.name = skill_name
-    skill.points = skill_points
+    skill.level = skill_level
 
     Skill.stubs(:find).returns(skill)
 
@@ -193,7 +193,7 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
     message = valid_success_request(response)
 
     assert_equal skill_name, message['name']
-    assert_equal skill_points, message['points']
+    assert_equal skill_level, message['level']
   end
 
   test "should_not_find_skill_by_id" do
@@ -210,12 +210,12 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 
     skill_id = 3
     skill_name = 'Java'
-    skill_points = 43
+    skill_level = 43
 
     skill = Skill.new
     skill.id = skill_id
     skill.name = skill_name
-    skill.points = skill_points
+    skill.level = skill_level
 
     Skill.stubs(:find_by).returns(skill)
 
@@ -223,7 +223,7 @@ class SkillControllerTest < ActionDispatch::IntegrationTest
 
     message = valid_success_request(response)
     assert_equal skill_name, message['name']
-    assert_equal skill_points, message['points']
+    assert_equal skill_level, message['level']
   end
 
 end

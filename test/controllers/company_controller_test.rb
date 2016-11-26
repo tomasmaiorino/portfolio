@@ -376,11 +376,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company_temp.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
   end
 
   test "should_find_company_by_token_not_found" do
@@ -416,11 +416,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
   end
 =end
   test "should_not_find_company_by_client_id" do
@@ -462,11 +462,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company_temp.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
     assert_equal projects.size, message["projects"].size
     assert_equal projects[0].name, message["projects"][0]['name']
     assert_equal projects[0].summary, message["projects"][0]['summary']

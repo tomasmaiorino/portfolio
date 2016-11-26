@@ -102,7 +102,7 @@ class CompanyController < BaseApiController
     end
 
     if !obj.nil? then return render :json => obj, :include => {
-      :skills => {:only => [:name, :points]}, :projects => {
+      :skills => {:only => [:name, :level]}, :projects => {
         :only =>
         [:name,
         :img,
@@ -134,7 +134,7 @@ class CompanyController < BaseApiController
   def get_company_skills
     company = Company.find_by(:token => params[:token])
     return head(:not_found) if company.nil? || company.skills.nil? || company.skills.empty?
-    render :json => {:skills => company.skills.as_json(only: [:name, :points])}
+    render :json => {:skills => company.skills.as_json(only: [:name, :level])}
   end
 
 

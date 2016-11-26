@@ -72,7 +72,7 @@ class ActiveSupport::TestCase
     if (qt == 1)
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 2
+    skill.level = 2
     skill.save unless !create
     return skill
     elsif !skills.empty?
@@ -80,7 +80,7 @@ class ActiveSupport::TestCase
       skills.each_with_index{|x, i|
         skill = Skill.new
         skill.name = x
-        skill.points = 2 + i.to_i
+        skill.level = 2 + i.to_i
         skill.save unless !create
         temp << skill
       }
@@ -90,7 +90,7 @@ class ActiveSupport::TestCase
       (1..qt).each{|t|
         skill = Skill.new
         skill.name = "atg #{t}"
-        skill.points = 2 + t.to_i
+        skill.level = 2 + t.to_i
         skill.save unless !create
         temp << skill
       }

@@ -23,7 +23,7 @@ class SkillController < BaseApiController
 
     if !skill_temp.nil?
       skill_temp.name = skill.name
-      skill_temp.points = skill.points
+      skill_temp.level = skill.level
       skill = skill_temp
     end
 
