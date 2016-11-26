@@ -47,4 +47,9 @@ class SkillController < BaseApiController
     base_get {Skill.find(params[:id])}
   end
 
+  def get_all
+    Rails.logger.debug "Searching all skills"
+    base_get {Skill.all}
+  end
+
 end

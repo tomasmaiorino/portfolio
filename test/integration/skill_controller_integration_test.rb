@@ -153,4 +153,32 @@ class SkillControllerIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal params[:name], message['name']
       assert_equal params[:level], message['level']
     end
+
+    test "integration_should_lisl_all_skills" do
+      Skill.destroy_all
+      skill_1 = get_valid_skill(false, -1, ['JAVA'])
+      params = skill_1[0].attributes
+      add_client_token_param(params, @client)
+      post '/api/v1/skill', params
+
+      message = valid_success_request(response, {'id' => ''}, true)
+
+      skill_2 = get_valid_skill(false, -1, ['SQL'])
+      params = skill_2[0].attributes
+      add_client_token_param(params, @client)
+      post '/api/v1/skill', params
+
+      message = valid_success_request(response, {'id' => ''}, true)
+
+      get '/api/v1/skill/all'
+      message = valid_success_request(response)
+      assert_not_nil message
+      assert_not_empty message
+      assert_equal 2, message.size
+      assert_equal skill_1[0].name, message[0]['name']
+      assert_equal skill_1[0].level, message[0]['level']
+      assert_equal skill_2[0].name, message[1]['name']
+      assert_equal skill_2[0].level, message[1]['level']
+
+    end
 end

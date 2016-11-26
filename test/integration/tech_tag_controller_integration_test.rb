@@ -129,4 +129,35 @@ class TechTagIntegrationControllerTest < ActionDispatch::IntegrationTest
 
   end
 
+  test "integration_should_find_all_tech_tag" do
+    TechTag.destroy_all
+    tech_tags = get_valid_teck_tag(false, ['java', 'sql', 'oracle'])
+    params = tech_tags[0].attributes
+    add_client_token_param(params, @client)
+    post '/api/v1/tech_tag', params
+
+    message = valid_success_request(response, {'id' => ''})
+
+    params = tech_tags[1].attributes
+    add_client_token_param(params, @client)
+    post '/api/v1/tech_tag', params
+
+    message = valid_success_request(response, {'id' => ''})
+
+    params = tech_tags[2].attributes
+    add_client_token_param(params, @client)
+    post '/api/v1/tech_tag', params
+
+    message = valid_success_request(response, {'id' => ''})
+
+    get "/api/v1/tech_tag/all"
+    message = valid_success_request(response)
+    assert_not_nil message
+    assert_not_empty message
+    assert_equal tech_tags.size, message.size
+    assert_equal tech_tags[0].name, message[0]['name']
+    assert_equal tech_tags[1].name, message[1]['name']
+    assert_equal tech_tags[2].name, message[2]['name']    
+  end
+
 end

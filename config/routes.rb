@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   match 'api/v1/skill' => 'skill#create', via: [:post]
   match 'api/v1/skill' => 'skill#update', via: [:put]
   match 'api/v1/skill' => 'skill#get', via: [:get]
+  match 'api/v1/skill/all' => 'skill#get_all', via: [:get]
   match 'api/v1/skill/:id' => 'skill#get', constraints: { id: /\d+/ }, via: [:get]
   match 'api/v1/skill/:name' => 'skill#get_name', via: [:get]
 
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
   match 'api/v1/tech_tag' => 'tech_tag#create', via: [:post]
   match 'api/v1/tech_tag' => 'tech_tag#update', via: [:put]
   match 'api/v1/tech_tag' => 'tech_tag#get', via: [:get]
+  match 'api/v1/tech_tag/all' => 'tech_tag#get_all', via: [:get]
   match 'api/v1/tech_tag/:id' => 'tech_tag#get', constraints: { id: /\d+/ }, via: [:get]
   match 'api/v1/tech_tag/:name' => 'tech_tag#get_name', via: [:get]
 

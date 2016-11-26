@@ -41,6 +41,11 @@ class TechTagController < BaseApiController
     base_get {TechTag.find(params[:id])}
   end
 
+  def get_all
+    base_get {TechTag.all}
+  end
+
+
   def get_name
     base_get {TechTag.find_by(:name => params[:name])}
   end

@@ -23,12 +23,12 @@ Things you may want to cover:
 
 * ...
 * Creating client:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\": \"monsters\", \"token\":\"tkclient\", \"active\":true, \"host\":\"localhost\", \"security_permissions\":1}" http://localhost:3000/api/v1/client
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Tomas\",\"token\":\"df2a0983392\",\"active\":true,\"host\":\"localhost\",\"security_permissions\":1}" http://localhost:3000/api/v1/client
 Sample response:
-{"id":3}
+{"id":1}
 
 * Update client
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":3, \"name\": \"monsters two\", \"token\":\"tkclient\", \"active\":true, \"security_permissions\":1}" http://localhost:3000/api/v1/client
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":3, \"name\": \"monsters two\", \"token\":\"df2a0983392\", \"active\":true, \"security_permissions\":1}" http://localhost:3000/api/v1/client
 Sample response:
 {"id":3}
 
@@ -67,10 +67,11 @@ Sample response:
 
 
 * Creating Projects:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Recover Password\",\"img\":\"assets/images/projects/netshoes.png\",\"link_img\":\"http://www.netshoes.com.br\",\"summary\":\"Change the recover password workflow\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the support calls in 20%\",\"time_spent\":\"2 weeks\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"tkclient\",\"tech_tags\":[1,2]}" http://localhost:3000/api/v1/project
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Recover Password\",\"img\":\"assets/images/projects/netshoes.png\",\"link_img\":\"http://www.netshoes.com.br\",\"summary\":\"Change the recover password workflow\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the support calls in 20%\",\"time_spent\":\"2 weeks\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[1,2,4,5],\"companies\":[1]}" http://localhost:3000/api/v1/project
 
 * Updating Projects:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":1,\"name\":\"Recover Password\",\"img\":\"assets/images/projects/netshoes.png\",\"link_img\":\"http://www.netshoes.com.br\",\"summary\":\"Change the recover password workflow\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the support calls in 20%\",\"time_spent\":\"3 weeks\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"tkclient\",\"tech_tags\":[1],\"companies\":[1]}" http://localhost:3000/api/v1/project
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":1,\"name\":\"Recover Password\",\"img\":\"assets/images/projects/netshoes.png\",\"link_img\":\"http://www.netshoes.com.br\",\"summary\":\"Change the recover password workflow\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the support calls in 20%\",\"time_spent\":\"2 weeks\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[1,2,4,5],\"companies\":[1,2]}" http://localhost:3000/api/v1/project
+
 
 
 * Find Project
@@ -79,10 +80,16 @@ Sample response:
 {"id":2,"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"2 weeks","language":"en","active":true,"future_project":false,"project_date":"2016-11-25T19:46:39.047Z","created_at":"2016-11-25T21:57:31.109Z","updated_at":"2016-11-25T21:57:31.109Z","tech_tags":[{"name":"JAVA"},{"name":"SQL"}]}
 
 * Creating Company:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Lab\",\"token\":\"labtk\",\"email\":\"lab@lab.com\",\"ct\":\"tkclient\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":2}" http://localhost:3000/api/v1/company
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Lab\",\"token\":\"0e8c7467e46\",\"email\":\"lab@lab.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
+
+
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Monsters\",\"token\":\"e5fcdf02e26\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
+
 
 * Updating Company
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":1,\"name\":\"Lab\",\"token\":\"labtk\",\"email\":\"lab@lab.com\",\"ct\":\"tkclient\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":2,\"skills\":[1]}" http://localhost:3000/api/v1/company
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d
+"{\"id\":2,\"manager_name\":\"Jeff\",\"name\":\"Monsters\",\"token\":\"e5fcdf02e26\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
+
 
 * Find company by token (For now the company is being returned only if it has at least a project associated to it)
 $ curl -ihttp://localhost:3000/api/v1/company/token/labtk
