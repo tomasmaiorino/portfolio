@@ -1,5 +1,7 @@
 class TechTagController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   def create
 
     if (@json.nil? || @json.empty?)
@@ -13,7 +15,8 @@ class TechTagController < BaseApiController
 				return render json: tech_tag.errors.to_json, status: :bad_request
 		end
 
-    tech_tag_temp = TechTag.find_by(:name => tech_tag.name)
+    tech_tag_temp = if !tech_tag.id.nil? then TechTag.find_by(:id => tech_tag.id) else TechTag.find_by(:name => tech_tag.name) end
+
     message = tech_tag_temp.nil? ? "Creating" : "Updating"
 
     Rails.logger.info "#{message} tech_tag with name :" << tech_tag.name

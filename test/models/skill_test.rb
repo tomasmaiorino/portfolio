@@ -214,6 +214,48 @@ class SkillTest < ActiveSupport::TestCase
     assert_nil skills[1].id
   end
 
+  test "should_load_skills_by_id" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.points = 20
+    assert skill.valid?
+    assert skill.save
+    id_1 = skill.id
+
+    skill = Skill.new
+    skill.name = 'java'
+    skill.points = 49
+    assert skill.valid?
+    assert skill.save
+    id_2 = skill.id
+
+    skills_in = [id_1, id_2]
+    skills = Skill.load_skills(skills_in)
+
+    assert_not_empty skills
+    assert_equal skills_in.size, skills.size
+    assert_equal skills_in[0], skills[0].id
+    assert_equal skills_in[1], skills[1].id
+
+  end
+
+  test "should_not_load_al_skills_by_id" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.points = 20
+    assert skill.valid?
+    assert skill.save
+    id_1 = skill.id
+
+    skills_in = [id_1, 3]
+    skills = Skill.load_skills(skills_in)
+
+    assert_not_empty skills
+    assert_equal skills_in.size - 1, skills.size
+    assert_equal skills_in[0], skills[0].id
+
+  end
+
 
   test "should_not_load_skills_by_class" do
     skill = Skill.new

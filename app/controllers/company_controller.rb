@@ -1,5 +1,7 @@
 class CompanyController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   @my_class = Company
 
   def parse_json(value, clazz)
@@ -98,6 +100,7 @@ class CompanyController < BaseApiController
     rescue ActiveRecord::RecordNotFound
       return head(:not_found)
     end
+
     if !obj.nil? then return render :json => obj, :include => {
       :skills => {:only => [:name, :points]}, :projects => {
         :only =>

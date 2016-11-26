@@ -1,5 +1,7 @@
 class ProjectController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   def create
 
     if (@json.nil?)
@@ -61,6 +63,18 @@ class ProjectController < BaseApiController
     return head(:bad_request)
   end
 
+  def base_get
+    obj = nil
+    begin
+      obj = yield
+    rescue ActiveRecord::RecordNotFound
+      return head(:not_found)
+    end
+    if !obj.nil? then return render :json => obj,
+        :include => {:tech_tags => {:only => :name}}, :except => [:created_at, :language]
+       else return head(:not_found) end
+  end
+
   def get
     base_get {Project.find(params[:id])}
   end
@@ -73,6 +87,6 @@ class ProjectController < BaseApiController
   def configure_tech_tags(project)
     return nil if project.nil? || project[:tech_tags].blank?
     return TechTag.where(:id => project[:tech_tags])
-  end  
+  end
 
 end

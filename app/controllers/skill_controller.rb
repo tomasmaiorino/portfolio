@@ -1,5 +1,7 @@
 class SkillController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   def create
 
     if (@json.nil?)
@@ -13,7 +15,8 @@ class SkillController < BaseApiController
       return render json: skill.errors.to_json, status: :bad_request
     end
 
-    skill_temp = Skill.find_by(:name => skill.name)
+    skill_temp = if !skill.id.nil? then Skill.find_by(:id => skill.id) else Skill.find_by(:name => skill.name) end
+
     message = skill_temp.nil? ? "Creating" : "Updating"
 
     Rails.logger.info "#{message} skill with name :" << skill.name
