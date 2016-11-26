@@ -116,7 +116,7 @@ class CompanyController < BaseApiController
         ],
         :include => {:tech_tags => {:only => :name}}
       }
-      } else return head(:not_found) end
+      }, :except => [:created_at, :updated_at] else return head(:not_found) end
   end
 
   def get
