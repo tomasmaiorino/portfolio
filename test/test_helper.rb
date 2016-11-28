@@ -138,6 +138,7 @@ class ActiveSupport::TestCase
       company.email = 'monsters@monsters.com'
       company.manager_name = 'David'
       company.main_color = '#FF00FF'
+      company.cover_letter = "cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter"
       company.save unless !create
       return company
     else

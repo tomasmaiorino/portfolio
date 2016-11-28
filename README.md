@@ -95,3 +95,20 @@ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -
 $ curl -ihttp://localhost:3000/api/v1/company/token/labtk
 Sample response:
 {"id":1,"client_id":2,"active":true,"token":"labtk","email":"lab@lab.com","manager_name":null,"name":"Lab","main_color":"#FF0000","cover_letter":null,"created_at":"2016-11-25T23:12:58.640Z","updated_at":"2016-11-25T23:12:58.640Z","skills":[{"name":"Java Developer JavaEE","level":54}],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"3 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"JAVA"}]}]}
+
+
+* Find Company's skills by token
+$ curl -i hst:3000/api/v1/company/skill/0e8c7467e46
+Sample response:
+{"skills":[{"name":"Java \u0026amp; j2e","level":96},{"name":"Javascript \u0026amp; jquery","level":70},{"name":"Databases","level":60},{"name":"Ruby on rails","level":40}]}
+
+* Find Company's projects tech by token
+$ curl -i hst:3000/api/v1/company/tech/0e8c7467e46
+Sample response:
+{"tech_tags":["BCC","ATG-11","GIT","REST"]}
+
+
+* Find Company' by company's client id
+ $ curl -i http://localhost:3000/api/v1/company/1
+ Sample response:
+ [{"id":1,"client_id":1,"active":true,"token":"0e8c7467e46","email":"lab@lab.com","manager_name":null,"name":"Lab","main_color":"#FF0000","cover_letter":null,"skills":[{"name":"Java \u0026amp; j2e","level":96},{"name":"Javascript \u0026amp; jquery","level":70},{"name":"Databases","level":60},{"name":"Ruby on rails","level":40}],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"2 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"BCC"},{"name":"ATG-11"},{"name":"GIT"},{"name":"REST"}]}]},{"id":2,"client_id":1,"active":true,"token":"e5fcdf02e26","email":"monsters@monsters.com","manager_name":"Jeff","name":"Monsters","main_color":"#FF0000","cover_letter":null,"skills":[],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"2 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"BCC"},{"name":"ATG-11"},{"name":"GIT"},{"name":"REST"}]}]}]t

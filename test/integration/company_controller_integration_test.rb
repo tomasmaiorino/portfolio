@@ -131,6 +131,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     companies[0].id = company_id
     companies[0].token = 'new_token'
+    companies[0].cover_letter = "cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter"
     params = companies[0].attributes
     params[:client_id] = @client.id
     params[:skills] = skills[0..1]

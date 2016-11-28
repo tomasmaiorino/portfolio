@@ -55,6 +55,7 @@ class CompanyController < BaseApiController
     final_company.active = company[:active]
     final_company.main_color = company[:main_color]
     final_company.id = company[:id]
+    final_company.cover_letter = company[:cover_letter]
 
     if !final_company.valid?
         return render json: final_company.errors.to_json, status: :bad_request
@@ -74,6 +75,7 @@ class CompanyController < BaseApiController
       company_temp.main_color = final_company.main_color
       company_temp.active = final_company.active
       company_temp.client = final_company.client
+      company_temp.cover_letter = final_company.cover_letter
       final_company = company_temp
     end
 

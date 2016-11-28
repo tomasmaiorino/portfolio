@@ -79,7 +79,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :client= => client, :token => 'tk12', :id => 1, :skills => nil, :id= => 1)
+          :client= => client, :token => 'tk12', :id => 1, :skills => nil, :id= => 1,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:save).returns(true).once
     company.stubs(:valid?).returns(true)
@@ -110,7 +111,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :client= => client, :id= => 1, :errors => @name_required, :skills => nil)
+          :client= => client, :id= => 1, :errors => @name_required, :skills => nil,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:valid?).returns(false)
     Company.stubs(:new).returns(company)
@@ -136,7 +138,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :active= => true,
           :client= => client,
           :token => '',
-          :id => 1, :id= => 1, :errors => @token_required, :skills => nil)
+          :id => 1, :id= => 1, :errors => @token_required, :skills => nil,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:valid?).returns(false)
     Company.stubs(:new).returns(company)
@@ -183,7 +186,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :email= => 'manager@company.com',
           :main_color= => '#FF00FF',
           :active= => true,
-          :valid? => true, :nil? => false, :skills= => skills, :skills => skills)
+          :valid? => true, :nil? => false, :skills= => skills, :skills => skills,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     company.stubs(:save).returns(true).once
 
     Company.stubs(:new).returns(company)
@@ -220,6 +224,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email => 'manager@company.com',
           :email= => 'manager@company.com',
+          :cover_letter= => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
+          :cover_letter => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
           :active => true,
           :active= => true,
           :main_color= => '#FF00FF',
@@ -234,7 +240,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :main_color= => '#FF00FF'
+          :main_color= => '#FF00FF',
+          :cover_letter= => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
+          :cover_letter => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter'
           )
 
 
@@ -271,7 +279,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :valid? => false, :nil? => false, :skills= => skills, :skills => skills, :errors => @name_required)
+          :valid? => false, :nil? => false, :skills= => skills,
+          :skills => skills, :errors => @name_required,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     Company.stubs(:new).returns(company)
     company.stubs(:save).returns(true).never
@@ -307,7 +317,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :active= => true,
           :id= => 1, :skills => nil,
-          :valid? => false, :errors => @duplicate_token_message)
+          :valid? => false, :errors => @duplicate_token_message,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     company.stubs(:save).returns(true).never
 
     Company.stubs(:new).returns(company)
@@ -522,7 +533,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Company.stubs(:includes).returns(projects_mock)
 
     companies = mock()
-    companies = stub(:empty? => true, :nil? => false)
+    companies = stub(:empty? => true, :nil? => false,
+    :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     projects_mock.stubs(:where).returns(companies)
     get "/api/v1/company/tech/cmpToken"
     assert_response :not_found
