@@ -88,11 +88,11 @@ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST 
 
 * Updating Company
 curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d
-"{\"id\":2,\"manager_name\":\"Jeff\",\"name\":\"Monsters\",\"token\":\"e5fcdf02e26\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
+"{\"id\":2,\"manager_name\":\"Jeff\",\"name\":\"Monsters\",\"token\":\"e5fcdf02e2600a1e4\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1,\"skills\":[1,3]}" http://localhost:3000/api/v1/company
 
 
 * Find company by token (For now the company is being returned only if it has at least a project associated to it)
-$ curl -ihttp://localhost:3000/api/v1/company/token/labtk
+$ curl -ihttp://localhost:3000/api/v1/company/token/e5fcdf02e2600a1e4
 Sample response:
 {"id":1,"client_id":2,"active":true,"token":"labtk","email":"lab@lab.com","manager_name":null,"name":"Lab","main_color":"#FF0000","cover_letter":null,"created_at":"2016-11-25T23:12:58.640Z","updated_at":"2016-11-25T23:12:58.640Z","skills":[{"name":"Java Developer JavaEE","level":54}],"projects":[{"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"3 weeks","future_project":false,"project_date":"2016-11-25T19:46:39.047Z","tech_tags":[{"name":"JAVA"}]}]}
 
