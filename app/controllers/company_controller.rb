@@ -1,5 +1,7 @@
 class CompanyController < BaseApiController
 
+  after_action :set_headers
+
   skip_before_action :verify_authenticity_token
 
   @my_class = Company
@@ -153,5 +155,15 @@ class CompanyController < BaseApiController
     return head(:not_found) if tech_tags.empty?
     return render json:{'tech_tags':tech_tags.uniq}
   end
+
+  private
+
+  	def set_headers
+  		headers['Access-Control-Allow-Origin'] = '*'
+  		headers['Access-Control-Expose-Headers'] = 'Etag'
+  		headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD'
+  		headers['Access-Control-Allow-Headers'] = '*, x-requested-with, Content-Type, If-Modified-Since, If-None-Match'
+  		headers['Access-Control-Max-Age'] = '86400'
+  	end
 
 end
