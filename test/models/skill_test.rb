@@ -16,7 +16,7 @@ class SkillTest < ActiveSupport::TestCase
     assert !skill.save
 
     skill = Skill.new
-    skill.points = 2
+    skill.level = 2
     assert !skill.valid?
     assert !skill.save
   end
@@ -24,43 +24,43 @@ class SkillTest < ActiveSupport::TestCase
   test "should_not_save_skill_passing_duplicate_skill" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 2
+    skill.level = 2
     assert skill.save
 
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 4
+    skill.level = 4
     assert !skill.valid?
     assert !skill.save
 
     skill = Skill.new
     skill.name = 'aTG'
-    skill.points = 4
+    skill.level = 4
     assert !skill.valid?
     assert !skill.save
 
   end
 
-  test "should_not_save_skill_not_points_as_text" do
+  test "should_not_save_skill_not_level_as_text" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = '2e'
+    skill.level = '2e'
     assert !skill.valid?
     assert !skill.save
   end
 
-  test "should_not_save_skill_passing_invalid_points" do
+  test "should_not_save_skill_passing_invalid_level" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 101
+    skill.level = 101
     assert !skill.valid?
     assert !skill.save
 
-    skill.points = -1
+    skill.level = -1
     assert !skill.valid?
     assert !skill.save
 
-    skill.points = 100
+    skill.level = 100
     assert skill.valid?
     assert skill.save
   end
@@ -68,7 +68,7 @@ class SkillTest < ActiveSupport::TestCase
   test "should_save_skill" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 2
+    skill.level = 2
     assert skill.valid?
     assert skill.save
   end
@@ -76,15 +76,15 @@ class SkillTest < ActiveSupport::TestCase
   test "should_update_skill" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.find_by(:name => skill.name)
     assert_not_nil skill_2
-    assert_equal skill.points, skill_2.points
+    assert_equal skill.level, skill_2.level
 
-    skill_2.points = 30
+    skill_2.level = 30
     assert skill_2.valid?
     assert skill_2.save
   end
@@ -92,19 +92,19 @@ class SkillTest < ActiveSupport::TestCase
   test "should_not_update_skill" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 
     skill_3 = Skill.find_by(:name => skill_2.name)
     assert_not_nil skill_3
-    assert_equal skill_2.points, skill_3.points
+    assert_equal skill_2.level, skill_3.level
 
     skill_3.name = 'atg'
     assert !skill_3.valid?
@@ -114,13 +114,13 @@ class SkillTest < ActiveSupport::TestCase
   test "should_load_skills_by_class" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 
@@ -150,13 +150,13 @@ class SkillTest < ActiveSupport::TestCase
   test "should_load_not_all_skills_by_class" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 
@@ -183,13 +183,13 @@ class SkillTest < ActiveSupport::TestCase
   test "should_load_and_add_not_persisted_skills_by_class" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 
@@ -214,6 +214,48 @@ class SkillTest < ActiveSupport::TestCase
     assert_nil skills[1].id
   end
 
+  test "should_load_skills_by_id" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.level = 20
+    assert skill.valid?
+    assert skill.save
+    id_1 = skill.id
+
+    skill = Skill.new
+    skill.name = 'java'
+    skill.level = 49
+    assert skill.valid?
+    assert skill.save
+    id_2 = skill.id
+
+    skills_in = [id_1, id_2]
+    skills = Skill.load_skills(skills_in)
+
+    assert_not_empty skills
+    assert_equal skills_in.size, skills.size
+    assert_equal skills_in[0], skills[0].id
+    assert_equal skills_in[1], skills[1].id
+
+  end
+
+  test "should_not_load_al_skills_by_id" do
+    skill = Skill.new
+    skill.name = 'atg'
+    skill.level = 20
+    assert skill.valid?
+    assert skill.save
+    id_1 = skill.id
+
+    skills_in = [id_1, 3]
+    skills = Skill.load_skills(skills_in)
+
+    assert_not_empty skills
+    assert_equal skills_in.size - 1, skills.size
+    assert_equal skills_in[0], skills[0].id
+
+  end
+
 
   test "should_not_load_skills_by_class" do
     skill = Skill.new
@@ -234,13 +276,13 @@ class SkillTest < ActiveSupport::TestCase
   test "should_load_skills_by_name" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 
@@ -266,13 +308,13 @@ class SkillTest < ActiveSupport::TestCase
   test "should_load_not_all_skills_by_name" do
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 20
+    skill.level = 20
     assert skill.valid?
     assert skill.save
 
     skill_2 = Skill.new
     skill_2.name = 'java'
-    skill_2.points = 40
+    skill_2.level = 40
     assert skill_2.valid?
     assert skill_2.save
 

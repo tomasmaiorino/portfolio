@@ -62,6 +62,8 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     Project.any_instance.stubs(:valid?).returns(false)
     Project.any_instance.stubs(:errors).returns(@name_required)
 
+    configure_valid_mock_token_params(params)
+
     post "/api/v1/project", params
     message = valid_bad_request(response, {'name' => 'Field Required'})
   end
@@ -71,6 +73,8 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     params.delete(:project_date)
     Project.any_instance.stubs(:valid?).returns(false)
     Project.any_instance.stubs(:errors).returns(@project_date_required)
+
+    configure_valid_mock_token_params(params)
 
     post "/api/v1/project", params
     message = valid_bad_request(response, {'project_date' => 'Field Required'})
@@ -82,8 +86,24 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     Project.any_instance.stubs(:valid?).returns(false)
     Project.any_instance.stubs(:errors).returns(@summary_required)
 
+    configure_valid_mock_token_params(params)
+
     post "/api/v1/project", params
     message = valid_bad_request(response, {'summary' => 'Field Required'})
+  end
+
+  test "should_not_create_project_without_companies_and_tech_tags_unauthorized" do
+    params = @valid_params
+
+    Project.any_instance.stubs(:valid?).returns(true)
+    Project.any_instance.stubs(:save).returns(true)
+    Project.any_instance.stubs(:find).returns(nil)
+    Project.any_instance.stubs(:id).returns(1)
+
+    configure_valid_mock_token_params(params)
+
+    post "/api/v1/project", params
+    message = valid_success_request(response, {'id' => ''})
   end
 
   test "should_create_project_without_companies_and_tech_tags" do
@@ -94,8 +114,12 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     Project.any_instance.stubs(:find).returns(nil)
     Project.any_instance.stubs(:id).returns(1)
 
+    configure_valid_mock_token_params(params)
+    Client.stubs(:find_by).returns(nil)
+
     post "/api/v1/project", params
-    message = valid_success_request(response, {'id' => ''})
+    assert_response :unauthorized
+
   end
 
   test "should_create_project_with_companies_and_without_tech_tags" do
@@ -115,6 +139,8 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     Project.any_instance.stubs(:save).returns(true)
     Project.any_instance.stubs(:find).returns(nil)
     Project.any_instance.stubs(:id).returns(1)
+
+    configure_valid_mock_token_params(params)
 
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})
@@ -144,6 +170,8 @@ class ProjectControllerTest < ActionDispatch::IntegrationTest
     Project.any_instance.stubs(:save).returns(true)
     Project.any_instance.stubs(:find).returns(nil)
     Project.any_instance.stubs(:id).returns(1)
+
+    configure_valid_mock_token_params(params)
 
     post "/api/v1/project", params
     message = valid_success_request(response, {'id' => ''})

@@ -65,22 +65,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     #Client.find_by(:token => @json['token'])
   end
 
-  def get_mock_client
-    client = Client.new
-    client.id = 2
-    client.name = "Monsters"
-    client.token = 'tk12'
-    client.active = true
-    client.security_permissions = 1
-    return client
-  end
-
 #
 # => CREATE BLOCK
 #
   test "should_create_company_without_skills" do
 
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     company = Company.new
@@ -89,7 +79,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :client= => client, :token => 'tk12', :id => 1, :skills => nil, :id= => 1)
+          :client= => client, :token => 'tk12', :id => 1, :skills => nil, :id= => 1,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:save).returns(true).once
     company.stubs(:valid?).returns(true)
@@ -98,7 +89,12 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
 
     params = @valid_params
     params[:client_id] = client.id
+    params[:client_id] = client.id
 
+    add_client_token_param(params, client)
+
+    #controller.request.host = Rails.application.config.test_host
+    #host! Rails.application.config.test_host
     post '/api/v1/company', params
     print_response(response)
     message = valid_success_request(response, {'id' => ''})
@@ -106,7 +102,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
 
   test "should_not_create_company_without_name" do
 
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     company = Company.new
@@ -115,21 +111,22 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :client= => client, :id= => 1, :errors => @name_required, :skills => nil)
+          :client= => client, :id= => 1, :errors => @name_required, :skills => nil,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:valid?).returns(false)
     Company.stubs(:new).returns(company)
 
     params = @invalid_params_no_name
     params[:client_id] = client.id
-
+    add_client_token_param(params, client)
     post '/api/v1/company', params
     valid_bad_request(response, {'name' => ''})
   end
 
   test "should_not_create_company_without_token" do
 
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     company = Company.new
@@ -141,36 +138,35 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :active= => true,
           :client= => client,
           :token => '',
-          :id => 1, :id= => 1, :errors => @token_required, :skills => nil)
+          :id => 1, :id= => 1, :errors => @token_required, :skills => nil,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     company.stubs(:valid?).returns(false)
     Company.stubs(:new).returns(company)
 
     params = @invalid_params_no_token
     params[:client_id] = client.id
-
+    add_client_token_param(params, client)
+    #@request.host = TestCase.TEST_REQUEST_HOST
     post '/api/v1/company', params
     valid_bad_request(response, {'token' => ''})
   end
 
-  test "should_not_create_company_without_client" do
-    params = @valid_params
-    post '/api/v1/company', params
-    valid_bad_request(response, {'client_id' => ''})
-  end
-
   test "should_not_create_company_invalid_client" do
+    client = get_valid_mock_client
+    Client.stubs(:find_by).returns(client)
     Client.stubs(:find).raises(ActiveRecord::RecordNotFound)
 
     params = @valid_params
-    params[:client_id] = 23
-
+    params[:client_id] = client.id
+    params = @valid_params
+    add_client_token_param(params, client)
     post '/api/v1/company', params
     valid_bad_request(response, {'client_id' => ''})
   end
 
   test "should_create_company_with_skills" do
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     skills = get_valid_skill(false, -1, @skills)
@@ -190,7 +186,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :email= => 'manager@company.com',
           :main_color= => '#FF00FF',
           :active= => true,
-          :valid? => true, :nil? => false, :skills= => skills, :skills => skills)
+          :valid? => true, :nil? => false, :skills= => skills, :skills => skills,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     company.stubs(:save).returns(true).once
 
     Company.stubs(:new).returns(company)
@@ -199,6 +196,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     params = @valid_params
     params[:client_id] = client.id
     params[:skills] = @skills
+    add_client_token_param(params, client)
     post '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
   end
@@ -207,7 +205,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
   # => UPDATE BLOCK
   #
   test "should_update_company_with_skills" do
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     skills = get_valid_skill(false, -1, @skills)
@@ -226,9 +224,10 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email => 'manager@company.com',
           :email= => 'manager@company.com',
+          :cover_letter= => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
+          :cover_letter => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
           :active => true,
           :active= => true,
-          :main_color => '#FF00FF',
           :main_color= => '#FF00FF',
           :valid? => true, :nil? => false, :skills= => skills, :skills => skills)
 
@@ -241,7 +240,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :main_color= => '#FF00FF'
+          :main_color= => '#FF00FF',
+          :cover_letter= => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter',
+          :cover_letter => 'cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter'
           )
 
 
@@ -254,12 +255,13 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     params[:client_id] = client.id
     params[:skills] = skills
     params[:id] = 22
+    add_client_token_param(params, client)
     put '/api/v1/company', params
     message = valid_success_request(response, {'id' => ''})
   end
 
   test "should_not_update_company_with_skills_without_name" do
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     skills = get_valid_skill(false, -1, @skills)
@@ -277,7 +279,9 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :email= => 'manager@company.com',
           :active= => true,
-          :valid? => false, :nil? => false, :skills= => skills, :skills => skills, :errors => @name_required)
+          :valid? => false, :nil? => false, :skills= => skills,
+          :skills => skills, :errors => @name_required,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
 
     Company.stubs(:new).returns(company)
     company.stubs(:save).returns(true).never
@@ -286,19 +290,22 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     params[:client_id] = client.id
     params[:skills] = @skills
     params[:id] = client.id
+    add_client_token_param(params, client)
     put '/api/v1/company', params
     #checks
     valid_bad_request(response, {'name' => ''})
   end
 
   test "should_not_update_company_not_passing_id" do
+    client = get_valid_mock_client
     params = @valid_params
+    add_client_token_param(params, client)
     put '/api/v1/company', params
     message = valid_bad_request(response, {'id' => ''})
   end
 
   test "should_not_update_company_duplicate_token" do
-    client = get_mock_client
+    client = get_valid_mock_client
     Client.stubs(:find).returns(client)
 
     company = Company.new
@@ -310,7 +317,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
           :manager_name= => 'manager name',
           :active= => true,
           :id= => 1, :skills => nil,
-          :valid? => false, :errors => @duplicate_token_message)
+          :valid? => false, :errors => @duplicate_token_message,
+          :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     company.stubs(:save).returns(true).never
 
     Company.stubs(:new).returns(company)
@@ -319,6 +327,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     params = @valid_params
     params[:client_id] = client.id
     params[:id] = 4433
+    add_client_token_param(params, client)
     put '/api/v1/company', params
     message = valid_bad_request(response, {'token' => ''})
 
@@ -326,6 +335,7 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
 
   test "should_not_update_company_with_skills" do
     params = @valid_params
+    add_client_token_param(params, get_valid_mock_client)
     put '/api/v1/company', params
     print_response(response)
     valid_bad_request(response, {'id' => 'Field required'})
@@ -377,11 +387,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company_temp.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
   end
 
   test "should_find_company_by_token_not_found" do
@@ -417,14 +427,18 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
   end
 =end
   test "should_not_find_company_by_client_id" do
+    client = get_valid_mock_client
+    client.stubs(:nil?).returns(false)
+    Client.stubs(:find_by).returns()
+    Company.stubs(:where).returns(nil)
     get "/api/v1/company/80808080980"
     assert_response :not_found
   end
@@ -459,11 +473,11 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     assert_equal company_temp.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
     assert_equal projects.size, message["projects"].size
     assert_equal projects[0].name, message["projects"][0]['name']
     assert_equal projects[0].summary, message["projects"][0]['summary']
@@ -519,7 +533,8 @@ class CompanyControllerTest < ActionDispatch::IntegrationTest
     Company.stubs(:includes).returns(projects_mock)
 
     companies = mock()
-    companies = stub(:empty? => true, :nil? => false)
+    companies = stub(:empty? => true, :nil? => false,
+    :cover_letter= => "cover letter cover letter cover letter cover letter cover letter")
     projects_mock.stubs(:where).returns(companies)
     get "/api/v1/company/tech/cmpToken"
     assert_response :not_found

@@ -4,9 +4,10 @@ require 'rails/test_help'
 require 'mocha/mini_test'
 
 class ActiveSupport::TestCase
+
+  TEST_REQUEST_HOST = "http://localhost"
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
-
 
   def add_client_token_param(params, client = nil)
     if (client.nil?)
@@ -16,14 +17,35 @@ class ActiveSupport::TestCase
     return params
   end
 
+  def configure_valid_mock_token_params(params)
+    client = get_valid_mock_client
+    Client.stubs(:find_by).returns(client)
+    return add_client_token_param(params, client)
+  end
+
   # Add more helper methods to be used by all tests here...
   def get_valid_client(create = false)
     client = Client.new
     client.name = 'monsters'
     client.token = 'xxss12'
     client.active = true
+    client.host = 'localhost'
     client.save unless !create
     return client
+  end
+
+  def get_valid_mock_client
+    client = Client.new
+    return stub(:name= => 'Lab',
+          :token= => 'tk12',
+          :active= => true,
+          :token => 'tk12',
+          :id => 1,
+          :id= => 1,
+          :security_permissions => 1,
+          :security_permissions= => 1,
+          :host => 'http://localhost',
+          :host= => 'http://localhost')
   end
 
   def get_valid_teck_tag(create = false, tags = [])
@@ -50,7 +72,7 @@ class ActiveSupport::TestCase
     if (qt == 1)
     skill = Skill.new
     skill.name = 'atg'
-    skill.points = 2
+    skill.level = 2
     skill.save unless !create
     return skill
     elsif !skills.empty?
@@ -58,7 +80,7 @@ class ActiveSupport::TestCase
       skills.each_with_index{|x, i|
         skill = Skill.new
         skill.name = x
-        skill.points = 2 + i.to_i
+        skill.level = 2 + i.to_i
         skill.save unless !create
         temp << skill
       }
@@ -68,7 +90,7 @@ class ActiveSupport::TestCase
       (1..qt).each{|t|
         skill = Skill.new
         skill.name = "atg #{t}"
-        skill.points = 2 + t.to_i
+        skill.level = 2 + t.to_i
         skill.save unless !create
         temp << skill
       }
@@ -116,6 +138,7 @@ class ActiveSupport::TestCase
       company.email = 'monsters@monsters.com'
       company.manager_name = 'David'
       company.main_color = '#FF00FF'
+      company.cover_letter = "cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter"
       company.save unless !create
       return company
     else

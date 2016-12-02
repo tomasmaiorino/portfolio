@@ -19,6 +19,16 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     @client = get_valid_client(true)
   end
 
+  test "integration_should_return_unauthorized_during_company_creation" do
+
+    company = get_valid_company(false, @client)
+    params = company.attributes
+    params[:client_id] = @client.id
+
+    post '/api/v1/company', params
+    assert_response :unauthorized
+  end
+
   test "integration_should_create_company_without_skills" do
     company = get_valid_company(false, @client)
     params = company.attributes
@@ -83,7 +93,7 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     message = valid_bad_request(response, {'token' => ''})
   end
 
-  test "integration_should_update_company_with_skills" do
+  test "integration_should_throw_unauthorized_for_update_company_with_skills" do
     companies = get_valid_company(false, @client, 2)
     skills = get_valid_skill(false, -1, @skills)
 
@@ -102,9 +112,33 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     params[:client_id] = @client.id
     params[:skills] = skills[0..1]
 
+    put '/api/v1/company', params
+    assert_response :unauthorized
+  end
+
+  test "integration_should_update_company_with_skills" do
+    companies = get_valid_company(false, @client, 2)
+    skills = get_valid_skill(false, -1, @skills)
+
+    params = companies[0].attributes
+    params[:client_id] = @client.id
+    params[:skills] = skills
+    #company 1
+    add_client_token_param(params, @client)
+    post '/api/v1/company', params
+    message = valid_success_request(response, {'id' => ''})
+    company_id = message['id']
+
+    companies[0].id = company_id
+    companies[0].token = 'new_token'
+    companies[0].cover_letter = "cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter cover letter"
+    params = companies[0].attributes
+    params[:client_id] = @client.id
+    params[:skills] = skills[0..1]
+
     add_client_token_param(params, @client)
     put '/api/v1/company', params
-    print_response(response)
+    #print_response(response)
     message = valid_success_request(response, {'id' => company_id})
   end
 
@@ -164,11 +198,11 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal company.name, message["name"]
     assert_equal skills.size, message["skills"].size
     assert_equal skills[0].name, message["skills"][0]['name']
-    assert_equal skills[0].points, message["skills"][0]['points']
+    assert_equal skills[0].level, message["skills"][0]['level']
     assert_equal skills[1].name, message["skills"][1]['name']
-    assert_equal skills[1].points, message["skills"][1]['points']
+    assert_equal skills[1].level, message["skills"][1]['level']
     assert_equal skills[2].name, message["skills"][2]['name']
-    assert_equal skills[2].points, message["skills"][2]['points']
+    assert_equal skills[2].level, message["skills"][2]['level']
   end
 
   test "integration_should_find_company_by_client_id_not_found" do
@@ -588,5 +622,5 @@ class CompanyControllerIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal project_2.name, company_get[2]['projects'][0]['name']
     assert_equal project_2.img, company_get[2]['projects'][0]['img']
   end
-  
+
 end

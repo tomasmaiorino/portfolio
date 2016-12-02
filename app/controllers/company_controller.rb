@@ -1,5 +1,7 @@
 class CompanyController < BaseApiController
 
+  skip_before_action :verify_authenticity_token
+
   @my_class = Company
 
   def parse_json(value, clazz)
@@ -53,6 +55,7 @@ class CompanyController < BaseApiController
     final_company.active = company[:active]
     final_company.main_color = company[:main_color]
     final_company.id = company[:id]
+    final_company.cover_letter = company[:cover_letter]
 
     if !final_company.valid?
         return render json: final_company.errors.to_json, status: :bad_request
@@ -72,6 +75,7 @@ class CompanyController < BaseApiController
       company_temp.main_color = final_company.main_color
       company_temp.active = final_company.active
       company_temp.client = final_company.client
+      company_temp.cover_letter = final_company.cover_letter
       final_company = company_temp
     end
 
@@ -98,8 +102,9 @@ class CompanyController < BaseApiController
     rescue ActiveRecord::RecordNotFound
       return head(:not_found)
     end
+
     if !obj.nil? then return render :json => obj, :include => {
-      :skills => {:only => [:name, :points]}, :projects => {
+      :skills => {:only => [:name, :level]}, :projects => {
         :only =>
         [:name,
         :img,
@@ -113,7 +118,7 @@ class CompanyController < BaseApiController
         ],
         :include => {:tech_tags => {:only => :name}}
       }
-      } else return head(:not_found) end
+      }, :except => [:created_at, :updated_at] else return head(:not_found) end
   end
 
   def get
@@ -131,7 +136,7 @@ class CompanyController < BaseApiController
   def get_company_skills
     company = Company.find_by(:token => params[:token])
     return head(:not_found) if company.nil? || company.skills.nil? || company.skills.empty?
-    render :json => {:skills => company.skills.as_json(only: [:name, :points])}
+    render :json => {:skills => company.skills.as_json(only: [:name, :level])}
   end
 
 

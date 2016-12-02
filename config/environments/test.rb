@@ -51,4 +51,7 @@ Rails.application.configure do
 
   # Set log level
   config.log_level = :DEBUG
+
+  config.test_host = "http://localhost"  
+
 end
