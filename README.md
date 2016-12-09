@@ -51,12 +51,12 @@ Sample response:
 {"id":1,"name":"monsters","active":true,"created_at":"2016-11-25T20:41:21.510Z","updated_at":"2016-11-25T20:41:21.510Z"}
 
 * Creating Skill tags:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Java JavaEE\",\"level\":94,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Java JavaEE\",\"level\":94,\"ct\":\"df2a0983392\"}" http://localhost:3000/api/v1/skill
 Sample response:
 {"id":1}
 
 * Update Skill tags:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"id\":1,\"name\":\"Java Developer JavaEE\",\"level\":54,\"ct\":\"tkclient\"}" http://localhost:3000/api/v1/skill
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"id\":1,\"name\":\"Java Developer JavaEE\",\"level\":54,\"ct\":\"df2a0983392\"}" http://localhost:3000/api/v1/skill
 Sample response:
 {"id":1}
 
@@ -71,6 +71,10 @@ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST 
 
 curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Recover Password\",\"img\":\"assets/images/projects/etna.png\",\"link_img\":\"http://www.etna.com.br\",\"summary\":\"Site Integration\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the problems with the integrations between the client's erp and the ecommerce\",\"time_spent\":\"6 months\",\"active\":true,\"future_project\":true,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[1,2,4,5,13,10,8],\"companies\":[1]}" http://localhost:3000/api/v1/project
 
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Payment Integration Improvements\",\"img\":\"assets/images/projects/etna.png\",\"link_img\":\"http://www.etna.com.br\",\"summary\":\"Paymment Intergration\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the problems with the integrations between the payment gateway\",\"time_spent\":\"6 months\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[6,14],\"companies\":[1]}" http://localhost:3000/api/v1/project
+
+curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Status Integration\",\"img\":\"assets/images/projects/etna.png\",\"link_img\":\"http://www.etna.com.br\",\"summary\":\"Change the order status integration to work a status property instead of last modified date property\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the problems with the integrations between the payment gateway\",\"time_spent\":\"2 months\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[1,6,14],\"companies\":[1]}" http://localhost:3000/api/v1/project
+
 
 * Updating Projects:
 curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":1,\"name\":\"Recover Password\",\"img\":\"assets/images/projects/netshoes.png\",\"link_img\":\"http://www.netshoes.com.br\",\"summary\":\"Change the recover password workflow\",\"description\":\"description description description description description description description description description\",\"improvements\":\"Reduce the support calls in 20%\",\"time_spent\":\"2 weeks\",\"active\":true,\"future_project\":false,\"project_date\":\"2016-11-25T19:46:39.047Z\",\"ct\":\"df2a0983392\",\"tech_tags\":[1,2,4,5],\"companies\":[1,2]}" http://localhost:3000/api/v1/project
@@ -83,14 +87,14 @@ Sample response:
 {"id":2,"name":"Recover Password","img":"assets/images/projects/netshoes.png","link_img":"http://www.netshoes.com.br","summary":"Change the recover password workflow","description":"description description description description description description description description description","improvements":"Reduce the support calls in 20%","time_spent":"2 weeks","language":"en","active":true,"future_project":false,"project_date":"2016-11-25T19:46:39.047Z","created_at":"2016-11-25T21:57:31.109Z","updated_at":"2016-11-25T21:57:31.109Z","tech_tags":[{"name":"JAVA"},{"name":"SQL"}]}
 
 * Creating Company:
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Lab\",\"token\":\"e5fcdf02e2600a1e4\",\"email\":\"lab@lab.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1,\"skills\":[1,3]}" http://localhost:3000/api/v1/company
+$ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Lab\",\"token\":\"e5fcdf02e2600a1e4\",\"email\":\"lab@lab.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1,\"skills\":[1,3]}" http://localhost:3000/api/v1/company
 
 
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Monsters\",\"token\":\"e5fcdf02e26\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
+$ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"name\":\"Monsters\",\"token\":\"e5fcdf02e26\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1}" http://localhost:3000/api/v1/company
 
 
 * Updating Company
-curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":2,\"manager_name\":\"Jeff\",\"name\":\"Monsters\",\"token\":\"e5fcdf02e2600a1e4\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1,\"skills\":[1,3]}" http://localhost:3000/api/v1/company
+$ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X PUT -d "{\"id\":1,\"manager_name\":\"Jeff\",\"name\":\"Monsters\",\"token\":\"e5fcdf02e2600a1e4\",\"email\":\"monsters@monsters.com\",\"ct\":\"df2a0983392\",\"active\":true,\"main_color\":\"#FF0000\",\"client_id\":1,\"skills\":[1,3],\"cover_letter\":\"\"}" http://localhost:3000/api/v1/company
 
 
 * Find company by token (For now the company is being returned only if it has at least a project associated to it)
