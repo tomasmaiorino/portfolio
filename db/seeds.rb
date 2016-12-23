@@ -10,8 +10,9 @@
 # => DEV INITIA LOAD
 #
 dev_tech_tags_array = ["BCC","ATG-11","ANT","GIT","REST","SOAP","SPRING-BOOT","SPRING-WEB","JSF 1.2",
-"JSTL","MYSQL","ORACLE","WEBLOGIC","REDIS","MONGO-DB","SVN","JMS","PLAY-FRAMEWORK","WEBSPHERE"]
-dev_skills = { "Java &amp; J2E" => 96, "Javascript &amp; jQuery" => 70, "Databases" => 60, "Ruby on Rails" => 40, "ATG &amp; ENDECA" => 50}
+"JSTL","MYSQL","ORACLE","WEBLOGIC","REDIS","MONGO-DB","SVN","JMS","PLAY-FRAMEWORK","WEBSPHERE","TOMCAT"]
+dev_skills = { "Java and J2EE" => 96, "Javascript and jQuery" => 70, "Databases" => 60, "Ruby on Rails" => 40,
+   "ATG ENDECA" => 50}
 
 def load_tech_tags(tech_tag, env)
   if (!tech_tag.nil? && !tech_tag.empty?)
