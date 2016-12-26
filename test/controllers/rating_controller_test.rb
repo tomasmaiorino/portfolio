@@ -26,6 +26,21 @@ class RatingControllerTest < ActionDispatch::IntegrationTest
     Client.stubs(:find_by).returns(client)
     Rating.any_instance.stubs(:valid?).returns(true)
     Rating.any_instance.stubs(:save).returns(true)
+    Rating.any_instance.stubs(:id).returns(1)
+    post '/api/v1/rating', params
+    valid_success_request(response, {'id' => 1})
+  end
+
+  test "should_create_rating_with_company" do
+    params = @valid_params
+    params[:cp] = 'tk1'
+    client = Client.new
+    Client.stubs(:find_by).returns(client)
+    company = Company.new
+    Company.stubs(:find_by).returns(company)
+    Rating.any_instance.stubs(:valid?).returns(true)
+    Rating.any_instance.stubs(:save).returns(true)
+    Rating.any_instance.stubs(:id).returns(1)
     post '/api/v1/rating', params
     valid_success_request(response, {'id' => 1})
   end

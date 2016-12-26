@@ -1,7 +1,5 @@
 class RatingController < BaseApiController
 
-  after_action :set_headers
-
   skip_before_action :verify_authenticity_token
 
   def create
@@ -12,16 +10,18 @@ class RatingController < BaseApiController
     end
 
     rating_req = @json
-
-    if !rating_req.valid?
-        return render json: rating_req.errors.to_json, status: :bad_request
-    end
+    company_id = rating_req[:cp]
+    rating_req.delete(:cp)
 
     rating = JSON.parse(rating_req.to_json, object_class: Rating)
 
-    if !rating_req[:cp].blank?
+    if !rating.valid?
+        return render json: rating_req.errors.to_json, status: :bad_request
+    end
+
+    if !company_id.blank?
         company = Company.find_by(:token => rating_req[:cp])
-        Rails.logger.debug "Invalid company informed: #{rating_req[:cp]}"
+        Rails.logger.debug "Invalid company informed: #{company_id}"
         rating.company = company unless company.nil?
     end
 
