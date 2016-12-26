@@ -10,13 +10,14 @@ class RatingController < BaseApiController
     end
 
     rating_req = @json
+
     company_id = rating_req[:cp]
     rating_req.delete(:cp)
 
     rating = JSON.parse(rating_req.to_json, object_class: Rating)
 
     if !rating.valid?
-        return render json: rating_req.errors.to_json, status: :bad_request
+        return render json: rating.errors.to_json, status: :bad_request
     end
 
     if !company_id.blank?

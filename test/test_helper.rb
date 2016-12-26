@@ -187,6 +187,10 @@ class ActiveSupport::TestCase
     return valid_basic(:bad_request, response, params, debug)
   end
 
+  def valid_unauthorized(response, params = {}, debug = false)
+    return valid_basic(:unauthorized, response, params, debug)
+  end
+
   def print_response(response)
     message = response.body
     Rails.logger.debug "Response: #{message}"

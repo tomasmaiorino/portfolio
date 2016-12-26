@@ -78,8 +78,6 @@ class CompanyTest < ActiveSupport::TestCase
     company_temp = Company.find(company.id)
     company_temp.token = 'xxss11'
     assert !company_temp.valid?
-    puts '+++__++_'
-    puts company_temp.errors.messages
     assert company_temp.errors.messages.has_key?(:token)
     assert !company_temp.save
   end
