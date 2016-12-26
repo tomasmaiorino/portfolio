@@ -37,4 +37,8 @@ Rails.application.routes.draw do
   match 'api/v1/project/:id' => 'project#get', constraints: { id: /\d+/ }, via: [:get]
   match 'api/v1/project/company/:id' => 'project#get_company', via: [:get]
 
+  #rating
+  match 'api/v1/rating' => 'rating#create', via: [:post]
+  match 'api/v1/rating' => 'rating#get', via: [:get]
+
 end
