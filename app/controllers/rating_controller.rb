@@ -21,7 +21,7 @@ class RatingController < BaseApiController
     end
 
     if !company_id.blank?
-        company = Company.find_by(:token => rating_req[:cp])
+        company = Company.find_by(:token => company_id)
         Rails.logger.debug "Invalid company informed: #{company_id}"
         rating.company = company unless company.nil?
     end
@@ -33,6 +33,22 @@ class RatingController < BaseApiController
     Rails.logger.error "Error #{message} rating"
     return head(:bad_request)
 
+  end
+
+  def base_get
+    obj = nil
+    begin
+      obj = yield
+    rescue ActiveRecord::RecordNotFound
+      return head(:not_found)
+    end
+
+    if !obj.blank? then return render :json => obj, :except => [:created_at, :updated_at, :company] else return head(:not_found) end
+  end
+
+  def get
+    token  = params[:token]
+    base_get{Rating.includes(:company).where('token = ?', token).references(:companies)}
   end
 
 
