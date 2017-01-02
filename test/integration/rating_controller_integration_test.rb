@@ -14,7 +14,6 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
 
     test "integration_should_create_rating_without_company" do
       params = @valid_params
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -26,7 +25,6 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
 
       params = @valid_params
       params['cp'] = company.token
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -39,7 +37,6 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
       params = @valid_params
       params['cp'] = company.token
       params['comments'] = 'This site is cool'
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''}, true)
@@ -51,21 +48,18 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
 
       params = @valid_params
       params['cp'] = company.token
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''})
 
       params = @valid_params
       params['points'] = 2
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''})
 
       params = @valid_params
       params['points'] = 5
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''})
@@ -90,7 +84,6 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
       params['cp'] = company.token
       params['comments'] = comments
 
-      add_client_token_param(params, @client)
       post '/api/v1/rating', params
 
       message = valid_success_request(response, {'id' => ''})
@@ -107,7 +100,7 @@ class RatingControllerIntegrationTest < ActionDispatch::IntegrationTest
       assert_nil rating_get[0]['company']
     end
 
-    test "integration_should_not_recover_rating_by_company" do      
+    test "integration_should_not_recover_rating_by_company" do
       get '/api/v1/rating/' << 'tk'
       assert_response :not_found
 

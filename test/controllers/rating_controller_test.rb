@@ -64,13 +64,6 @@ class RatingControllerTest < ActionDispatch::IntegrationTest
     message = valid_bad_request(response, {'points' =>'must be less than or equal to 5'})
   end
 
-  test "should_not_create_not_informing_client_token" do
-    params = @valid_params
-    post '/api/v1/rating', params
-    message = valid_unauthorized(response)
-  end
-
-
   test "should_not_create_rating_points_less_than_one" do
     rating = Rating.new
     rating.stubs(:errors).returns(@invalid_points_less_than_1)

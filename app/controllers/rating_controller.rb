@@ -51,5 +51,4 @@ class RatingController < BaseApiController
     base_get{Rating.includes(:company).where('token = ?', token).references(:companies)}
   end
 
-
 end

@@ -31,7 +31,7 @@ class BaseApiController < ApplicationController
   private
 
 	def should_check_client_token
-		if !request.fullpath.include?("api/v1/client")
+		if !request.fullpath.include?("api/v1/client") && !request.fullpath.include?("api/v1/rating")
 			if(request.method == "POST" || request.method == "PUT")
 				return true
 			end
