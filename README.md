@@ -123,3 +123,13 @@ Sample response:
  curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"points\":5}" http://localhost:3000/api/v1/rating
  Sample response:
  {"id":1}
+
+ * Creating rating with company:
+ curl -i -H "Content-Type:application/json" -H "Accept:application/json" -X POST -d "{\"points\":5,\"cp\":\"e5fcdf02e2600a1e4\"}" http://localhost:3000/api/v1/rating
+ Sample response:
+ {"id":1}
+
+ * Recovering rating by company:
+ $ curl -i  http://localhost:3000/api/v1/rating/e5fcdf02e2600a1e4
+ Sample response:
+ {"id":4,"company_id":2,"points":5,"comments":null}

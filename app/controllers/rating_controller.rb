@@ -14,7 +14,9 @@ class RatingController < BaseApiController
     company_id = rating_req[:cp]
     rating_req.delete(:cp)
 
+    Rails.logger.debug "Parsing json object to class Rating ->"
     rating = JSON.parse(rating_req.to_json, object_class: Rating)
+    Rails.logger.debug "Parsing json object to class Rating <-"
 
     if !rating.valid?
         return render json: rating.errors.to_json, status: :bad_request
@@ -22,7 +24,7 @@ class RatingController < BaseApiController
 
     if !company_id.blank?
         company = Company.find_by(:token => company_id)
-        Rails.logger.debug "Invalid company informed: #{company_id}"
+        Rails.logger.debug "Invalid company informed: #{company_id}" unless !company.nil?
         rating.company = company unless company.nil?
     end
 
@@ -49,6 +51,24 @@ class RatingController < BaseApiController
   def get
     token  = params[:token]
     base_get{Rating.includes(:company).where('token = ?', token).references(:companies)}
+  end
+
+  def get_all
+    ratings = Rating.all
+    average = get_ratings_average(ratings)
+    return render :json => {
+      :ratings => ratings.as_json(:except => [:created_at, :updated_at, :company]),
+      :average => average
+    }
+  end
+
+  def get_ratings_average(ratings = nil)
+    return nil unless !ratings.nil?
+    total = 0
+    ratings.each{|r|
+        total = total + r.points
+    }
+    if total > 0 then return total / ratings.size else return 0 end
   end
 
 end

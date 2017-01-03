@@ -1,4 +1,6 @@
 class Rating < ApplicationRecord
+
+  MAX_POINTS = 5
   belongs_to :company, optional: true
 
   validates :points, numericality: { only_integer: true,

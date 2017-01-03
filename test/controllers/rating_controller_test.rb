@@ -78,5 +78,52 @@ class RatingControllerTest < ActionDispatch::IntegrationTest
     message = valid_bad_request(response, {'points' =>'must be greater than or equal to 1'})
   end
 
+  test "should_return_all_ratings" do
+    ratings = get_valid_rating(false, 10)
+
+    Rating.stubs(:all).returns(ratings)
+    get '/api/v1/rating'  
+    message = valid_success_request(response)
+
+    assert_not_nil message['average']
+    assert_not_nil message['ratings']
+    assert_not_empty message['ratings']
+    assert_equal 10, message['ratings'].size
+  end
+
+  test "should_get_ratings_average_return_nil_using_nil_array" do
+    rating_controller = RatingController.new
+    assert_nil rating_controller.get_ratings_average
+
+    assert_nil rating_controller.get_ratings_average(nil)
+  end
+
+  test "should_get_ratings_average_return_nil_using_empty_array" do
+    rating_controller = RatingController.new
+    ratings = []
+    assert_equal 0, rating_controller.get_ratings_average(ratings)
+  end
+
+  test "should_get_ratings_average" do
+    rating_controller = RatingController.new
+    ratings = get_valid_rating(false, 100)
+    total = 0
+    ratings.each{|s|
+      total = total + s.points
+    }
+    average = rating_controller.get_ratings_average(ratings)
+    assert_not_nil average
+    assert_equal total / ratings.size, average
+  end
+
+  test "should_get_ratings_average_zero" do
+    rating_controller = RatingController.new
+    ratings = get_valid_rating(false)
+    ratings.points = 0
+
+    average = rating_controller.get_ratings_average([ratings])
+    assert_not_nil average
+    assert_equal 0, average
+  end
 
 end

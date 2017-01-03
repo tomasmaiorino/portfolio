@@ -40,5 +40,6 @@ Rails.application.routes.draw do
   #rating
   match 'api/v1/rating' => 'rating#create', via: [:post]
   match 'api/v1/rating/:token' => 'rating#get', via: [:get]
+  match 'api/v1/rating' => 'rating#get_all', via: [:get]
 
 end

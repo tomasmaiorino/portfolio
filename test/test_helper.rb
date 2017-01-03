@@ -34,6 +34,24 @@ class ActiveSupport::TestCase
     return client
   end
 
+  def get_valid_rating(create = false, qt = 1)
+    if (qt == 1)
+      rating = Rating.new
+      rating.points = rand(0..Rating::MAX_POINTS)
+      rating.save unless !create
+      return rating
+    else
+      temp = []
+      (1..qt).each{|t|
+        rating = Rating.new
+        rating.points = rand(0..Rating::MAX_POINTS)
+        rating.save unless !create
+        temp << rating
+      }
+      return temp
+    end
+  end
+
   def get_valid_mock_client
     client = Client.new
     return stub(:name= => 'Lab',
