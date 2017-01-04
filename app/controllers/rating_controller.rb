@@ -1,5 +1,7 @@
 class RatingController < BaseApiController
 
+  after_action :set_headers
+
   skip_before_action :verify_authenticity_token
 
   def create
@@ -69,6 +71,14 @@ class RatingController < BaseApiController
         total = total + r.points
     }
     if total > 0 then return total / ratings.size else return 0 end
+  end
+
+  def set_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Expose-Headers'] = 'Etag'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD'
+    headers['Access-Control-Allow-Headers'] = '*, x-requested-with, Content-Type, If-Modified-Since, If-None-Match'
+    headers['Access-Control-Max-Age'] = '86400'
   end
 
 end
