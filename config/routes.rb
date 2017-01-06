@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   match 'api/v1/project/company/:id' => 'project#get_company', via: [:get]
 
   #rating
-  match 'api/v1/rating' => 'rating#create', via: [:post]
+  match 'api/v1/rating' => 'rating#create', via: [:post, :options]
   match 'api/v1/rating/:token' => 'rating#get', via: [:get]
   match 'api/v1/rating' => 'rating#get_all', via: [:get]
 
