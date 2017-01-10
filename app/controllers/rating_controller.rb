@@ -73,6 +73,9 @@ class RatingController < BaseApiController
     if total > 0 then return total / ratings.size else return 0 end
   end
 
+  def create_option
+  end
+
   def set_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Expose-Headers'] = 'Etag'
