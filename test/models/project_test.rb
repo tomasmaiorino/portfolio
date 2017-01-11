@@ -139,17 +139,19 @@ class ProjectTest < ActiveSupport::TestCase
 
   test "should_return_project_by_companies" do
     project = get_full_project(true)
-    temp_project = Project.includes(:companies).find(project.companies[0].id)
+
+    #temp_project = Project.includes(:companies).where(:companies => {id: project.companies[0].id})
+    temp_project = Project.joins(:companies).where(:companies => {id: project.companies[0].id})
 
     assert_not_nil temp_project
-    assert_equal project.id, temp_project.id
-    assert_equal project.companies.size, temp_project.companies.size
-    assert_not_empty temp_project.companies
-    assert_equal 2, temp_project.companies.size
-    assert_equal project.companies[0].id, temp_project.companies[0].id
-    assert_equal project.companies[1].id, temp_project.companies[1].id
-    assert_equal project.companies[1].name, temp_project.companies[1].name
-    assert_equal project.companies[0].name, temp_project.companies[0].name
+    assert_equal 1, temp_project.size
+    assert_equal project.id, temp_project[0].id
+    assert_equal project.companies.size, temp_project[0].companies.length
+    assert_not_empty temp_project[0].companies
+    assert_equal project.companies[0].id, temp_project[0].companies[0].id
+    assert_equal project.companies[1].id, temp_project[0].companies[1].id
+    assert_equal project.companies[1].name, temp_project[0].companies[1].name
+    assert_equal project.companies[0].name, temp_project[0].companies[0].name
 
   end
 

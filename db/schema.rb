@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20161223122915) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "clients", force: :cascade do |t|
     t.string   "name"
     t.boolean  "active",               default: false
@@ -33,21 +36,21 @@ ActiveRecord::Schema.define(version: 20161223122915) do
     t.text     "cover_letter"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.index ["client_id"], name: "index_companies_on_client_id"
+    t.index ["client_id"], name: "index_companies_on_client_id", using: :btree
   end
 
   create_table "companies_projects", id: false, force: :cascade do |t|
     t.integer "project_id"
     t.integer "company_id"
-    t.index ["company_id"], name: "index_companies_projects_on_company_id"
-    t.index ["project_id"], name: "index_companies_projects_on_project_id"
+    t.index ["company_id"], name: "index_companies_projects_on_company_id", using: :btree
+    t.index ["project_id"], name: "index_companies_projects_on_project_id", using: :btree
   end
 
   create_table "companies_skills", id: false, force: :cascade do |t|
     t.integer "skill_id"
     t.integer "company_id"
-    t.index ["company_id"], name: "index_companies_skills_on_company_id"
-    t.index ["skill_id"], name: "index_companies_skills_on_skill_id"
+    t.index ["company_id"], name: "index_companies_skills_on_company_id", using: :btree
+    t.index ["skill_id"], name: "index_companies_skills_on_skill_id", using: :btree
   end
 
   create_table "projects", force: :cascade do |t|
@@ -69,8 +72,8 @@ ActiveRecord::Schema.define(version: 20161223122915) do
   create_table "projects_tech_tags", id: false, force: :cascade do |t|
     t.integer "project_id"
     t.integer "tech_tag_id"
-    t.index ["project_id"], name: "index_projects_tech_tags_on_project_id"
-    t.index ["tech_tag_id"], name: "index_projects_tech_tags_on_tech_tag_id"
+    t.index ["project_id"], name: "index_projects_tech_tags_on_project_id", using: :btree
+    t.index ["tech_tag_id"], name: "index_projects_tech_tags_on_tech_tag_id", using: :btree
   end
 
   create_table "ratings", force: :cascade do |t|
@@ -79,7 +82,7 @@ ActiveRecord::Schema.define(version: 20161223122915) do
     t.text     "comments"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["company_id"], name: "index_ratings_on_company_id"
+    t.index ["company_id"], name: "index_ratings_on_company_id", using: :btree
   end
 
   create_table "skills", force: :cascade do |t|
