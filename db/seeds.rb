@@ -9,12 +9,55 @@
 #
 # => DEV INITIA LOAD
 #
-dev_tech_tags_array = ["BCC","ATG-11","ANT","GIT","REST","SOAP","SPRING-BOOT","SPRING-WEB","JSF 1.2",
-"JSTL","MYSQL","ORACLE","WEBLOGIC","REDIS","MONGO-DB","SVN","JMS","PLAY-FRAMEWORK","WEBSPHERE","TOMCAT"]
-dev_skills = { "Java and J2EE" => 96, "Javascript and jQuery" => 70, "Databases" => 60, "Ruby on Rails" => 40,
-   "ATG ENDECA" => 50}
+dev_tech_tags_array = [
+  "BCC",
+  "ATG-11",
+  "ANT",
+  "GIT",
+  "REST",
+  "SOAP",
+  "SPRING-BOOT",
+  "SPRING-WEB",
+  "JSF 1.2",
+  "JSTL",
+  "MYSQL",
+  "ORACLE",
+  "WEBLOGIC",
+  "REDIS",
+  "MONGO-DB",
+  "SVN",
+  "JMS",
+  "PLAY-FRAMEWORK",
+  "WEBSPHERE",
+  "TOMCAT",
+  "MOCKITO",
+   "SCRIPTLET",
+   "JAVA-1.7",
+   "RABBIT-MQ",
+   "ORACLE-DB-11",
+   "JSP",
+   "DROPLETS",
+   "FORM-HANDLERS",
+   "PAYMENT PIPELINE",
+   "ATG SEGMENTATION",
+   "J2EE",
+   "JENKINS",
+   "JAVASCRIPT",
+   "JQUERY",
+   "STRUTS",
+   "JUNIT"
+ ]
 
-def load_tech_tags(tech_tag, env)
+dev_skills = {
+    "Java and J2EE" => 96,
+     "Javascript and jQuery" => 70,
+     "Databases" => 60,
+     "Ruby on Rails" => 40,
+     "ATG ENDECA" => 50
+   }
+
+def load_tech_tags(tech_tag,
+ env)
   if (!tech_tag.nil? && !tech_tag.empty?)
     cont = 0
     tech_tag.each{ |t|
@@ -36,10 +79,12 @@ def load_tech_tags(tech_tag, env)
   end
 end
 
-def load_skills(skills, env)
+def load_skills(skills,
+ env)
   if (!skills.nil? && !skills.empty?)
     cont = 0
-    skills.each{ |k, v|
+    skills.each{ |k,
+ v|
       skill = Skill.find_by(:name => k.capitalize)
       if (skill.nil?)
         puts "Creating skill #{k} level #{v} in #{env} :0"
@@ -63,6 +108,7 @@ end
 
 
 if Rails.env.development?
-  load_tech_tags(dev_tech_tags_array, "development")
+  load_tech_tags(dev_tech_tags_array,
+ "development")
   load_skills(dev_skills, "development")
 end
