@@ -2,6 +2,8 @@ class SkillController < BaseApiController
 
   skip_before_action :verify_authenticity_token
 
+  after_action :set_headers
+  
   def create
 
     if (@json.nil?)

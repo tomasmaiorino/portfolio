@@ -77,4 +77,15 @@ class BaseApiController < ApplicationController
 		Rails.logger.debug "Invalid request :("
     end
   end
+
+	def set_headers
+		allow_origins = Rails.application.config.allow_origins
+		Rails.logger.debug "Access-Control-Allow-Origin [#{allow_origins}]"
+		headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Expose-Headers'] = 'Etag'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD'
+    headers['Access-Control-Allow-Headers'] = '*, x-requested-with, Content-Type, If-Modified-Since, If-None-Match'
+    headers['Access-Control-Max-Age'] = '86400'
+  end
+
 end

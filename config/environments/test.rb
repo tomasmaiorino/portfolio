@@ -52,6 +52,7 @@ Rails.application.configure do
   # Set log level
   config.log_level = :DEBUG
 
-  config.test_host = "http://localhost"  
+  config.test_host = "http://localhost"
 
+  config.allow_origins = "*"
 end
