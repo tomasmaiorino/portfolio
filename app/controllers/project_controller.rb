@@ -88,7 +88,17 @@ class ProjectController < BaseApiController
 
   def configure_tech_tags(project)
     return nil if project.nil? || project[:tech_tags].blank?
-    return TechTag.where(:id => project[:tech_tags])
+    tecs = []
+    project[:tech_tags].each{|t|
+      tech_temp = nil
+      is_number = t.kind_of? Numeric
+      if (is_number) then
+        tech_temp = TechTag.where(:id => t).first
+      else
+        tech_temp = TechTag.where(:name => t).first
+      end
+      tecs << tech_temp unless tech_temp.nil?
+    }
+    return tecs
   end
-
 end

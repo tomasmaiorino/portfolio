@@ -16,7 +16,8 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
         :time_spent => "2 weeks",
         :active => true,
         :future_project => false,
-        :project_date => Date.new
+        :project_date => Date.new,
+        :activities_done => "Development, helped on the business analyze process and also to find the better technical solution."
         }
 
     @invalid_params = {
@@ -197,7 +198,7 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
   test "should_return_tech_tags" do
     tech_tags = get_valid_teck_tag(true, ['java', 'oracle', 'rails'])
     params = @valid_params
-    params[:tech_tags] = [tech_tags[0], tech_tags[1], tech_tags[2]]
+    params[:tech_tags] = [tech_tags[0].id, tech_tags[1].id, 'rails']
     controller = ProjectController.new
     tech_tags_get = controller.configure_tech_tags(params)
     assert_not_empty tech_tags_get
@@ -210,7 +211,7 @@ class ProjectControllerIntegrationTest < ActionDispatch::IntegrationTest
   test "should_not_return_tech_tags" do
     tech_tags = get_valid_teck_tag(true, ['java', 'oracle', 'rails'])
     params = @valid_params
-    params[:tech_tags] = [1]
+    params[:tech_tags] = [44, 'weblogic']
     controller = ProjectController.new
     assert_empty controller.configure_tech_tags(params)
   end

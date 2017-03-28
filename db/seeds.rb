@@ -45,7 +45,9 @@ dev_tech_tags_array = [
    "JAVASCRIPT",
    "JQUERY",
    "STRUTS",
-   "JUNIT"
+   "JUNIT",
+   "JIRA",
+   "SCRUM"
  ]
 
 dev_skills = {

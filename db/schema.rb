@@ -60,13 +60,14 @@ ActiveRecord::Schema.define(version: 20161223122915) do
     t.string   "summary"
     t.text     "description"
     t.text     "improvements"
+    t.text     "activities_done"
     t.string   "time_spent"
-    t.string   "language",       default: "en"
-    t.boolean  "active",         default: false
-    t.boolean  "future_project", default: false
+    t.string   "language",        default: "en"
+    t.boolean  "active",          default: false
+    t.boolean  "future_project",  default: false
     t.datetime "project_date"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "projects_tech_tags", id: false, force: :cascade do |t|
