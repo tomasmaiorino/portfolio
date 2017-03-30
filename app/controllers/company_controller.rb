@@ -116,7 +116,8 @@ class CompanyController < BaseApiController
         :improvements,
         :time_spent,
         :future_project,
-        :project_date
+        :project_date,
+        :activities_done
         ],
         :include => {:tech_tags => {:only => :name}}
       }
